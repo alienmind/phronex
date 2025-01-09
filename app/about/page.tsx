@@ -15,7 +15,7 @@ function AboutNavbar() {
     <nav className="flex items-center justify-between p-4 bg-gray-800">
       <div className="flex items-center">
         <Link href="/">
-            <img src="/logo.jpg" alt="logo" className="h-8 w-8 mr-2 rounded-2xl" />
+            <img src="/logo.png" alt="logo" className="h-8 w-8 mr-2 rounded-2xl" />
         </Link>
         <span className="text-white text-xl font-bold">Phronex</span>
       </div>

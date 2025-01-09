@@ -6,7 +6,7 @@ function LandingNavbar() {
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-800">
       <div className="flex items-center">
-            <Image width={1024} height={1024} src="/logo.jpg" alt="Phronex logo" className="h-8 w-8 mr-2 rounded-2xl" />
+            <Image width={1024} height={1024} src="/logo.png" alt="Phronex logo" className="h-8 w-8 mr-2 rounded-2xl" />
         <span className="text-white text-xl font-bold">Phronex</span>
       </div>
       <div className="flex gap-4 mt-4">

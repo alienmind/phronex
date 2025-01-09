@@ -52,7 +52,7 @@ export function AppSidebar() {
     <Sidebar className="align-center">
       <SidebarHeader>
         <Link href="/dashboard">
-          <img src="/logo.jpg" alt="logo" className="h-10 w-10 mr-2 rounded-xl" />
+          <img src="/logo.png" alt="logo" className="h-10 w-10 mr-2 rounded-xl" />
           <span className="text-left text-xl font-bold">Phronex</span>
         </Link>
       </SidebarHeader>
@@ -90,7 +90,7 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleSignOut}>Sign out {userEmail}</SidebarMenuButton>
+            <SidebarMenuButton>Sign out {userEmail}</SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
