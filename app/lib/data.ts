@@ -1,5 +1,19 @@
+import type { User } from '@/app/lib/definitions';
+
 //import { sql } from '@vercel/postgres';
 const connectionPool = require('../../db');
+
+export async function getUser(email: string): Promise<User | undefined> {
+  try {
+    const user = await connectionPool.query(`SELECT * FROM users WHERE email='${email}'`);
+    return user.rows[0];
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error('Failed to fetch user.');
+  }
+}
+
+/*
 
 import {
   CustomersTableType,
@@ -220,3 +234,5 @@ export async function fetchFilteredCustomers(query: string) {
     throw new Error('Failed to fetch customer table.');
   }
 }
+
+*/

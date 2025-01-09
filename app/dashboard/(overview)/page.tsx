@@ -1,11 +1,12 @@
-import CardWrapper /*, { Card } */  from '@/app/ui/dashboard/cards';
-import RevenueChart from '@/app/ui/dashboard/revenue-chart';
-import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
-import { lusitana } from '@/app/ui/fonts';
+/*
+import CardWrapper from '@/app/ui/projects/cardlist';
+import RevenueChart from '@/app/ui/projects/revenue-chart';
+import LatestInvoices from '@/app/ui/projects/latest-invoices';
+import { CardsWrapperSkeleton CardSkeleton } from '@/app/ui/skeletons';
+*/
+
+import { roboto } from '@/app/ui/fonts';
 import { Suspense } from 'react';
-import { LatestInvoicesSkeleton,
-         RevenueChartSkeleton,
-         CardSkeleton } from '@/app/ui/skeletons';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,23 +15,18 @@ export const metadata: Metadata = {
  
 export default async function Page() {
   return (
+    <>
     <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard
-      </h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardSkeleton />}>
-        <CardWrapper/>
-        </Suspense>
-      </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        <Suspense fallback={<RevenueChartSkeleton />}>
-          <RevenueChart/>
-        </Suspense>
-        <Suspense fallback={<LatestInvoicesSkeleton />}>
-          <LatestInvoices/>
-        </Suspense>
-      </div>
+      Dashboard
     </main>
+    </>
   );
 }
+
+/*
+    <div className="float-left flex flex-1 gap-4 p-4 pt-0">
+    <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-1 lg:grid-rows-3 gap-8 xl:gap-12">
+    <Suspense fallback={<CardsWrapperSkeleton />}>
+      <CardsWrapper/>
+    </Suspense>
+*/

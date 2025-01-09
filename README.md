@@ -150,7 +150,6 @@ Install https://ui.shadcn.com/docs/installation/vite
 Successive UI components have been added under components/ui via:
 
 ```bash
-  npx shadcn@latest add button
   npx shadcn@latest add sidebar
   npx shadcn@latest add card
   npx shadcn@latest add alert-dialog
@@ -189,3 +188,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+
+
+## Last minute things
+[ ] Hero images
+[ ] Favicon
+[ ] Cleanup secrets?

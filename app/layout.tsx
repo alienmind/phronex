@@ -1,11 +1,12 @@
+import { ThemeProvider } from "@/app/ui/theme-provider"
 import '@/app/ui/global.css';
-import { inter } from '@/app/ui/fonts';
+import { roboto } from '@/app/ui/fonts';
 import { Metadata } from 'next';
  
 export const metadata: Metadata = {
-  title: 'Acme Dashboard',
-  description: 'The official Next.js Course Dashboard, built with App Router.',
-  metadataBase: new URL('https://next-learn-dashboard.vercel.sh'),
+  title: 'Phronex Project Manager',
+  description: 'A modern web project management tool',
+  metadataBase: new URL('https://github.com/alienmind'),
 };
 
 export default function RootLayout({
@@ -14,8 +15,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${roboto.className} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+        {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

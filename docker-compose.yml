@@ -14,13 +14,13 @@ services:
     ports:
       - 8080:8080
 
-  webapp:
-    image: phronex-web
-    ports:
-      - 3000:3000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    env_file:
-      - .env.docker
-    depends_on:
-      - postgres
+#  webapp:
+#   image: phronex-web
+#   ports:
+#     - 3000:3000
+#   extra_hosts:
+#     - "host.docker.internal:host-gateway"
+#   env_file:
+#     - .env.docker
+#   depends_on:
+#     - postgres
