@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/app/ui/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 import '@/app/ui/global.css';
 import { roboto } from '@/app/ui/fonts';
 import { Metadata } from 'next';
@@ -24,6 +25,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
         {children}
+        <Toaster/>
         </ThemeProvider>
       </body>
     </html>

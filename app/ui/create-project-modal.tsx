@@ -23,8 +23,8 @@ import { createProject, State } from '@/app/lib/actions';
 import { CreateProjectFormSchema } from '@/app/lib/schemas';
 import { useToast } from "@/hooks/use-toast"
 import { z } from 'zod';
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
+import { ToastAction } from "@/components/ui/toast"
 
 import {
   ExclamationCircleIcon
@@ -49,10 +49,24 @@ export function CreateProjectModal() {
     undefined,
   );
 
+  useEffect(() => {
+    const error : string|undefined = errorMessage?.message;
+    if (!errorMessage) return;
+    toast({
+      title: "Error",
+      description: error,
+      action: (
+        <ToastAction altText="Back">Back</ToastAction>
+      ),
+    })
+  }, [errorMessage]);
+
   return (
+    <>
     <Dialog>
       <DialogTrigger asChild>
         <Button className="w-full m-2" >New</Button>
+
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -113,14 +127,7 @@ export function CreateProjectModal() {
           </form>
           </Form>
       </DialogContent>
-      <DialogFooter>
-        {errorMessage && (
-          <>
-            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-            <p className="text-sm text-red-500">{JSON.stringify(errorMessage)}</p>
-          </>
-        )}
-      </DialogFooter>
     </Dialog>
+    </>
   );
 };
