@@ -72,19 +72,12 @@ export async function createProject(
  
   // Prepare data for insertion into the database
   const { project_name, project_start_date, project_end_date } = validatedFields.data;
-  const project_creation_date = new Date().toISOString().split('T')[0];
- 
-  console.log("insert 1");
 
   // Insert data into the database
   try {
-    console.log(`
-      INSERT INTO project (project_name, project_start_date, project_end_date, project_creation_date)
-      VALUES ('${project_name}', ${project_start_date}, '${project_end_date}', '${project_creation_date}')
-      `);
     await connectionPool.query(`
-      INSERT INTO project (project_name, project_start_date, project_end_date, project_creation_date)
-      VALUES ('${project_name}', ${project_start_date}, '${project_end_date}', '${project_creation_date}')
+      INSERT INTO project (project_name, project_start_date, project_end_date)
+      VALUES ('${project_name}', ${project_start_date}, '${project_end_date}')
     `);
   } catch (_error) {
     // If a database error occurs, return a more specific error.
