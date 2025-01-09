@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -15,8 +16,11 @@ import {
   Form,
   FormField,
   FormItem,
-  FormMessage,
+  FormLabel,
+  FormControl
 } from "@/components/ui/form"
+import { Calendar as CalendarIcon } from "lucide-react"
+
 import { useForm, FormProvider } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { createProject, State } from '@/app/lib/actions';
@@ -25,10 +29,18 @@ import { useToast } from "@/hooks/use-toast"
 import { z } from 'zod';
 import { useActionState, useEffect } from 'react';
 import { ToastAction } from "@/components/ui/toast"
+import { DatePicker } from "@/app/ui/date-picker";
 
+// FIXME - quitar
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
 import {
-  ExclamationCircleIcon
-} from '@heroicons/react/24/outline';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 
 /**
  * 
@@ -39,8 +51,8 @@ export function CreateProjectModal() {
     defaultValues: {
       "project_id": "",
       "project_name": "",
-      "project_start_date": "",
-      "project_end_date": "",
+      "project_start_date": new Date(),
+      "project_end_date": new Date()
     }
   });
   const { toast } = useToast()
@@ -49,6 +61,7 @@ export function CreateProjectModal() {
     undefined,
   );
 
+  // Effect for error message
   useEffect(() => {
     const error : string|undefined = errorMessage?.message;
     if (!errorMessage) return;
@@ -76,14 +89,24 @@ export function CreateProjectModal() {
           </DialogDescription>
         </DialogHeader>
           <Form {...form}>
-          <form action={formAction}>
+          <form action={formAction} >
+          {/*
+          onSubmit={form.handleSubmit(async (data) => {
+                  toast({
+                    title: "You submitted the following values:",
+                    description: (
+                      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+                      </pre>
+                    )
+                  })})}>
+          */}
               <div className="grid gap-4 py-4">
               <FormField
                 name="project_id"
                 render={({ field }) => (
                   <FormItem>
                     <Input className="hidden" placeholder="Project Id" {...field} />
-                    <FormMessage />
                   </FormItem>
                 )} />
               </div>
@@ -93,17 +116,18 @@ export function CreateProjectModal() {
                 render={({ field }) => (
                   <FormItem>
                     <Input placeholder="Project name" {...field} />
-                    <FormMessage />
                   </FormItem>
                 )} />
               </div>
               <div className="grid gap-4 py-4">
               <FormField
                 name="project_start_date"
+                control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <Input placeholder="Project start date" {...field} />
-                    <FormMessage />
+                    <FormControl>
+                    <DatePicker {...field} />
+                    </FormControl>
                   </FormItem>
                 )} />
               </div>
@@ -112,8 +136,7 @@ export function CreateProjectModal() {
                 name="project_end_date"
                 render={({ field }) => (
                   <FormItem>
-                    <Input placeholder="Project end date" {...field} />
-                    <FormMessage />
+                    <DatePicker {...field} />
                   </FormItem>
                 )} />
               </div>

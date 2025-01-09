@@ -54,16 +54,19 @@ export async function createProject(
   formData: FormData,
 ) {
 
-  console.log("createProject");
+  // Validate form using Zod
+  const validatedFields = CreateProject.safeParse({
+    project_id: formData.get('project_id'),
+    project_name: formData.get('project_name'),
+    project_start_date: formData.get('project_start_date'),
+    project_end_date: formData.get('project_end_date'),
+  });
 
   const rawFormData = Object.fromEntries(formData.entries())
-  // Validate form using Zod
-  const validatedFields = CreateProject.safeParse(rawFormData);
- 
+
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
-    console.log("error 1");
-
+    console.log("Validation error: ", JSON.stringify(validatedFields));
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to create project.',
@@ -75,14 +78,15 @@ export async function createProject(
 
   // Insert data into the database
   try {
-    await connectionPool.query(`
-      INSERT INTO project (project_name, project_start_date, project_end_date)
-      VALUES ('${project_name}', ${project_start_date}, '${project_end_date}')
-    `);
+    await connectionPool.query({
+      text: "INSERT INTO projects (project_name, project_start_date, project_end_date) VALUES ($1, $2, $3)",
+      values: [project_name, project_start_date, project_end_date]
+    });
   } catch (_error) {
     // If a database error occurs, return a more specific error.
+    console.log("Database error: ", JSON.stringify(_error));
     return {
-      message: 'Database Error: Failed to create project.',
+      message: 'Database Error: Failed to create project',
     };
   }
  
