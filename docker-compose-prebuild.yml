@@ -1,0 +1,12 @@
+# This docker-compose is required as a prebuilding step
+# It will just simply bring up postgresql running against localhost
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/data/postgres:/var/lib/postgresql/data
+    env_file:
+      - .env.prebuild

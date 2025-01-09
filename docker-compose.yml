@@ -6,10 +6,21 @@ services:
     volumes:
       - ~/data/postgres:/var/lib/postgresql/data
     env_file:
-      - .env
+      - .env.docker
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+  webapp:
+    image: phronex-web
+    ports:
+      - 3000:3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - .env.docker
+    depends_on:
+      - postgres
