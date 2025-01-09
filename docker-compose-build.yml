@@ -1,0 +1,18 @@
+# This docker-compose file is only intended for building
+# It requires to run first:
+#   docker compose -f docker-compose-prebuild.yml up -d
+#
+# The Docker image builder can access database through internal network (.internal:5432) to run SSR pre-rendering
+
+services:
+  webapp:
+    image: phronex-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+      extra_hosts:
+        - "host.docker.internal:host-gateway"
+    ports:
+      - 3000:3000
+    env_file:
+      - .env.internal

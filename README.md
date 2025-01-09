@@ -2,8 +2,7 @@
 This is a demo project, for learning purposes, to teach me latest Next JS 15 and React 19.
 
 ## App name
-The name is derived from the Greek word "Phronesis" (φρόνησις), which means practical wisdom or prudence—especially the kind used in decision-making, planning, and budgeting.
-The name Phronex captures the essence of thoughtful planning and managing resources, which fits perfectly for a project budgeting web application. Plus, it sounds modern and catchy.
+The name is derived from the Greek word "Phronesis" (φρόνησις), which means practical wisdom or prudence—especially the kind used in decision-making, planning, and budgeting. The name Phronex captures the essence of thoughtful planning and managing resources, which fits perfectly for a project budgeting web application. Plus, it sounds modern and catchy.
 
 <p align="center">
   <img src="doc/logo.jpg" alt="Phronex logo: derived from the Greek word 'Phronesis' (φρόνησις), which means practical wisdom or prudence—especially the kind used in decision-making, planning, and budgeting." style="width:350px; height:350px; border-radius:50%; float:right">
@@ -29,16 +28,47 @@ The name Phronex captures the essence of thoughtful planning and managing resour
 
 
 # Prerrequisites
-1. Linux
-2. Docker
+1. Linux (tested on Ubuntu v22.04 and Amazon Linux AMI)
+2. Docker v27 or up
+3. Node v20 / nvm / pnpm
 
-# Instructions (run locally)
-1. Clone the project
+## Install Node and pnpm
+
+```bash
+  nvm install v20.11.1
+  npm install -g pnpm@latest
+```
+
+## Fist steps
+1. Clone the project, 
 2. Set up your .env based on .env.template
    cp -p .env.template .env # and edit values
-3. docker compose up -d
-4. PostgreSQL access: http://localhost:8080/
-5. Web UI access:  http://localhost:3000/
+
+## Run / build with docker
+Build process somehow requires the database to be up as SSR will require temporarily connect.
+It is necessary to bring up a partial docker-compose.yml with just the database up before building.
+
+All steps are automated in build.sh, just run:
+```bash
+./build.sh
+```
+
+Make sure to keep .env.* files around necessary for the build.
+
+Any subsequent run will just require the default docker-compose.yml file.
+```bash
+docker compose up -d
+```
+
+# Instructions (run locally)
+1. Customize your own .env based on .env.localhost
+2. Run
+```bash
+pnpm run dev
+```
+## Access:
+1. PostgreSQL access: http://localhost:8080/
+2. Web UI access:  http://localhost:3000/
 
 # Instructions (AWS)
 TBD
@@ -109,6 +139,8 @@ Install https://ui.shadcn.com/docs/installation/vite
   npx shadcn@latest init
 
 Successive UI components have been added under components/ui via:
+
+```bash
   npx shadcn@latest add button
   npx shadcn@latest add sidebar
   npx shadcn@latest add card
@@ -119,5 +151,32 @@ Successive UI components have been added under components/ui via:
   npx shadcn@latest add drawer
   npx shadcn@latest add dialog
   npx shadcn@latest add form
+```
 
 Make sure to set it up to use tailwindcss utility classes by setting tailwind.cssVariables = false in components.json 
+
+## Dockerize it
+
+To add support for Docker to an existing project, just copy the [`Dockerfile`](https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile) into the root of the project and add the following to the `next.config.js` file:
+
+```js
+// next.config.js
+module.exports = {
+  // ... rest of the configuration.
+  output: "standalone",
+};
+```
+
+This will build the project as a standalone app inside the Docker image.
+
+How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
+
+Build the container: `docker build -t phronex-webapp .`.
+
+Run the container: `docker run -p 3000:3000 phronex-webapp`.
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+
+The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
