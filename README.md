@@ -121,7 +121,7 @@ TBD
 - [ ] .. Registration screen
 
 ## Issues
-- [ ] 
+- [ ] .. Create project form
 
 # Appendix
 

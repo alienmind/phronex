@@ -12,13 +12,12 @@ import {
   DialogClose
 } from "@/components/ui/dialog"
 import {
-  FormControl,
+  Form,
   FormField,
   FormItem,
   FormMessage,
 } from "@/components/ui/form"
-import Form from "next/form"
-import { useForm } from "react-hook-form"
+import { useForm, FormProvider } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { createProject, State } from '@/app/lib/actions';
 import { CreateProjectFormSchema } from '@/app/lib/schemas';
@@ -35,6 +34,15 @@ import {
  * 
  */
 export function CreateProjectModal() {
+  type CreateProjectForm = z.infer<typeof CreateProjectFormSchema>;
+  const form = useForm<CreateProjectForm>({
+    defaultValues: {
+      "project_id": "",
+      "project_name": "",
+      "project_start_date": "",
+      "project_end_date": "",
+    }
+  });
   const { toast } = useToast()
   const [errorMessage, formAction, isPending] = useActionState(
     createProject,
@@ -53,7 +61,8 @@ export function CreateProjectModal() {
             Please set up a descriptive name for this project. Later you can add more details in the project view.
           </DialogDescription>
         </DialogHeader>
-          <Form action={formAction}>
+          <Form {...form}>
+          <form action={formAction}>
               <div className="grid gap-4 py-4">
               <FormField
                 name="project_id"
@@ -101,6 +110,7 @@ export function CreateProjectModal() {
               </DialogClose>
               </DialogFooter>
               </div>
+          </form>
           </Form>
       </DialogContent>
       <DialogFooter>
