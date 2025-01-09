@@ -66,9 +66,18 @@ docker compose up -d
 ```bash
 pnpm run dev
 ```
+
+Or simply:
+```bash
+./rundev.sh
+```
+
 ## Access:
 1. PostgreSQL access: http://localhost:8080/
 2. Web UI access:  http://localhost:3000/
+
+## Seed test data (only first time)
+1. Access http://localhost:3000/seed
 
 # Instructions (AWS)
 TBD
@@ -78,11 +87,11 @@ TBD
 - [x] High level solution architecture and navigation design
 - [x] Decide tech stack (with reasoned defaults)
 - [x] Scaffold basic app with the final stack and solve all required dependencies
+- [x] Containerized run
 - [ ] V1 : local dev, login screen, basic prototype with static content
-- [ ] V2 : connect to local database
-- [ ] V3 : containerized locally
-- [ ] V4 : deployed with final serverless architecture
-- [ ] V5 : Prepare analytics with quicksight
+- [ ] V2 : feature complete in docker
+- [ ] V3 : deployed with final serverless architecture
+- [ ] V4 : Prepare analytics with quicksight
 - [ ] Finalize and adjust final solution architecture documentation
 - [ ] Project plan to production
 - [ ] Prepare presentation slides as code with revealJS
@@ -91,7 +100,7 @@ TBD
 # Detailed TODO
 - [x] .. Scaffold with nextJS (used nextJS tutorial + dockerized local postgresql)
 - [x] .. Integrate tailwindcss, shadcn/ui, state manager?
-- [ ] .. Dockerize the web app
+- [x] .. Dockerize the web app
 - [ ] .. Refactor project - inc. security boundaries
 - [ ] .. Visuals - basic screen layout inc. navbar and grid
 - [ ] .. Landing page
