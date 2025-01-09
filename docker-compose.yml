@@ -6,7 +6,7 @@ services:
     volumes:
       - ~/data/postgres:/var/lib/postgresql/data
     env_file:
-      - .secrets/postgres.env
+      - .env
 
   adminer:
     image: adminer
