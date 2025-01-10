@@ -67,7 +67,7 @@ async function seedUsers() {
     users.map(async (user) => {
       return await connectionPool.query(`
         INSERT INTO users (user_id, name, email, encpassword)
-        VALUES ('${user.user_id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4))))
+        VALUES ('${user.user_id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4)))
         ON CONFLICT (user_id) DO NOTHING;
       `);
     }),
