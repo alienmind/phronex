@@ -3,11 +3,26 @@ import bcrypt from 'bcrypt';
 const connectionPool = require('../../db');
 import {
   // New
+  users,
+  roles,
+  categories,
+  costs,
+  persons,
   projects,
+  projectCostPeriods,
+  projectPersonRoles,
+} from '../lib/load-data';
 
-  // Legacy
-  invoices, customers, revenue, users
-} from '../lib/placeholder-data';
+async function dropTables() {
+  await connectionPool.query(`DROP TABLE IF EXISTS users CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS role CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS category CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS cost CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS person CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS projects CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS project_cost_period CASCADE`);
+  await connectionPool.query(`DROP TABLE IF EXISTS project_person_role CASCADE`);
+}
 
 async function seedProjects() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
@@ -25,8 +40,8 @@ async function seedProjects() {
   const insertedProjects = await Promise.all(
     projects.map(async (project) => {
       return await connectionPool.query(`
-        INSERT INTO projects (project_name, project_start_date, project_end_date, project_scope)
-        VALUES ('${project.project_name}', '${project.project_start_date}', '${project.project_end_date}', '${project.project_scope}')
+        INSERT INTO projects (project_id, project_name, project_start_date, project_end_date, project_scope)
+        VALUES ('${project.project_id}', '${project.project_name}', '${project.project_start_date}', '${project.project_end_date}', '${project.project_scope}')
         ON CONFLICT (project_id) DO NOTHING;
       `);
     }),
@@ -36,36 +51,11 @@ async function seedProjects() {
 
 }
 
-export async function GET() {
-  /*
-  return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  });
-  */
-  try {
-    await seedProjects();
-
-    /***** LEGACY ******/
-    await seedUsers();
-    await seedCustomers();
-    await seedInvoices();
-    await seedRevenue();
-
-    return Response.json({ message: 'Database seeded successfully' });
-  } catch (error) {
-    //await connectionPool.query(`ROLLBACK`);
-    return Response.json({ error }, { status: 500 });
-  }
-}
-
-
-/**************** LEGACY *******************/
 async function seedUsers() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
   await connectionPool.query(`
     CREATE TABLE IF NOT EXISTS users (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
@@ -76,9 +66,9 @@ async function seedUsers() {
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       return await connectionPool.query(`
-        INSERT INTO users (id, name, email, password)
-        VALUES ('${user.id}', '${user.name}', '${user.email}', '${hashedPassword}')
-        ON CONFLICT (id) DO NOTHING;
+        INSERT INTO users (user_id, name, email, password)
+        VALUES ('${user.user_id}', '${user.name}', '${user.email}', '${hashedPassword}')
+        ON CONFLICT (user_id) DO NOTHING;
       `);
     }),
   );
@@ -86,75 +76,177 @@ async function seedUsers() {
   return insertedUsers;
 }
 
-async function seedInvoices() {
+async function seedRoles() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-
   await connectionPool.query(`
-    CREATE TABLE IF NOT EXISTS invoices (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      customer_id UUID NOT NULL,
-      amount INT NOT NULL,
-      status VARCHAR(255) NOT NULL,
-      date DATE NOT NULL
+    CREATE TABLE IF NOT EXISTS role (
+      role_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      role_description VARCHAR(255) NOT NULL
     );
   `);
 
-  const insertedInvoices = await Promise.all(
-    invoices.map(
-      (invoice) => connectionPool.query(`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES ('${invoice.customer_id}', '${invoice.amount}', '${invoice.status}', '${invoice.date}')
-        ON CONFLICT (id) DO NOTHING;
-      `),
-    ),
+  const insertedRoles = await Promise.all(
+    roles.map(async (role) => {
+      return await connectionPool.query(`
+        INSERT INTO role (role_id, role_description)
+        VALUES ('${role.role_id}', '${role.role_description}')
+        ON CONFLICT (role_id) DO NOTHING;
+      `);
+    }),
   );
 
-  return insertedInvoices;
+  return insertedRoles;
 }
 
-async function seedCustomers() {
+async function seedCategories() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
-
   await connectionPool.query(`
-    CREATE TABLE IF NOT EXISTS customers (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL,
-      image_url VARCHAR(255) NOT NULL
+    CREATE TABLE IF NOT EXISTS category (
+      category_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      category_name VARCHAR(255) NOT NULL
     );
   `);
 
-  const insertedCustomers = await Promise.all(
-    customers.map(
-      (customer) => connectionPool.query(`
-        INSERT INTO customers (id, name, email, image_url)
-        VALUES ('${customer.id}', '${customer.name}', '${customer.email}', '${customer.image_url}')
-        ON CONFLICT (id) DO NOTHING;
-      `),
-    ),
+  const insertedCategories = await Promise.all(
+    categories.map(async (category) => {
+      return await connectionPool.query(`
+        INSERT INTO category (category_id, category_name)
+        VALUES ('${category.category_id}', '${category.category_name}')
+        ON CONFLICT (category_id) DO NOTHING;
+      `);
+    }),
   );
 
-  return insertedCustomers;
+  return insertedCategories;
 }
 
-async function seedRevenue() {
+async function seedCosts() {
+  await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
   await connectionPool.query(`
-    CREATE TABLE IF NOT EXISTS revenue (
-      month VARCHAR(4) NOT NULL UNIQUE,
-      revenue INT NOT NULL
+    CREATE TABLE IF NOT EXISTS cost (
+      cost_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      cost_name VARCHAR(255) NOT NULL,
+      category_id UUID NOT NULL,
+      FOREIGN KEY (category_id) REFERENCES category(category_id)
     );
   `);
 
-  const insertedRevenue = await Promise.all(
-    revenue.map(
-      (rev) => connectionPool.query(`
-        INSERT INTO revenue (month, revenue)
-        VALUES ('${rev.month}', '${rev.revenue}')
-        ON CONFLICT (month) DO NOTHING;
-      `),
-    ),
+  const insertedCosts = await Promise.all(
+    costs.map(async (cost) => {
+      return await connectionPool.query(`
+        INSERT INTO cost (cost_id, cost_name, category_id)
+        VALUES ('${cost.cost_id}', '${cost.cost_name}', '${cost.category_id}')
+        ON CONFLICT (cost_id) DO NOTHING;
+      `);
+    }),
   );
 
-  return insertedRevenue;
+  return insertedCosts;
+}
+
+async function seedProjectCostPeriods() {
+  await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+  await connectionPool.query(`
+    CREATE TABLE IF NOT EXISTS project_cost_period (
+      project_id UUID NOT NULL,
+      cost_id UUID NOT NULL,
+      estimate DECIMAL(10,2) NOT NULL,
+      real DECIMAL(10,2),
+      period_start DATE NOT NULL,
+      period_end DATE NOT NULL,
+      PRIMARY KEY (project_id, cost_id),
+      FOREIGN KEY (project_id) REFERENCES projects(project_id),
+      FOREIGN KEY (cost_id) REFERENCES cost(cost_id)
+    );
+  `);
+
+  const insertedProjectCosts = await Promise.all(
+    projectCostPeriods.map(async (period) => {
+      return await connectionPool.query(`
+        INSERT INTO project_cost_period (project_id, cost_id, estimate, real, period_start, period_end)
+        VALUES ('${period.project_id}', '${period.cost_id}', ${period.estimate}, ${period.real || 'NULL'}, 
+                '${period.period_start}', '${period.period_end}')
+        ON CONFLICT (project_id, cost_id) DO NOTHING;
+      `);
+    }),
+  );
+
+  return insertedProjectCosts;
+}
+
+async function seedProjectPersonRoles() {
+  await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+  await connectionPool.query(`
+    CREATE TABLE IF NOT EXISTS project_person_role (
+      project_id UUID NOT NULL,
+      person_id UUID NOT NULL,
+      role_id UUID NOT NULL,
+      PRIMARY KEY (project_id, person_id),
+      FOREIGN KEY (project_id) REFERENCES projects(project_id),
+      FOREIGN KEY (person_id) REFERENCES person(person_id),
+      FOREIGN KEY (role_id) REFERENCES role(role_id)
+    );
+  `);
+
+  const insertedProjectPersonRoles = await Promise.all(
+    projectPersonRoles.map(async (assignment) => {
+      return await connectionPool.query(`
+        INSERT INTO project_person_role (project_id, person_id, role_id)
+        VALUES ('${assignment.project_id}', '${assignment.person_id}', '${assignment.role_id}')
+        ON CONFLICT (project_id, person_id) DO NOTHING;
+      `);
+    }),
+  );
+
+  return insertedProjectPersonRoles;
+}
+
+async function seedPersons() {
+  await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+  await connectionPool.query(`
+    CREATE TABLE IF NOT EXISTS person (
+      person_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      person_name VARCHAR(255) NOT NULL,
+      person_surname VARCHAR(255) NOT NULL
+    );
+  `);
+
+  const insertedPersons = await Promise.all(
+    persons.map(async (person) => {
+      return await connectionPool.query(`
+        INSERT INTO person (person_id,person_name, person_surname)
+        VALUES ('${person.person_id}', '${person.person_name}', '${person.person_surname}')
+        ON CONFLICT (person_id) DO NOTHING;
+      `);
+    }),
+  );
+
+  return insertedPersons;
+}
+
+export async function GET() {
+  try {
+
+    // Drop all tables
+    // THIS SHOULD NEVER GO TO PRODUCTION
+    await dropTables();
+
+    // First seed the independent tables
+    await seedUsers();
+    await seedPersons();
+    await seedRoles();
+    await seedCategories();
+    await seedProjects();
+    
+    // Then seed the dependent tables
+    await seedCosts();
+    await seedProjectCostPeriods();
+    await seedProjectPersonRoles();
+
+    return Response.json({ message: 'Database seeded successfully' });
+  } catch (error) {
+    //await connectionPool.query(`ROLLBACK`);
+    return Response.json({ error }, { status: 500 });
+  }
 }
 
