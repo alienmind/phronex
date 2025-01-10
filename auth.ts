@@ -3,20 +3,8 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 // FIXME - better use - OAuth https://authjs.dev/getting-started/authentication/oauth
 import { z } from 'zod';
-const connectionPool = require('db');
-import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
-
-async function getUser(email: string): Promise<User | undefined> {
-  try {
-    console.log(`SELECT * FROM users WHERE email='${email}'`);
-    const user = await connectionPool.query(`SELECT * FROM users WHERE email='${email}'`);
-    return user.rows[0];
-  } catch (error) {
-    console.error('Failed to fetch user:', error);
-    throw new Error('Failed to fetch user.');
-  }
-}
+import { getUser } from '@/app/lib/data'
  
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,

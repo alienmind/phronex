@@ -77,7 +77,7 @@ Or simply:
 2. Web UI access:  http://localhost:3000/
 
 ## Seed test data (only first time)
-1. Access http://localhost:3000/seed
+1. Access About screen -> Seed (or http://localhost:3000/seed )
 
 # Instructions (AWS)
 TBD
@@ -90,8 +90,8 @@ TBD
 - [x] Containerized run
 - [ ] V1 : local dev, login screen, basic prototype with static content
 - [ ] V2 : feature complete in docker
-- [ ] V3 : deployed with final serverless architecture
-- [ ] V4 : Prepare analytics with quicksight
+- [ ] V3 : deployed in AWS Fargate, exposed via public ip, DNS name
+- [ ] V4 : Prepare analytics with Quicksight
 - [ ] Finalize and adjust final solution architecture documentation
 - [ ] Project plan to production
 - [ ] Prepare presentation slides as code with revealJS
@@ -101,27 +101,27 @@ TBD
 - [x] .. Scaffold with nextJS (used nextJS tutorial + dockerized local postgresql)
 - [x] .. Integrate tailwindcss, shadcn/ui, state manager?
 - [x] .. Dockerize the web app
-- [ ] .. Refactor project - inc. security boundaries
-- [ ] .. Visuals - basic screen layout inc. navbar and grid
-- [ ] .. Landing page
-- [ ] .. Login screen
-- [ ] .. Data model (as JSON objects in lib/data.ts)
-- [ ] .. Static projects dashboard
-- [ ] .. Static project detail screen inc. metadata, scope, reporting
+- [x] .. Visuals - basic screen layout inc. navbar and grid
+- [x] .. Landing page
+- [x] .. Login screen
+- [x] .. Form server action checks
+- [x] .. Create project modal & server action
+- [ ] .. Projects dashboard
+- [ ] .. Project detail screen inc. metadata, scope, reporting
 - [ ] .. Create the actual data model DDLs and apply locally to postgresql
-- [ ] .. Populate info from the JSONs
 - [ ] .. Implement update project details
 - [ ] .. Implement delete project details with confirmation dialog
 - [ ] .. Implement enroll in project button (and screen?)
+- [ ] .. Implement registration screen
 
 # Extras
 - [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for structured budget scaffolding based on scope text
 - [ ] .. Try to generate cost items based in the model output
 - [ ] .. Dark theme
-- [ ] .. Registration screen
 
 ## Issues
-- [ ] 
+- [ ] .. Create project form client validation (currently only in server)
+- [ ] .. Create project form server validation (toast should iterate over all errors)
 
 # Appendix
 
@@ -140,6 +140,9 @@ npx create-next-app@latest phronex --example "https://github.com/vercel/next-lea
 - PostgreSQL locally with docker-compose https://medium.com/@agusmahari/docker-how-to-install-postgresql-using-docker-compose-d646c793f216
 - PostgreSQL official docker image https://hub.docker.com/_/postgres
 - Dockerize NextJS app https://nextjs.org/docs/app/building-your-application/deploying#docker-image
+- How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
+- Hybrid form validation client & server in Next : https://dev.to/bookercodes/nextjs-form-validation-on-the-client-and-server-with-zod-lbc
+- Fix passing date with date picker to nextjs server action: https://www.youtube.com/watch?v=4d2g-yAD7xY
 
 ## Shadcn for premade UI components
 I've been adding shadcn premade components to the project, together with tailwindcss theming.
@@ -150,7 +153,6 @@ Install https://ui.shadcn.com/docs/installation/vite
 Successive UI components have been added under components/ui via:
 
 ```bash
-  npx shadcn@latest add button
   npx shadcn@latest add sidebar
   npx shadcn@latest add card
   npx shadcn@latest add alert-dialog
@@ -160,6 +162,7 @@ Successive UI components have been added under components/ui via:
   npx shadcn@latest add drawer
   npx shadcn@latest add dialog
   npx shadcn@latest add form
+  ...
 ```
 
 Make sure to set it up to use tailwindcss utility classes by setting tailwind.cssVariables = false in components.json 
@@ -178,14 +181,12 @@ module.exports = {
 
 This will build the project as a standalone app inside the Docker image.
 
-How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
-
-Build the container: `docker build -t phronex-webapp .`.
-
-Run the container: `docker run -p 3000:3000 phronex-webapp`.
-
+## Dockerized version - details
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+
+## Last minute cleanup things to not forget
+[ ] Hero images
+[ ] Favicon
+[ ] Cleanup secrets?

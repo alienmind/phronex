@@ -1,5 +1,71 @@
-// This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
-// https://nextjs.org/learn/dashboard-app/fetching-data
+// Fake data for demo purposes
+const projects = [
+  {
+    project_name: "Project 1",
+    project_scope: "Scope 1",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 2",
+    project_scope: "Scope 2",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 3",
+    project_scope: "Scope 3",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 4",
+    project_scope: "Scope 4",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 5",
+    project_scope: "Scope 5",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 6",
+    project_scope: "Scope 6",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 7",
+    project_scope: "Scope 7",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 8",
+    project_scope: "Scope 8",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 9",
+    project_scope: "Scope 9",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  },
+  {
+    project_name: "Project 10",
+    project_scope: "Scope 10",
+    project_start_date: "2022-12-06",
+    project_end_date: "2022-12-06"
+  }
+]
+
+export { projects };
+
+
+// Legacy data from the nextjs tutorial
 const users = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',

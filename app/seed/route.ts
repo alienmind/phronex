@@ -1,10 +1,66 @@
 import bcrypt from 'bcrypt';
 //import { db } from '@vercel/postgres';
 const connectionPool = require('../../db');
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import {
+  // New
+  projects,
 
-//const client = await db.connect();
+  // Legacy
+  invoices, customers, revenue, users
+} from '../lib/placeholder-data';
 
+async function seedProjects() {
+  await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+  await connectionPool.query(`
+    CREATE TABLE IF NOT EXISTS projects (
+      project_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      project_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      project_name VARCHAR(255) NOT NULL,
+      project_start_date DATE NOT NULL,
+      project_end_date DATE NOT NULL,
+      project_scope TEXT
+    );
+  `);
+
+  const insertedProjects = await Promise.all(
+    projects.map(async (project) => {
+      return await connectionPool.query(`
+        INSERT INTO projects (project_name, project_start_date, project_end_date, project_scope)
+        VALUES ('${project.project_name}', '${project.project_start_date}', '${project.project_end_date}', '${project.project_scope}')
+        ON CONFLICT (project_id) DO NOTHING;
+      `);
+    }),
+  );
+
+  return insertedProjects;
+
+}
+
+export async function GET() {
+  /*
+  return Response.json({
+    message:
+      'Uncomment this file and remove this line. You can delete this file when you are finished.',
+  });
+  */
+  try {
+    await seedProjects();
+
+    /***** LEGACY ******/
+    await seedUsers();
+    await seedCustomers();
+    await seedInvoices();
+    await seedRevenue();
+
+    return Response.json({ message: 'Database seeded successfully' });
+  } catch (error) {
+    //await connectionPool.query(`ROLLBACK`);
+    return Response.json({ error }, { status: 500 });
+  }
+}
+
+
+/**************** LEGACY *******************/
 async function seedUsers() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
   await connectionPool.query(`
@@ -102,24 +158,3 @@ async function seedRevenue() {
   return insertedRevenue;
 }
 
-export async function GET() {
-  /*
-  return Response.json({
-    message:
-      'Uncomment this file and remove this line. You can delete this file when you are finished.',
-  });
-  */
-  try {
-    //await connectionPool.query(`BEGIN`);
-    await seedUsers();
-    await seedCustomers();
-    await seedInvoices();
-    await seedRevenue();
-    //await connectionPool.query(`COMMIT`);
-
-    return Response.json({ message: 'Database seeded successfully' });
-  } catch (error) {
-    //await connectionPool.query(`ROLLBACK`);
-    return Response.json({ error }, { status: 500 });
-  }
-}
