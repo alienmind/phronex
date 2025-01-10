@@ -108,23 +108,25 @@ TBD
 - [x] .. Create project modal & server action
 - [x] .. Create the actual data model DDLs and apply locally to postgresql
 - [ ] .. Projects dashboard
+- [ ] .. Stop using static data and use actual database for the dashboard
 - [ ] .. Project detail screen inc. metadata, scope, reporting
 - [ ] .. Implement update project details
 - [ ] .. Implement delete project details with confirmation dialog
-- [ ] .. Implement enroll in project button (and screen?)
 - [ ] .. Implement registration screen
 
 # Extras
 - [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for structured budget scaffolding based on scope text
 - [ ] .. Try to generate cost items based in the model output
+- [ ] .. Implement enroll in project button (and screen?)
 - [x] .. Dark theme
-- [ ] .. Doom
+- [x] .. Doom
 
 ## Issues
 - [x] .. Create project form is broken again
 - [ ] .. Create project form client validation (currently only in server)
 - [ ] .. Create project form server validation (toast should iterate over all errors)
-- [ ] .. Back button not working in About
+- [x] .. Back button not working in About
+- [ ] .. It will be necessary to do an export of the data to a CSV file instead of using seed, as building the artifacts requires access to the tables
 
 # Appendix
 

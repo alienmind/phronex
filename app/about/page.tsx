@@ -58,7 +58,7 @@ function AboutPage() {
             </Button>
             <Dialog>
               <DialogTrigger>
-                  Don't click here
+                  Don&apos;t click here
               </DialogTrigger>
               <DialogContent className="min-w-[400px] max-w-[33vw]">
                 <DialogHeader>

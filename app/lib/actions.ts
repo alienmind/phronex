@@ -5,8 +5,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema } from '@/app/lib/schemas';
-import { z } from 'zod';
-const connectionPool = require('../../db');
+import { Project } from './definitions';
+import { addProject } from './data';
 
 /*
  * User authentication
@@ -80,22 +80,17 @@ export async function createProject(
   // Prepare data for insertion into the database
   const { project_name, project_start_date, project_end_date } = validatedFields.data;
 
-  // Insert data into the database
-  try {
-    await connectionPool.query({
-      text: "INSERT INTO projects (project_name, project_start_date, project_end_date) VALUES ($1, $2, $3)",
-      values: [project_name, project_start_date, project_end_date]
-    });
 
-  } catch (_error) {
-    // If a database error occurs, return a more specific error.
-    console.log("Database error: ", JSON.stringify(_error));
-    return {
-      message: 'Database Error: Failed to create project',
-    };
-  }
- 
-  await connectionPool.query(`COMMIT`);
+  const project = {
+    project_id: "",
+    project_name: project_name,
+    project_start_date: project_start_date,
+    project_end_date: project_end_date,
+    project_scope: ""
+  };
+
+  await addProject(project);
+
 
   // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/dashboard');
