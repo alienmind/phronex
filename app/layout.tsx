@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster"
 import '@/app/ui/global.css';
 import { roboto } from '@/app/ui/fonts';
 import { Metadata } from 'next';
+import { SessionProvider } from 'next-auth/react'
  
 export const metadata: Metadata = {
   title: 'Phronex Project Manager',
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${roboto.className} antialiased`}>
+        <SessionProvider>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -27,6 +29,7 @@ export default function RootLayout({
         {children}
         <Toaster/>
         </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

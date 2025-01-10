@@ -24,7 +24,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <SessionProvider>
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
@@ -38,7 +37,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </SidebarInset>
       </SidebarProvider>
-      </SessionProvider>
     </ThemeProvider>
   );
 }

@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import { authConfig } from './auth.config';
+import { authConfig } from '@/auth.config';
 import Credentials from 'next-auth/providers/credentials';
 // FIXME - better use - OAuth https://authjs.dev/getting-started/authentication/oauth
 import { z } from 'zod';
@@ -28,5 +28,6 @@ export const { auth, signIn, signOut } = NextAuth({
   ],
 });
 
+// These are required for Next.js 13+ App Router
 export const GET = auth;
 export const POST = auth;

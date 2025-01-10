@@ -48,7 +48,7 @@ function AboutPage() {
         <div className="flex flex-col items-center md:items-start justify-center gap-4">
 
         <Button asChild>
-          <a href="javascript:history.back()">Back</a>
+          <Link href="/login">Back</Link>
         </Button>
           </div>
         </div>
