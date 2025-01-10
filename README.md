@@ -106,9 +106,9 @@ TBD
 - [x] .. Login screen
 - [x] .. Form server action checks
 - [x] .. Create project modal & server action
+- [x] .. Create the actual data model DDLs and apply locally to postgresql
 - [ ] .. Projects dashboard
 - [ ] .. Project detail screen inc. metadata, scope, reporting
-- [ ] .. Create the actual data model DDLs and apply locally to postgresql
 - [ ] .. Implement update project details
 - [ ] .. Implement delete project details with confirmation dialog
 - [ ] .. Implement enroll in project button (and screen?)
@@ -117,11 +117,14 @@ TBD
 # Extras
 - [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for structured budget scaffolding based on scope text
 - [ ] .. Try to generate cost items based in the model output
-- [ ] .. Dark theme
+- [x] .. Dark theme
+- [ ] .. Doom
 
 ## Issues
+- [ ] .. Create project form is broken again
 - [ ] .. Create project form client validation (currently only in server)
 - [ ] .. Create project form server validation (toast should iterate over all errors)
+- [ ] .. Back button not working in About
 
 # Appendix
 
