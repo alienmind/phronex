@@ -1,5 +1,7 @@
+"use client"
 import Link from "next/link";
-
+//import { signOut, auth } from '@/auth'
+import { useSession, signOut } from "next-auth/react"
 import { Home, Search, Settings } from "lucide-react"
 
 import {
@@ -15,38 +17,32 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar"
 
-import { ModeToggle } from "@/app/ui/dashboard/modetoggle";
-const userEmail = ""; // FIXME - implement get user name
-
-async function handleSignOut() {
-  // FIXME - implement sign out
-  console.log("FIXME - implement get user name");
-  console.log("FIXME - implement sign out...");
-  await new Promise(resolve => setTimeout(resolve, 1000));
-}
-
-// Menu items.
-const items = [
-  {
-    title: "Dashboard",
-    url: "#",
-    icon: Home,
-  },
-  // FIXME - not implemented
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  // FIXME - not implemented
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-]
+import { ModeToggle } from "@/app/ui/modetoggle";
 
 export function AppSidebar() {
+
+  const { data: session, status } = useSession()
+
+  // Menu items.
+  const items = [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: Home,
+    },
+    // FIXME - not implemented
+    {
+      title: "Search",
+      url: "#",
+      icon: Search,
+    },
+    // FIXME - not implemented
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings,
+    },
+  ]
 
   return (
     <Sidebar className="align-center">
@@ -91,8 +87,11 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem className="flex-none">
-              <SidebarMenuButton className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
-                Sign out {userEmail}
+              <SidebarMenuButton 
+                onClick={() => signOut({redirect: true, callbackUrl: '/'})}
+                className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20"
+              >
+              Sign out - {session?.user?.email}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </div>

@@ -35,10 +35,10 @@ export function CardSkeleton() {
           <CardContent>
           </CardContent>
           <CardFooter>
-            <Button className="${shimmer} w-full m-2" variant="ghost" disabled>&nbsp;</Button>
-            <Button className="${shimmer} w-full m-2" variant="ghost" disabled>&nbsp;</Button>
-            <Button className="${shimmer} w-full m-2" variant="ghost" disabled>&nbsp;</Button>
-            <Button className="${shimmer} w-full m-2" variant="destructive">&nbsp;</Button>
+            <Button className=" w-full m-2" variant="ghost" disabled>&nbsp;</Button>
+            <Button className=" w-full m-2" variant="ghost" disabled>&nbsp;</Button>
+            <Button className=" w-full m-2" variant="ghost" disabled>&nbsp;</Button>
+            <Button className=" w-full m-2" variant="destructive">&nbsp;</Button>
           </CardFooter>
         </Card>
       </div>
@@ -46,7 +46,7 @@ export function CardSkeleton() {
   )
 }
 
-export function CardsWrapperSkeleton() {
+export function ProjectCardListSkeleton() {
   return (
     <>
       <CardSkeleton />

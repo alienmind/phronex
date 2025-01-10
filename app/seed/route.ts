@@ -1,5 +1,4 @@
-import bcrypt from 'bcrypt';
-//import { db } from '@vercel/postgres';
+'use server';
 const connectionPool = require('../../db');
 import {
   // New
@@ -53,21 +52,22 @@ async function seedProjects() {
 
 async function seedUsers() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
+  await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "pgcrypto"`);
+
   await connectionPool.query(`
     CREATE TABLE IF NOT EXISTS users (
       user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
+      encpassword TEXT NOT NULL
     );
   `);
 
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
-      const hashedPassword = await bcrypt.hash(user.password, 10);
       return await connectionPool.query(`
-        INSERT INTO users (user_id, name, email, password)
-        VALUES ('${user.user_id}', '${user.name}', '${user.email}', '${hashedPassword}')
+        INSERT INTO users (user_id, name, email, encpassword)
+        VALUES ('${user.user_id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4))))
         ON CONFLICT (user_id) DO NOTHING;
       `);
     }),

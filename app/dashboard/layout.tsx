@@ -1,11 +1,12 @@
 //export const experimental_ppr = true;
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
-import { AppSidebar } from '@/app/ui/dashboard/sidebar';
+import { AppSidebar } from '@/app/ui/sidebar';
 import { ThemeProvider } from "@/app/ui/theme-provider"
 import { Separator } from "@/components/ui/separator"
 import { Metadata } from 'next';
 import { CreateProjectModal } from "../ui/create-project-modal";
- 
+import { SessionProvider } from "next-auth/react";
+
 export const metadata: Metadata = {
   title: {
     template: '%s',
@@ -23,6 +24,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
+      <SessionProvider>
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
@@ -36,6 +38,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </SidebarInset>
       </SidebarProvider>
+      </SessionProvider>
     </ThemeProvider>
   );
 }

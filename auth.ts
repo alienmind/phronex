@@ -3,7 +3,6 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 // FIXME - better use - OAuth https://authjs.dev/getting-started/authentication/oauth
 import { z } from 'zod';
-import bcrypt from 'bcrypt';
 import { getUser } from '@/app/lib/data'
  
 export const { auth, signIn, signOut } = NextAuth({
@@ -17,10 +16,9 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
+          const user = await getUser(email, password);
           if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          return user;
         }
 
         console.log('Invalid credentials');

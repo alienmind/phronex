@@ -143,9 +143,11 @@ npx create-next-app@latest phronex --example "https://github.com/vercel/next-lea
 - PostgreSQL locally with docker-compose https://medium.com/@agusmahari/docker-how-to-install-postgresql-using-docker-compose-d646c793f216
 - PostgreSQL official docker image https://hub.docker.com/_/postgres
 - Dockerize NextJS app https://nextjs.org/docs/app/building-your-application/deploying#docker-image
+- NextJS tutorial with local database https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
 - How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
 - Hybrid form validation client & server in Next : https://dev.to/bookercodes/nextjs-form-validation-on-the-client-and-server-with-zod-lbc
 - Fix passing date with date picker to nextjs server action: https://www.youtube.com/watch?v=4d2g-yAD7xY
+- Properly manage passwords with PostgreSQL: https://www.postgresql.org/docs/8.3/pgcrypto.html
 
 ## Shadcn for premade UI components
 I've been adding shadcn premade components to the project, together with tailwindcss theming.
