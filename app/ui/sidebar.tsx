@@ -21,8 +21,6 @@ import { ModeToggle } from "@/app/ui/modetoggle";
 
 export function AppSidebar() {
 
-  const { data: session, status } = useSession()
-
   // Menu items.
   const items = [
     {
@@ -89,7 +87,7 @@ export function AppSidebar() {
             <SidebarMenuItem className="flex-none">
                 <form action={unauthenticate}>
                 <SidebarMenuButton className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
-                  Sign out - {session?.user?.email}
+                  Sign out
                 </SidebarMenuButton>
               </form>
             </SidebarMenuItem>
