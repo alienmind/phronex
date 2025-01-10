@@ -6,15 +6,27 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      let ret = false;
+      let redirect = false;
+
+      console.log("AUTH: " + JSON.stringify(auth) + " " + JSON.stringify(nextUrl));
       const isLoggedIn = !!auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
-      if (isOnDashboard) {
+
+      // All routes except login are protected
+      const isOnProtected = !(nextUrl.pathname.startsWith('/login'));
+
+      if (isOnProtected) {
         if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
+        else ret = false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl));
+        ret = true;
+        redirect = true;
       }
-      return true;
+      ret = true;
+
+      console.log("AUTH: ret=" + ret + " redirect=" + redirect + " auth=" + JSON.stringify(auth) + " nextUrl=" + JSON.stringify(nextUrl));
+      if (redirect) return Response.redirect(new URL('/dashboard', nextUrl));
+      return ret;
     },
   },
   providers: [], // Add providers with an empty array for now

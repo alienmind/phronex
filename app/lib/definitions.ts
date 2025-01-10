@@ -6,8 +6,57 @@ export type User = {
   id: string;
   name: string;
   email: string;
-  password: string;
+  encpassword: string;
+  emailVerified: Date;
 };
+
+export type Cost = {
+  cost_id: string;
+  cost_name: string;
+  category_id: string;
+};
+
+export type Person = {
+  person_id: string;
+  person_name: string;
+  person_surname: string;
+};
+
+export type ProjectCostPeriod = {
+  project_id: string;
+  cost_id: string;
+};
+
+export type ProjectPersonPeriod = {
+  project_id: string;
+  cost_id: string;
+  estimate: number;
+  real: number;
+  period_start: Date;
+  period_end: Date;
+};
+
+export type ProjectPersonRole = {
+  project_id: string;
+  person_id: string;
+  role_id: string;
+};
+
+export type Project = {
+  project_id: string;
+  project_creation_date: Date;
+  project_name: string;
+  project_start_date: Date;
+  project_end_date: Date;
+  project_scope: string;
+};
+
+export type Role = {
+  role_id: string;
+  role_name: string;
+};
+
+/*
 
 export type Customer = {
   id: string;
@@ -96,3 +145,5 @@ export type InvoicePerCustomer = {
   email : string,
   image_url : string,
 };
+
+*/

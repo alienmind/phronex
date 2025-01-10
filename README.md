@@ -148,6 +148,7 @@ npx create-next-app@latest phronex --example "https://github.com/vercel/next-lea
 - Hybrid form validation client & server in Next : https://dev.to/bookercodes/nextjs-form-validation-on-the-client-and-server-with-zod-lbc
 - Fix passing date with date picker to nextjs server action: https://www.youtube.com/watch?v=4d2g-yAD7xY
 - Properly manage passwords with PostgreSQL: https://www.postgresql.org/docs/8.3/pgcrypto.html
+- Fix signIn / signOut in next-auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f
 
 ## Shadcn for premade UI components
 I've been adding shadcn premade components to the project, together with tailwindcss theming.

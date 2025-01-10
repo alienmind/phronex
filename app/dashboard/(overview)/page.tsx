@@ -3,16 +3,18 @@ import { ProjectCardList, ProjectCard } from '@/app/ui/project-cards';
 
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import { auth, signOut } from "@/auth" // adding { auth }
 
 export const metadata: Metadata = {
   title: 'Dashboard',
 }; 
 
 export default async function Page() {
+  const session = await auth() ;
   return (
     <>
     <main>
-      Dashboard
+      Dashboard for {session?.user?.email}
     </main>
     </>
   );

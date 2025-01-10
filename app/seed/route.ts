@@ -10,9 +10,12 @@ import {
   projects,
   projectCostPeriods,
   projectPersonRoles,
-} from '../lib/load-data';
+} from '@/app/lib/load-data';
 
 async function dropTables() {
+  //await connectionPool.query(`DROP TABLE IF EXISTS verification_token CASCADE`);
+  //await connectionPool.query(`DROP TABLE IF EXISTS accounts CASCADE`);
+  //await connectionPool.query(`DROP TABLE IF EXISTS sessions CASCADE`);
   await connectionPool.query(`DROP TABLE IF EXISTS users CASCADE`);
   await connectionPool.query(`DROP TABLE IF EXISTS role CASCADE`);
   await connectionPool.query(`DROP TABLE IF EXISTS category CASCADE`);
@@ -22,6 +25,63 @@ async function dropTables() {
   await connectionPool.query(`DROP TABLE IF EXISTS project_cost_period CASCADE`);
   await connectionPool.query(`DROP TABLE IF EXISTS project_person_role CASCADE`);
 }
+
+/*
+async function seedAuthAdapterTables() {
+  await connectionPool.query(`
+    CREATE TABLE verification_token
+    (
+      identifier TEXT NOT NULL,
+      expires TIMESTAMPTZ NOT NULL,
+      token TEXT NOT NULL,
+
+      PRIMARY KEY (identifier, token)
+    );
+  `);
+
+  await connectionPool.query(`
+    CREATE TABLE accounts
+    (
+      id SERIAL,
+      userId INTEGER NOT NULL,
+      type VARCHAR(255) NOT NULL,
+      provider VARCHAR(255) NOT NULL,
+      providerAccountId VARCHAR(255) NOT NULL,
+      refresh_token TEXT,
+      access_token TEXT,
+      expires_at BIGINT,
+      id_token TEXT,
+      scope TEXT,
+      session_state TEXT,
+      token_type TEXT,
+      PRIMARY KEY (id)
+    );
+  `);
+
+  await connectionPool.query(`
+    CREATE TABLE sessions
+    (
+      id SERIAL,
+      userId INTEGER NOT NULL,
+      expires TIMESTAMPTZ NOT NULL,
+      sessionToken VARCHAR(255) NOT NULL,
+      PRIMARY KEY (id)
+    );
+  `);
+
+  await connectionPool.query(`
+    CREATE TABLE users
+    (
+      id SERIAL,
+      name VARCHAR(255),
+      email VARCHAR(255),
+      emailVerified TIMESTAMPTZ,
+      image TEXT,
+      PRIMARY KEY (id)
+    );
+  `);
+}
+*/
 
 async function seedProjects() {
   await connectionPool.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
@@ -59,7 +119,8 @@ async function seedUsers() {
       user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
-      encpassword TEXT NOT NULL
+      encpassword TEXT NOT NULL,
+      emailVerified TIMESTAMP
     );
   `);
 
@@ -67,7 +128,7 @@ async function seedUsers() {
     users.map(async (user) => {
       return await connectionPool.query(`
         INSERT INTO users (user_id, name, email, encpassword)
-        VALUES ('${user.user_id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4)))
+        VALUES ('${user.user_id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4), current_timestamp))
         ON CONFLICT (user_id) DO NOTHING;
       `);
     }),
@@ -232,6 +293,7 @@ export async function GET() {
     await dropTables();
 
     // First seed the independent tables
+    //await seedAuthAdapterTables();
     await seedUsers();
     await seedPersons();
     await seedRoles();

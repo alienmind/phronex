@@ -1,8 +1,8 @@
 "use client"
-import Link from "next/link";
-//import { signOut, auth } from '@/auth'
-import { useSession, signOut } from "next-auth/react"
-import { Home, Search, Settings } from "lucide-react"
+import Link from 'next/link';
+import { useSession } from 'next-auth/react'
+import { Home, Search, Settings } from 'lucide-react'
+import { unauthenticate } from '@/app/lib/actions'
 
 import {
   Sidebar,
@@ -87,12 +87,11 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem className="flex-none">
-              <SidebarMenuButton 
-                onClick={() => signOut({redirect: true, callbackUrl: '/'})}
-                className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20"
-              >
-              Sign out - {session?.user?.email}
-              </SidebarMenuButton>
+                <form action={unauthenticate}>
+                <SidebarMenuButton className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                  Sign out - {session?.user?.email}
+                </SidebarMenuButton>
+              </form>
             </SidebarMenuItem>
           </div>
         </SidebarMenu>
