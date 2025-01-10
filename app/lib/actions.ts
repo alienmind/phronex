@@ -82,6 +82,7 @@ export async function createProject(
       text: "INSERT INTO projects (project_name, project_start_date, project_end_date) VALUES ($1, $2, $3)",
       values: [project_name, project_start_date, project_end_date]
     });
+
   } catch (_error) {
     // If a database error occurs, return a more specific error.
     console.log("Database error: ", JSON.stringify(_error));
@@ -90,6 +91,8 @@ export async function createProject(
     };
   }
  
+  await connectionPool.query(`COMMIT`);
+
   // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/dashboard');
   redirect('/dashboard');

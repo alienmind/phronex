@@ -121,7 +121,7 @@ TBD
 - [ ] .. Doom
 
 ## Issues
-- [ ] .. Create project form is broken again
+- [x] .. Create project form is broken again
 - [ ] .. Create project form client validation (currently only in server)
 - [ ] .. Create project form server validation (toast should iterate over all errors)
 - [ ] .. Back button not working in About
