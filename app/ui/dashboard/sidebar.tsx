@@ -51,9 +51,9 @@ export function AppSidebar() {
   return (
     <Sidebar className="align-center">
       <SidebarHeader>
-        <Link href="/dashboard">
-          <img src="/logo.png" alt="logo" className="h-10 w-10 mr-2 rounded-xl" />
-          <span className="text-left text-xl font-bold">Phronex</span>
+        <Link href="/dashboard" className="flex items-center gap-2 px-2">
+          <img src="/logo.png" alt="logo" className="h-10 w-10 rounded-xl" />
+          <span className="text-xl font-bold">Phronex</span>
         </Link>
       </SidebarHeader>
       <SidebarContent>
@@ -65,9 +65,9 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
+                  <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                    <a href={item.url} className="flex items-center gap-2">
+                      <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
@@ -79,19 +79,23 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <ModeToggle />
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Link href="/about">About</Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton>Sign out {userEmail}</SidebarMenuButton>
-          </SidebarMenuItem>
+          <div className="flex items-center gap-2 px-2">
+            <SidebarMenuItem className="flex-none">
+              <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                <ModeToggle />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem className="flex-none">
+              <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                <Link href="/about">About</Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem className="flex-none">
+              <SidebarMenuButton className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                Sign out {userEmail}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </div>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
