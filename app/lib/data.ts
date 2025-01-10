@@ -3,9 +3,19 @@ import type { User } from '@/app/lib/definitions';
 //import { sql } from '@vercel/postgres';
 const connectionPool = require('../../db');
 
-export async function getUser(email: string): Promise<User | undefined> {
+//
+// Authentication SQL flow with PostgreSQL (the right way)
+// 1) Set up the database (see load-data.ts) with the extension pgcrypto
+//   CREATE EXTENSION pgcrypto;
+// 2) The following command encodes a password "mypasss" with a salt of 4 rounds of blowfish (increase to 8 in prod)
+//   SELECT crypt('mypass', gen_salt('bf', 4));
+// 3) The following insert will store the encoded password in the database 
+//   INSERT INTO users (user_id,enc_pass) VALUES (1,crypt('mypass', gen_salt('bf', 4)));
+// 4) The following query will check if the password is correct
+//   SELECT * FROM users WHERE email='test@test.com' and encpass = crypt('plain_password', encpass)
+export async function getUser(email: string, password: string): Promise<User | undefined> {
   try {
-    const user = await connectionPool.query(`SELECT * FROM users WHERE email='${email}'`);
+    const user = await connectionPool.query(`SELECT * FROM users WHERE email='${email}' and encpassword = crypt('${password}', encpassword)`);
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);

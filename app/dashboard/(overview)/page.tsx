@@ -1,32 +1,37 @@
-/*
-import CardWrapper from '@/app/ui/projects/cardlist';
-import RevenueChart from '@/app/ui/projects/revenue-chart';
-import LatestInvoices from '@/app/ui/projects/latest-invoices';
-import { CardsWrapperSkeleton CardSkeleton } from '@/app/ui/skeletons';
-*/
+import { ProjectCardListSkeleton } from '@/app/ui/skeletons';
+import { ProjectCardList, ProjectCard } from '@/app/ui/project-cards';
 
-import { roboto } from '@/app/ui/fonts';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
+import { auth, signOut } from "@/auth" // adding { auth }
 
 export const metadata: Metadata = {
   title: 'Dashboard',
-};
- 
+}; 
+
 export default async function Page() {
+  const session = await auth() ;
   return (
     <>
     <main>
-      Dashboard
+      Dashboard for {session?.user?.email}
     </main>
     </>
   );
 }
 
 /*
+export default async function Page() {
+  return (
+    <main>
     <div className="float-left flex flex-1 gap-4 p-4 pt-0">
     <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-1 lg:grid-rows-3 gap-8 xl:gap-12">
-    <Suspense fallback={<CardsWrapperSkeleton />}>
-      <CardsWrapper/>
+    <Suspense fallback={<ProjectCardListSkeleton />}>
+    <ProjectCardList/>
     </Suspense>
+    </div>
+    </div>
+    </main>
+  );
+}
 */

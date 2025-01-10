@@ -1,11 +1,12 @@
 //export const experimental_ppr = true;
+import AuthWrapper from '@/app/auth_wrapper';
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar"
-import { AppSidebar } from '@/app/ui/dashboard/sidebar';
+import { AppSidebar } from '@/app/ui/sidebar';
 import { ThemeProvider } from "@/app/ui/theme-provider"
 import { Separator } from "@/components/ui/separator"
 import { Metadata } from 'next';
 import { CreateProjectModal } from "../ui/create-project-modal";
- 
+
 export const metadata: Metadata = {
   title: {
     template: '%s',
@@ -17,12 +18,13 @@ export const metadata: Metadata = {
  
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
+    <AuthWrapper>
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
     >
+      {/*       disableTransitionOnChange */}
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
@@ -37,5 +39,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </SidebarInset>
       </SidebarProvider>
     </ThemeProvider>
+    </AuthWrapper>
   );
 }

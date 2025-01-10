@@ -143,9 +143,15 @@ npx create-next-app@latest phronex --example "https://github.com/vercel/next-lea
 - PostgreSQL locally with docker-compose https://medium.com/@agusmahari/docker-how-to-install-postgresql-using-docker-compose-d646c793f216
 - PostgreSQL official docker image https://hub.docker.com/_/postgres
 - Dockerize NextJS app https://nextjs.org/docs/app/building-your-application/deploying#docker-image
+- NextJS tutorial with local database https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
 - How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
 - Hybrid form validation client & server in Next : https://dev.to/bookercodes/nextjs-form-validation-on-the-client-and-server-with-zod-lbc
 - Fix passing date with date picker to nextjs server action: https://www.youtube.com/watch?v=4d2g-yAD7xY
+- Properly manage passwords with PostgreSQL: https://www.postgresql.org/docs/8.3/pgcrypto.html
+- Fix signIn / signOut in next-auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f
+- Great article on next auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f 
+- Adding OAuth authentication with nextauth.js: https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h
+- Migrating to latest Next JS Auth https://authjs.dev/getting-started/migrating-to-v5#authenticating-server-side and https://authjs.dev/concepts/session-strategies
 
 ## Shadcn for premade UI components
 I've been adding shadcn premade components to the project, together with tailwindcss theming.
@@ -190,6 +196,37 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
 ## Last minute cleanup things to not forget
-[ ] Hero images
-[ ] Favicon
-[ ] Cleanup secrets?
+- [ ] Hero images
+- [ ] Favicon
+- [ ] Cleanup secrets?
+
+
+## Install on AWS EC2
+1. Set up a free tier EC2 instance
+2. Set up an ALB with a target group pointing to the EC2 instance, port 3000
+3. Install all software
+```bash
+sudo yum install docker python3-pip git -y
+sudo pip install docker-compose
+sudo usermod -a -G docker ec2-user
+sudo systemctl enable docker.service
+sudo systemctl start docker.service
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+. ~/.bashrc
+nvm install v20.11.1
+npm install -g pnpm@latest
+sudo npm install -g pm2
+```
+
+4. Set up .env
+5. Start posgresql with docker
+
+```bash
+docker compose up -d
+```
+Additional steps (potentially):
+10. Set up a security group for the ALB with HTTP/HTTPS access
+11. Set up a security group for the EC2 instance with SSH access
+12. Set up a DNS name for the ALB in Route 53
+13. Set up a certificate in ACM for the domain name
+...

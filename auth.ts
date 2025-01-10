@@ -3,10 +3,13 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 // FIXME - better use - OAuth https://authjs.dev/getting-started/authentication/oauth
 import { z } from 'zod';
-import bcrypt from 'bcrypt';
-import { getUser } from '@/app/lib/data'
+import { User } from '@/app/lib/definitions';
+
+// FIXME - this needs to be sorted out
+// Avoid server only dependency from client
+//import { getUser } from '@/app/lib/data';
  
-export const { auth, signIn, signOut } = NextAuth({
+export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -17,15 +20,44 @@ export const { auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
+          // Mock login
+          //const user = await getUser(email, password);
+          const user = {
+            id: '1',
+            name: 'Jaime Lopez',
+            email: 'jaime.lopez@gmail.com',
+            encpassword: '$2a$04$G7t5TzOwenlV2cxjTD9p7eUHIG.GfMlort2LGuzYiFCOdTHtPjzPy',
+            emailVerified: new Date(),
+          }
           if (!user) return null;
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          return user as User;
         }
-
         console.log('Invalid credentials');
         return null;
       },
     }),
   ],
+  session: {
+    strategy: 'jwt', // Alternative is database but jwt is easier to manage as will be just a cookie
+  },
+  secret: process.env.AUTH_SECRET,
+  callbacks: {
+    async session({ session, token, user }) {
+      session.user = token.user as User
+      console.log('session: ', JSON.stringify(session));
+      return session;
+    },
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.user = user;
+      }
+      console.log('token: ', JSON.stringify(token));
+      return token;
+    },
+  },
 });
+
+/*
+export const GET = auth;
+export const POST = auth;
+*/
