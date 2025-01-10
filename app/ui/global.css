@@ -51,7 +51,12 @@ input[type='number']::-webkit-outer-spin-button {
         --sidebar-accent: 240 4.8% 95.9%;
         --sidebar-accent-foreground: 240 5.9% 10%;
         --sidebar-border: 220 13% 91%;
-        --sidebar-ring: 142 71% 45%
+        --sidebar-ring: 142 71% 45%;
+        --button-background: 100 50% 45%;
+        --button-foreground: 0 0% 98%;
+        --button-hover: 100 50% 40%;
+        --button-secondary-background: 142 30% 96%;
+        --button-secondary-hover: 142 35% 92%;
   }
   .dark {
         --background: 0 0% 3.9%;
@@ -85,6 +90,23 @@ input[type='number']::-webkit-outer-spin-button {
         --sidebar-accent: 240 3.7% 15.9%;
         --sidebar-accent-foreground: 240 4.8% 95.9%;
         --sidebar-border: 240 3.7% 15.9%;
-        --sidebar-ring: 142 71% 45%
+        --sidebar-ring: 142 71% 45%;
+        --button-background: 142 50% 45%;
+        --button-foreground: 0 0% 98%;
+        --button-hover: 142 50% 50%;
+        --button-secondary-background: 142 30% 20%;
+        --button-secondary-hover: 142 35% 25%;
+  }
+}
+
+@layer components {
+  .button {
+    @apply bg-[hsl(var(--button-background))] text-[hsl(var(--button-foreground))] 
+    hover:bg-[hsl(var(--button-hover))] transition-colors;
+  }
+  
+  .button-secondary {
+    @apply bg-[hsl(var(--button-secondary-background))] text-[hsl(var(--primary))]
+    hover:bg-[hsl(var(--button-secondary-hover))] transition-colors;
   }
 }

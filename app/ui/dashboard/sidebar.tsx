@@ -79,21 +79,23 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
-              <ModeToggle />
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
-              <Link href="/about">About</Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
-              Sign out {userEmail}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <div className="flex items-center gap-2 px-2">
+            <SidebarMenuItem className="flex-none">
+              <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                <ModeToggle />
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem className="flex-none">
+              <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                <Link href="/about">About</Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem className="flex-none">
+              <SidebarMenuButton className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
+                Sign out {userEmail}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </div>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
