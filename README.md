@@ -108,23 +108,25 @@ TBD
 - [x] .. Create project modal & server action
 - [x] .. Create the actual data model DDLs and apply locally to postgresql
 - [ ] .. Projects dashboard
+- [ ] .. Stop using static data and use actual database for the dashboard
 - [ ] .. Project detail screen inc. metadata, scope, reporting
 - [ ] .. Implement update project details
 - [ ] .. Implement delete project details with confirmation dialog
-- [ ] .. Implement enroll in project button (and screen?)
 - [ ] .. Implement registration screen
 
 # Extras
 - [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for structured budget scaffolding based on scope text
 - [ ] .. Try to generate cost items based in the model output
+- [ ] .. Implement enroll in project button (and screen?)
 - [x] .. Dark theme
-- [ ] .. Doom
+- [x] .. Doom
 
 ## Issues
 - [x] .. Create project form is broken again
 - [ ] .. Create project form client validation (currently only in server)
 - [ ] .. Create project form server validation (toast should iterate over all errors)
-- [ ] .. Back button not working in About
+- [x] .. Back button not working in About
+- [ ] .. It will be necessary to do an export of the data to a CSV file instead of using seed, as building the artifacts requires access to the tables
 
 # Appendix
 
@@ -152,6 +154,7 @@ npx create-next-app@latest phronex --example "https://github.com/vercel/next-lea
 - Great article on next auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f 
 - Adding OAuth authentication with nextauth.js: https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h
 - Migrating to latest Next JS Auth https://authjs.dev/getting-started/migrating-to-v5#authenticating-server-side and https://authjs.dev/concepts/session-strategies
+- Fix breaking changes on NextJS url params https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change
 
 ## Shadcn for premade UI components
 I've been adding shadcn premade components to the project, together with tailwindcss theming.

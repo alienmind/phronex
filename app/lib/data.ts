@@ -1,4 +1,4 @@
-import type { User } from '@/app/lib/definitions';
+import type { ProjectWithPersonRole, User, Project } from '@/app/lib/definitions';
 
 //import { sql } from '@vercel/postgres';
 const connectionPool = require('../../db');
@@ -22,6 +22,53 @@ export async function getUser(email: string, password: string): Promise<User | u
     throw new Error('Failed to fetch user.');
   }
 }
+
+export async function addProject(project: Project) {
+  // Insert data into the database
+  try {
+    await connectionPool.query({
+      text: "INSERT INTO projects (project_name, project_start_date, project_end_date) VALUES ($1, $2, $3)",
+      values: [project.project_name, project.project_start_date, project.project_end_date]
+    });
+
+  } catch (error) {
+    // If a database error occurs, return a more specific error.
+    console.log("Database error: ", JSON.stringify(error));
+    return {
+      message: 'Database Error: Failed to create project',
+    };
+  }
+ 
+  await connectionPool.query(`COMMIT`);
+}
+
+
+export async function fetchMostRecentProjects(limit?: number) {
+  try {
+    const query = `
+    SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
+       project_scope, person_name, person_surname, role_description
+    FROM projects a
+    LEFT OUTER JOIN project_person_role b on a.project_id = b.project_id
+    LEFT OUTER JOIN role c on b.role_id = c.role_id
+    LEFT OUTER JOIN person d on b.person_id = d.person_id
+    WHERE role_description = 'Project Manager'
+    ORDER BY a.project_start_date DESC
+    ${limit ? `LIMIT ${limit}` : ''}
+    `;
+
+    const data = await connectionPool.query(query);
+
+    const mostRecentProjects = data.rows.map((project: ProjectWithPersonRole) => ({
+      ...project,
+    }));
+    return mostRecentProjects;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch most recent projects.');
+  }
+}
+
 
 /*
 

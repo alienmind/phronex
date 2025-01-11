@@ -1,7 +1,5 @@
-// This file contains type definitions for your data.
-// It describes the shape of the data, and what data type each property should accept.
-// For simplicity of teaching, we're manually defining these types.
-// However, these types are generated automatically if you're using an ORM such as Prisma.
+// This file contains type definitions for the data.
+// Could be generated automatically if using an ORM such as Prisma.
 export type User = {
   id: string;
   name: string;
@@ -16,6 +14,11 @@ export type Cost = {
   category_id: string;
 };
 
+export type Category = {
+  category_id: string;
+  category_name: string;
+};
+
 export type Person = {
   person_id: string;
   person_name: string;
@@ -25,6 +28,10 @@ export type Person = {
 export type ProjectCostPeriod = {
   project_id: string;
   cost_id: string;
+  estimate: number;
+  real: number;
+  period_start: Date;
+  period_end: Date;
 };
 
 export type ProjectPersonPeriod = {
@@ -44,16 +51,28 @@ export type ProjectPersonRole = {
 
 export type Project = {
   project_id: string;
-  project_creation_date: Date;
+  project_creation_date?: Date | undefined;
   project_name: string;
-  project_start_date: Date;
-  project_end_date: Date;
-  project_scope: string;
+  project_start_date?: Date | undefined;
+  project_end_date?: Date | undefined;
+  project_scope?: string | undefined;
 };
 
 export type Role = {
   role_id: string;
   role_name: string;
+};
+
+export type ProjectWithPersonRole = {
+  project_id: string;
+  project_creation_date?: Date;
+  project_name: string;
+  project_start_date: Date;
+  project_end_date: Date;
+  project_scope: string;
+  person_name: string;
+  person_surname: string;
+  role_description: string;
 };
 
 /*

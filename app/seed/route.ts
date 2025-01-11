@@ -10,7 +10,7 @@ import {
   projects,
   projectCostPeriods,
   projectPersonRoles,
-} from '@/app/lib/load-data';
+} from '@/app/seed/load-data';
 
 async function dropTables() {
   //await connectionPool.query(`DROP TABLE IF EXISTS verification_token CASCADE`);
@@ -98,16 +98,22 @@ async function seedProjects() {
 
   const insertedProjects = await Promise.all(
     projects.map(async (project) => {
-      return await connectionPool.query(`
-        INSERT INTO projects (project_id, project_name, project_start_date, project_end_date, project_scope)
-        VALUES ('${project.project_id}', '${project.project_name}', '${project.project_start_date}', '${project.project_end_date}', '${project.project_scope}')
-        ON CONFLICT (project_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query({
+          text: `INSERT INTO projects (project_id, project_creation_date, project_name, project_start_date, project_end_date, project_scope)
+                 VALUES ($1, current_timestamp, $2, $3, $4, $5)
+                 ON CONFLICT (project_id) DO NOTHING`,
+          values: [project.project_id, project.project_name, project.project_start_date, project.project_end_date, project.project_scope]
+        });
+      } catch (error) {
+        console.error('Failed to insert project:', JSON.stringify(project, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
   return insertedProjects;
-
 }
 
 async function seedUsers() {
@@ -116,7 +122,7 @@ async function seedUsers() {
 
   await connectionPool.query(`
     CREATE TABLE IF NOT EXISTS users (
-      user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
       encpassword TEXT NOT NULL,
@@ -126,11 +132,17 @@ async function seedUsers() {
 
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
-      return await connectionPool.query(`
-        INSERT INTO users (user_id, name, email, encpassword)
-        VALUES ('${user.user_id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4), current_timestamp))
-        ON CONFLICT (user_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query(`
+          INSERT INTO users (id, name, email, encpassword, emailVerified)
+          VALUES ('${user.id}', '${user.name}', '${user.email}', crypt('${user.password}', gen_salt('bf',4)), current_timestamp)
+          ON CONFLICT (id) DO NOTHING;
+        `);
+      } catch (error) {
+        console.error('Failed to insert user:', JSON.stringify(user, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
@@ -148,11 +160,17 @@ async function seedRoles() {
 
   const insertedRoles = await Promise.all(
     roles.map(async (role) => {
-      return await connectionPool.query(`
-        INSERT INTO role (role_id, role_description)
-        VALUES ('${role.role_id}', '${role.role_description}')
-        ON CONFLICT (role_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query(`
+          INSERT INTO role (role_id, role_description)
+          VALUES ('${role.role_id}', '${role.role_name}')
+          ON CONFLICT (role_id) DO NOTHING;
+        `);
+      } catch (error) {
+        console.error('Failed to insert role:', JSON.stringify(role, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
@@ -170,11 +188,17 @@ async function seedCategories() {
 
   const insertedCategories = await Promise.all(
     categories.map(async (category) => {
-      return await connectionPool.query(`
-        INSERT INTO category (category_id, category_name)
-        VALUES ('${category.category_id}', '${category.category_name}')
-        ON CONFLICT (category_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query(`
+          INSERT INTO category (category_id, category_name)
+          VALUES ('${category.category_id}', '${category.category_name}')
+          ON CONFLICT (category_id) DO NOTHING;
+        `);
+      } catch (error) {
+        console.error('Failed to insert category:', JSON.stringify(category, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
@@ -194,11 +218,17 @@ async function seedCosts() {
 
   const insertedCosts = await Promise.all(
     costs.map(async (cost) => {
-      return await connectionPool.query(`
-        INSERT INTO cost (cost_id, cost_name, category_id)
-        VALUES ('${cost.cost_id}', '${cost.cost_name}', '${cost.category_id}')
-        ON CONFLICT (cost_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query(`
+          INSERT INTO cost (cost_id, cost_name, category_id)
+          VALUES ('${cost.cost_id}', '${cost.cost_name}', '${cost.category_id}')
+          ON CONFLICT (cost_id) DO NOTHING;
+        `);
+      } catch (error) {
+        console.error('Failed to insert cost:', JSON.stringify(cost, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
@@ -221,18 +251,26 @@ async function seedProjectCostPeriods() {
     );
   `);
 
-  const insertedProjectCosts = await Promise.all(
+  const insertedProjectCostPeriods = await Promise.all(
     projectCostPeriods.map(async (period) => {
-      return await connectionPool.query(`
-        INSERT INTO project_cost_period (project_id, cost_id, estimate, real, period_start, period_end)
-        VALUES ('${period.project_id}', '${period.cost_id}', ${period.estimate}, ${period.real || 'NULL'}, 
-                '${period.period_start}', '${period.period_end}')
-        ON CONFLICT (project_id, cost_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query({
+          text: `
+          INSERT INTO project_cost_period (project_id, cost_id, estimate, real, period_start, period_end)
+          VALUES ($1,$2,$3,$4,$5,$6)
+          ON CONFLICT (project_id, cost_id) DO NOTHING;
+          `,
+          values: [period.project_id, period.cost_id, period.estimate, period.real, period.period_start, period.period_end]
+        });
+      } catch (error) {
+        console.error('Failed to insert project cost period:', JSON.stringify(period, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
-  return insertedProjectCosts;
+  return insertedProjectCostPeriods;
 }
 
 async function seedProjectPersonRoles() {
@@ -251,11 +289,17 @@ async function seedProjectPersonRoles() {
 
   const insertedProjectPersonRoles = await Promise.all(
     projectPersonRoles.map(async (assignment) => {
-      return await connectionPool.query(`
-        INSERT INTO project_person_role (project_id, person_id, role_id)
-        VALUES ('${assignment.project_id}', '${assignment.person_id}', '${assignment.role_id}')
-        ON CONFLICT (project_id, person_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query(`
+          INSERT INTO project_person_role (project_id, person_id, role_id)
+          VALUES ('${assignment.project_id}', '${assignment.person_id}', '${assignment.role_id}')
+          ON CONFLICT (project_id, person_id) DO NOTHING;
+        `);
+      } catch (error) {
+        console.error('Failed to insert project person role:', JSON.stringify(assignment, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 
@@ -274,11 +318,17 @@ async function seedPersons() {
 
   const insertedPersons = await Promise.all(
     persons.map(async (person) => {
-      return await connectionPool.query(`
-        INSERT INTO person (person_id,person_name, person_surname)
-        VALUES ('${person.person_id}', '${person.person_name}', '${person.person_surname}')
-        ON CONFLICT (person_id) DO NOTHING;
-      `);
+      try {
+        return await connectionPool.query(`
+          INSERT INTO person (person_id, person_name, person_surname)
+          VALUES ('${person.person_id}', '${person.person_name}', '${person.person_surname}')
+          ON CONFLICT (person_id) DO NOTHING;
+        `);
+      } catch (error) {
+        console.error('Failed to insert person:', JSON.stringify(person, null, 2));
+        console.error('Error:', error);
+        throw error;
+      }
     }),
   );
 

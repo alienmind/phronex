@@ -3,6 +3,15 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react'
 import { Home, Search, Settings } from 'lucide-react'
 import { unauthenticate } from '@/app/lib/actions'
+import { usePathname } from 'next/navigation';
+import {
+  HomeIcon,
+  FolderIcon,
+  UsersIcon,
+  UserGroupIcon,
+  BanknotesIcon,
+} from '@heroicons/react/24/outline';
+import clsx from 'clsx';
 
 import {
   Sidebar,
@@ -20,27 +29,36 @@ import {
 import { ModeToggle } from "@/app/ui/modetoggle";
 
 export function AppSidebar() {
+  const pathname = usePathname();
 
-  // Menu items.
+  // Menu items with their respective icons and URLs
   const items = [
     {
-      title: "Dashboard",
-      url: "#",
-      icon: Home,
+      title: "Home",
+      url: "/dashboard",
+      icon: HomeIcon,
     },
-    // FIXME - not implemented
     {
-      title: "Search",
-      url: "#",
-      icon: Search,
+      title: "Projects",
+      url: "/dashboard/projects",
+      icon: FolderIcon,
     },
-    // FIXME - not implemented
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
+      title: "People",
+      url: "/dashboard/people",
+      icon: UsersIcon,
     },
-  ]
+    {
+      title: "Roles",
+      url: "/dashboard/roles",
+      icon: UserGroupIcon,
+    },
+    {
+      title: "Cost Categories",
+      url: "/dashboard/costs",
+      icon: BanknotesIcon,
+    },
+  ];
 
   return (
     <Sidebar className="align-center">
@@ -51,7 +69,6 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        { /* Menu group */}
         <SidebarGroup>
           <SidebarGroupLabel>
           </SidebarGroupLabel>
@@ -59,11 +76,19 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20">
-                    <a href={item.url} className="flex items-center gap-2">
+                  <SidebarMenuButton 
+                    asChild 
+                    className={clsx(
+                      "hover:bg-emerald-800/20 dark:hover:bg-emerald-800/20 w-full",
+                      {
+                        'bg-emerald-800/10 dark:bg-emerald-800/30': pathname === item.url,
+                      }
+                    )}
+                  >
+                    <Link href={item.url} className="flex items-center gap-2 p-2">
                       <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

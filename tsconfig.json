@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/lib/load-data.ts",
+    "app/seed/load-data.ts",
     "scripts/seed.js"
 , "app/page.tsx.old", "app/ui/date-picker.ts.orig", "app/api/auth/signin/page.tsx.old"  ],
   "exclude": ["node_modules"]
