@@ -97,6 +97,24 @@ export async function fetchMostRecentProjects(limit?: number) {
   }
 }
 
+export async function fetchProjectById(id: string) {
+  try {
+    const query = `
+      SELECT p.*, 
+             person.person_name, 
+             person.person_surname
+      FROM projects p
+      LEFT JOIN person ON p.project_manager_id = person.person_id
+      WHERE p.project_id = $1
+    `;
+    
+    const result = await connectionPool.query(query, [id]);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project.');
+  }
+}
 
 /*
 
@@ -319,5 +337,4 @@ export async function fetchFilteredCustomers(query: string) {
     throw new Error('Failed to fetch customer table.');
   }
 }
-
 */

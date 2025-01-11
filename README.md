@@ -129,7 +129,7 @@ project-root/
 - [x] .. Create the actual data model DDLs and apply locally to postgresql
 - [x] .. Projects dashboard
 - [x] .. Stop using static data and use actual database for the dashboard
-- [ ] .. Add a mandatory project manager
+- [x] .. Add a mandatory project manager
 - [ ] .. Project detail screen inc. metadata, scope, reporting
 - [ ] .. Implement update project details
 - [ ] .. Implement delete project details with confirmation dialog
