@@ -68,9 +68,23 @@ export function ProjectCard (
     console.log("Delete project with id: " + id);
   }
 
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData('text/plain', id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <>
-      <div className="w-[300px]" >
+      <div 
+        className="w-[300px] cursor-move" 
+        draggable="true"
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
         <Card className="w-full">
           <CardHeader className="bg-emerald-50 dark:bg-emerald-950/30 border-b border-emerald-100 dark:border-emerald-900">
             <CardTitle className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
