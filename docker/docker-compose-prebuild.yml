@@ -1,6 +1,6 @@
 # This docker-compose is required as a prebuilding step
 # It will just simply bring up postgresql running against localhost
-
+# to make it accessible for the builder image
 services:
   postgres:
     image: postgres:14-alpine
@@ -9,4 +9,4 @@ services:
     volumes:
       - ~/data/postgres:/var/lib/postgresql/data
     env_file:
-      - .env.prebuild
+      - env.prebuild
