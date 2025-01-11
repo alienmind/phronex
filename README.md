@@ -82,13 +82,33 @@ Or simply:
 # Instructions (AWS)
 TBD
 
+# Folder structure
+
+project-root/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/
+│   │   ├── (overview)/
+│   │   ├── api/
+│   │   ├── dashboard/
+│   │   ├── lib/
+│   │   ├── ui/
+│   │   └── ...
+│   ├── components/
+│   │   └── ui/
+│   └── lib/
+├── public/
+├── next.config.js
+├── package.json
+└── tsconfig.json
+
 # TODO list (high level)
 - [x] Set up project on Github
 - [x] High level solution architecture and navigation design
 - [x] Decide tech stack (with reasoned defaults)
 - [x] Scaffold basic app with the final stack and solve all required dependencies
 - [x] Containerized run
-- [ ] V1 : local dev, login screen, basic prototype with static content
+- [x] V1 : local dev, login screen, basic prototype with static content
 - [ ] V2 : feature complete in docker
 - [ ] V3 : deployed in AWS Fargate, exposed via public ip, DNS name
 - [ ] V4 : Prepare analytics with Quicksight
@@ -107,32 +127,37 @@ TBD
 - [x] .. Form server action checks
 - [x] .. Create project modal & server action
 - [x] .. Create the actual data model DDLs and apply locally to postgresql
-- [ ] .. Projects dashboard
-- [ ] .. Stop using static data and use actual database for the dashboard
+- [x] .. Projects dashboard
+- [x] .. Stop using static data and use actual database for the dashboard
+- [ ] .. Add a mandatory project manager
 - [ ] .. Project detail screen inc. metadata, scope, reporting
 - [ ] .. Implement update project details
 - [ ] .. Implement delete project details with confirmation dialog
 - [ ] .. Implement registration screen
 
 # Extras
-- [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for structured budget scaffolding based on scope text
-- [ ] .. Try to generate cost items based in the model output
-- [ ] .. Implement enroll in project button (and screen?)
+- [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for scope summarization
+- [ ] .. Also use OpenAI for structured budgeting scaffolding based on the scope text - try to generate cost items based in the model output in JSON
+- [ ] .. OAuth 2.0 authentication with Google or Github
 - [x] .. Dark theme
 - [x] .. Doom
+- [ ] .. Create project form client validation (currently only in server)
+- [ ] .. Enhance server validation (error toast should iterate over all errors)
 
 ## Issues
 - [x] .. Create project form is broken again
-- [ ] .. Create project form client validation (currently only in server)
-- [ ] .. Create project form server validation (toast should iterate over all errors)
 - [x] .. Back button not working in About
-- [ ] .. It will be necessary to do an export of the data to a CSV file instead of using seed, as building the artifacts requires access to the tables
+- [ ] .. User auth is broken again - login somehow is a client side component needs to become a proper api or server action
+- [ ] .. Create project form should ask for a mandatory project manager
+- [ ] .. Select box does not preselect to 6 projects (visually)
+- [ ] .. Destroy buttons have lost their red style
+- [ ] .. It will be necessary to do an export of the data to a CSV file instead of using seed, as building the artifacts requires access to the tables (chicken and egg problem)
 
 # Appendix
 
 Created from my Next JS demo project https://github.com/new?template_name=nextjs-postgresql-tutorial&template_owner=alienmind
 
-... which was created with:
+... which was created by me with:
 npx create-next-app@latest phronex --example "https://github.com/vercel/next-learn/tree/main/dashboard/starter-example" --use-pnpm
 
 ## References used

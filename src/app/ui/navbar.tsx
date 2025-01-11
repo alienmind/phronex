@@ -28,7 +28,7 @@ import {
 
 import { ModeToggle } from "@/app/ui/modetoggle";
 
-export function AppSidebar() {
+export function AppNavbar() {
   const pathname = usePathname();
 
   // Menu items with their respective icons and URLs

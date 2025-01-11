@@ -21,8 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
-import { formatDateToLocal } from '@/app/lib/utils';
-import { formatDate } from 'date-fns';
+import { formatDateToLocal } from '@/app/lib/miscutils';
 import Link from 'next/link';
 //import { CreateOrEditAuditForm } from '@/components/CreateOrEditAuditForm';
 

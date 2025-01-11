@@ -24,9 +24,9 @@ export function ProjectListFilter({
 
   function handleFilterChange(value: string) {
     const params = new URLSearchParams(searchParams);
-    const newLimit = value === 'all' ? undefined : parseInt(value);
+    const newLimit = parseInt(value);
     
-    if (value === 'all') {
+    if (value === '0') {
       params.delete('limit');
     } else {
       params.set('limit', value);
@@ -49,11 +49,11 @@ export function ProjectListFilter({
           <SelectValue placeholder="Select limit" />
         </SelectTrigger>
         <SelectContent>
+          <SelectItem value="0">All Projects</SelectItem>
           <SelectItem value="3">3 Projects</SelectItem>
           <SelectItem value="6">6 Projects</SelectItem>
           <SelectItem value="9">9 Projects</SelectItem>
           <SelectItem value="12">12 Projects</SelectItem>
-          <SelectItem value="all">All Projects</SelectItem>
         </SelectContent>
       </Select>
     </div>

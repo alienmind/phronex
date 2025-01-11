@@ -1,5 +1,5 @@
 'use server';
-const connectionPool = require('../../db');
+const connectionPool = require('@/app/lib/db');
 import {
   // New
   users,
