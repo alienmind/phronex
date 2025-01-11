@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
 import { formatDateToLocal } from '@/app/lib/utils';
+import { formatDate } from 'date-fns';
+import Link from 'next/link';
 //import { CreateOrEditAuditForm } from '@/components/CreateOrEditAuditForm';
 
 export function ProjectCard (
@@ -46,13 +48,15 @@ export function ProjectCard (
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the selected audit.
+              This action cannot be undone. This will permanently delete the selected project.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={() => deleteProject()}>
-              Yes, delete it!
+              <Button variant="destructive">
+                Yes, delete it!
+              </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -66,7 +70,7 @@ export function ProjectCard (
 
   return (
     <>
-      <div className="w-[300px]">
+      <div className="w-[300px]" >
         <Card className="w-full">
           <CardHeader className="bg-emerald-50 dark:bg-emerald-950/30 border-b border-emerald-100 dark:border-emerald-900">
             <CardTitle className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
@@ -97,7 +101,12 @@ export function ProjectCard (
               </div>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex gap-2">
+            <Link href={`/dashboard/projects/${id}`} className="flex-1">
+              <Button className="w-full m-2">
+                Open
+              </Button>
+            </Link>
             {deleteDialog}
           </CardFooter>
         </Card>
