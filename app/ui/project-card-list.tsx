@@ -7,7 +7,7 @@ import { ProjectCard } from '@/app/ui/project-card';
 
 export async function ProjectCardList() {
 
-  const projects = await fetchMostRecentProjects(10);
+  const projects = await fetchMostRecentProjects(20);
 
   const projectCardList = (
       projects.length > 0
