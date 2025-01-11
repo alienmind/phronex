@@ -22,10 +22,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/app/ui/date-picker";
-import { useRouter } from 'next/navigation';
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/hooks/use-toast"
 import { updateProject } from '@/app/lib/actions';
+import Link from 'next/link';
 
 export function ProjectDetailsForm({ project }: { project: Project }) {
   const [persons, setPersons] = useState<Person[]>([]);
@@ -61,6 +61,8 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
     const error : string|undefined = errorMessage?.error;
     if (!errorMessage) return;
     toast({
+      variant: "destructive",
+      className: "text-white",
       title: "Error",
       description: error,
       action: (
@@ -71,7 +73,6 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
 
   return (
     <Form {...form}>
-
       <form action={formAction} className="space-y-6">
         <FormField
           name="project_id"
@@ -173,7 +174,9 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
 
         <div className="flex gap-4">
           <Button variant="outline" type="button">
-            Cancel
+            <Link href={`/dashboard`}>
+              Cancel
+            </Link>
           </Button>
           <Button type="submit" disabled={isLoading}>
             {isLoading ? 'Saving...' : 'Save Changes'}

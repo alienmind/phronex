@@ -83,6 +83,7 @@ export function CreateProjectModal() {
     const error : string|undefined = errorMessage?.message;
     if (!errorMessage) return;
     toast({
+      variant: "destructive",
       title: "Error",
       description: error,
       action: (
