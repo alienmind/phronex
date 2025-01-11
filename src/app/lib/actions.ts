@@ -50,6 +50,7 @@ export type State = {
     project_start_date?: string[];
     project_end_date?: string[];
     project_creation_date?: string[];
+    project_manager_id?: string[];
   };
   message?: string | null;
 };
@@ -57,6 +58,7 @@ export async function createProject(
   prevState: State | undefined,
   formData: FormData,
 ) {
+  console.log('Starting project creation with form data:', Object.fromEntries(formData));
 
   // Validate form using Zod
   const validatedFields = CreateProject.safeParse({
@@ -64,6 +66,7 @@ export async function createProject(
     project_name: formData.get('project_name'),
     project_start_date: formData.get('project_start_date'),
     project_end_date: formData.get('project_end_date'),
+    project_manager_id: formData.get('project_manager_id'),
   });
 
   const rawFormData = Object.fromEntries(formData.entries())
@@ -76,9 +79,11 @@ export async function createProject(
       message: 'Missing Fields. Failed to create project.',
     };
   }
+
+  console.log('Validation successful:', validatedFields.data);
  
   // Prepare data for insertion into the database
-  const { project_name, project_start_date, project_end_date } = validatedFields.data;
+  const { project_name, project_start_date, project_end_date, project_manager_id } = validatedFields.data;
 
 
   const project = {
@@ -86,12 +91,21 @@ export async function createProject(
     project_name: project_name,
     project_start_date: project_start_date,
     project_end_date: project_end_date,
-    project_scope: ""
+    project_scope: "",
+    project_manager_id: project_manager_id
   };
 
-  await addProject(project);
+  console.log('Attempting to add project to database:', project);
 
+  try {
+    await addProject(project);
+    console.log('Project successfully added to database');
+  } catch (error) {
+    console.error('Failed to add project:', error);
+    throw error;
+  }
 
+  console.log('Revalidating dashboard path and redirecting');
   // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/dashboard');
   redirect('/dashboard');

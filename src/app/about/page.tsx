@@ -53,12 +53,25 @@ function AboutPage() {
           The following actions are dangerous, use with care!
           </p>
           <div className="flex gap-8 items-center">
-            <Button variant="destructive" asChild>
-              <Link href="/seed">Seed data</Link>
-            </Button>
             <Dialog>
-              <DialogTrigger>
-                  Don&apos;t click here
+              <DialogTrigger className={buttonVariants({ variant: "outline" })}>
+              Reset demo data
+              </DialogTrigger>
+              <DialogContent className="min-w-[400px] max-w-[33vw]">
+                <DialogHeader>
+                  <DialogTitle>Seeding data</DialogTitle>
+                </DialogHeader>
+                <iframe 
+                  src="/seed" 
+                  width={800} 
+                  height={600} 
+                  className="bg-black text-white font-mono p-4 overflow-auto rounded-md"
+                />
+              </DialogContent>
+            </Dialog>
+            <Dialog>
+              <DialogTrigger className={buttonVariants({ variant: "outline" })}>
+                Don&apos;t click here
               </DialogTrigger>
               <DialogContent className="min-w-[400px] max-w-[33vw]">
                 <DialogHeader>
@@ -67,8 +80,10 @@ function AboutPage() {
                 <iframe src="https://silentspacemarine.com/" width={800} height={600} scrolling="no"/>
               </DialogContent>
             </Dialog>
+          </div>
+          <div className="flex gap-8 items-center">
             <Button asChild>
-              <Link href="/login">Back</Link>
+              <Link href="/">Back</Link>
             </Button>
           </div>
         </div>

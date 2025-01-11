@@ -3,6 +3,22 @@ import type { ProjectWithPersonRole, User, Project } from '@/app/lib/definitions
 //import { sql } from '@vercel/postgres';
 const connectionPool = require('@/app/lib/db');
 
+export async function fetchPersons() {
+  try {
+    const query = `
+    SELECT person_id, person_name, person_surname 
+    FROM person 
+    ORDER BY person_surname, person_name`;
+    
+    const data = await connectionPool.query(query);
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch persons.');
+  }
+} 
+
+
 //
 // Authentication SQL flow with PostgreSQL (the right way)
 // 1) Set up the database (see load-data.ts) with the extension pgcrypto
@@ -27,8 +43,20 @@ export async function addProject(project: Project) {
   // Insert data into the database
   try {
     await connectionPool.query({
-      text: "INSERT INTO projects (project_name, project_start_date, project_end_date) VALUES ($1, $2, $3)",
-      values: [project.project_name, project.project_start_date, project.project_end_date]
+      text: `INSERT INTO projects (
+        project_name, 
+        project_start_date, 
+        project_end_date, 
+        project_scope,
+        project_manager_id
+      ) VALUES ($1, $2, $3, $4, $5)`,
+      values: [
+        project.project_name,
+        project.project_start_date,
+        project.project_end_date,
+        project.project_scope,
+        project.project_manager_id
+      ]
     });
 
   } catch (error) {
@@ -50,12 +78,9 @@ export async function fetchMostRecentProjects(limit?: number) {
     }
     const query = `
     SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
-       project_scope, person_name, person_surname, role_description
+       project_scope, person_name, person_surname
     FROM projects a
-    LEFT OUTER JOIN project_person_role b on a.project_id = b.project_id
-    LEFT OUTER JOIN role c on b.role_id = c.role_id
-    LEFT OUTER JOIN person d on b.person_id = d.person_id
-    WHERE role_description = 'Project Manager'
+    LEFT OUTER JOIN person b on a.project_manager_id = b.person_id
     ORDER BY a.project_start_date DESC
     ${limit ? `LIMIT ${limit}` : ''}
     `;
