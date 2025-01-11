@@ -20,6 +20,8 @@ export function ProjectListFilter({
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const currentValue = searchParams.get('limit') || defaultValue.toString();
+
   function handleFilterChange(value: string) {
     const params = new URLSearchParams(searchParams);
     const newLimit = value === 'all' ? undefined : parseInt(value);
@@ -40,7 +42,7 @@ export function ProjectListFilter({
     <div className="flex items-center gap-2">
       <label className="text-sm">Show:</label>
       <Select
-        defaultValue={defaultValue.toString()}
+        value={currentValue.toString()}
         onValueChange={handleFilterChange}
       >
         <SelectTrigger className="w-[120px]">
