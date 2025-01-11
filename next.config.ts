@@ -6,7 +6,12 @@ const nextConfig: NextConfig = {
   },
   devIndicators: {
     appIsrStatus: false,
+  },
+  // Ensure middleware is loaded from src directory
+  middleware: {
+    path: 'src/middleware.ts',
   }
+
 };
 export default nextConfig;
 

@@ -1,7 +1,7 @@
 import type { ProjectWithPersonRole, User, Project } from '@/app/lib/definitions';
 
 //import { sql } from '@vercel/postgres';
-const connectionPool = require('../../db');
+const connectionPool = require('@/app/lib/db');
 
 //
 // Authentication SQL flow with PostgreSQL (the right way)
@@ -45,6 +45,9 @@ export async function addProject(project: Project) {
 
 export async function fetchMostRecentProjects(limit?: number) {
   try {
+    if (limit && limit <= 0) {
+      limit = undefined;
+    }
     const query = `
     SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
        project_scope, person_name, person_surname, role_description

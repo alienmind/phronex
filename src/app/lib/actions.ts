@@ -5,7 +5,7 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema } from '@/app/lib/schemas';
-import { Project } from './definitions';
+import { Project } from '@/app/lib/definitions';
 import { addProject } from './data';
 
 /*

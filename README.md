@@ -82,6 +82,26 @@ Or simply:
 # Instructions (AWS)
 TBD
 
+# Folder structure
+
+project-root/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/
+│   │   ├── (overview)/
+│   │   ├── api/
+│   │   ├── dashboard/
+│   │   ├── lib/
+│   │   ├── ui/
+│   │   └── ...
+│   ├── components/
+│   │   └── ui/
+│   └── lib/
+├── public/
+├── next.config.js
+├── package.json
+└── tsconfig.json
+
 # TODO list (high level)
 - [x] Set up project on Github
 - [x] High level solution architecture and navigation design

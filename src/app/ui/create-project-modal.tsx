@@ -31,17 +31,6 @@ import { useActionState, useEffect } from 'react';
 import { ToastAction } from "@/components/ui/toast"
 import { DatePicker } from "@/app/ui/date-picker";
 
-// FIXME - quitar
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-
-
 /**
  * 
  */
