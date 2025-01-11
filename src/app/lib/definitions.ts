@@ -56,6 +56,7 @@ export type Project = {
   project_start_date?: Date | undefined;
   project_end_date?: Date | undefined;
   project_scope?: string | undefined;
+  project_manager_id: string;
 };
 
 export type Role = {

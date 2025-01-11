@@ -44,6 +44,7 @@ export function ProjectListFilter({
       <Select
         value={currentValue.toString()}
         onValueChange={handleFilterChange}
+        defaultValue="6"
       >
         <SelectTrigger className="w-[120px]">
           <SelectValue placeholder="Select limit" />

@@ -6,4 +6,6 @@ export const CreateProjectFormSchema = z.object({
   project_start_date: z.coerce.date().optional(),
   project_end_date: z.coerce.date().optional(),
   project_creation_date: z.coerce.date().optional(),
+  project_manager_id: z.string().uuid({ message: 'Project manager is required.' }),
+  project_scope: z.string().optional(),
 });

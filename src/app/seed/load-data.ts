@@ -16,70 +16,80 @@ export const projects : Project[] = [
     project_name: "Phoenix",
     project_scope: "Legacy system modernization and cloud migration",
     project_start_date: new Date("2024-01-01"),
-    project_end_date: new Date("2024-06-30")
+    project_end_date: new Date("2024-06-30"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
     project_name: "Stellar Gateway",
     project_scope: "Enterprise API gateway implementation",
     project_start_date: new Date("2024-04-01"),
-    project_end_date: new Date("2024-09-30")
+    project_end_date: new Date("2024-09-30"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
     project_name: "Super Lab PRO",
     project_scope: "Advanced laboratory management system",
     project_start_date: new Date("2024-07-01"),
-    project_end_date: new Date("2024-12-31")
+    project_end_date: new Date("2024-12-31"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
     project_name: "Fancy Data Factory",
     project_scope: "Data processing and analytics platform",
     project_start_date: new Date("2024-10-01"),
-    project_end_date: new Date("2025-03-31")
+    project_end_date: new Date("2025-03-31"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
     project_name: "Super Portal",
     project_scope: "Customer self-service portal redesign",
     project_start_date: new Date("2025-01-01"),
-    project_end_date: new Date("2025-06-30")
+    project_end_date: new Date("2025-06-30"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: '8f9a0b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c',
     project_name: "Quantum",
     project_scope: "High-performance computing infrastructure",
     project_start_date: new Date("2024-03-01"),
-    project_end_date: new Date("2024-08-31")
+    project_end_date: new Date("2024-08-31"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: '9a0b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d',
     project_name: "Super Cockpit",
     project_scope: "Executive dashboard and analytics suite",
     project_start_date: new Date("2024-06-01"),
-    project_end_date: new Date("2024-11-30")
+    project_end_date: new Date("2024-11-30"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: 'a0b1c2d3-e4f5-6a7b-8c9d-0e1f2a3b4c5d',
     project_name: "Megamapper",
     project_scope: "Global infrastructure mapping system",
     project_start_date: new Date("2024-09-01"),
-    project_end_date: new Date("2025-02-28")
+    project_end_date: new Date("2025-02-28"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: 'b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e',
     project_name: "Elysium",
     project_scope: "Next-gen cloud platform deployment",
     project_start_date: new Date("2024-12-01"),
-    project_end_date: new Date("2025-05-31")
+    project_end_date: new Date("2025-05-31"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
     project_id: 'c2d3e4f5-6a7b-8c9d-0e1f-2a3b4c5d6e7f',
     project_name: "Titan",
     project_scope: "Enterprise resource planning system",
     project_start_date: new Date("2025-03-01"),
-    project_end_date: new Date("2025-08-31")
+    project_end_date: new Date("2025-08-31"),
+    project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   }
 ]
 
