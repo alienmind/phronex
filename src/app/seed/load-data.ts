@@ -245,51 +245,51 @@ export const projectPersonRoles : ProjectPersonRole[] = [
   {
     project_id: projects[0].project_id,
     person_id: persons[0].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[1].role_id
   },
   {
     project_id: projects[1].project_id,
     person_id: persons[1].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[2].role_id
   },
   {
     project_id: projects[2].project_id,
     person_id: persons[2].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[3].role_id
   },
   {
     project_id: projects[3].project_id,
     person_id: persons[3].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[1].role_id
   },
   {
     project_id: projects[4].project_id,
     person_id: persons[4].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[2].role_id
   },
   {
     project_id: projects[5].project_id,
     person_id: persons[5].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[3].role_id
   },
   {
     project_id: projects[6].project_id,
     person_id: persons[6].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[1].role_id
   },
   {
     project_id: projects[7].project_id,
     person_id: persons[7].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[2].role_id
   },
   {
     project_id: projects[8].project_id,
     person_id: persons[8].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[3].role_id
   },
   {
     project_id: projects[9].project_id,
     person_id: persons[9].person_id,
-    role_id: roles[0].role_id
+    role_id: roles[1].role_id
   }
 ];

@@ -127,6 +127,44 @@ export async function fetchProjectById(id: string) {
   }
 }
 
+export async function fetchCostDetailsForProjectId(id: string) {
+  try {
+    const query = `
+      SELECT c.cost_id, estimate, real, period_start, period_end, cost_name, category_name
+      FROM projects a
+      JOIN project_cost_period b ON a.project_id = b.project_id
+      JOIN cost c ON b.cost_id = c.cost_id
+      JOIN category d ON c.category_id = d.category_id
+      WHERE a.project_id = $1
+    `;
+    
+    const result = await connectionPool.query(query, [id]);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project costs.');
+  }
+}
+
+export async function fetchResourcesForProjectId(id: string) {
+  try {
+    const query = `
+      SELECT person_name, role_description
+      FROM projects a
+      JOIN project_person_role b on a.project_id = b.project_id
+      JOIN role c on b.role_id = c.role_id
+      JOIN person d on b.person_id = d.person_id
+      WHERE a.project_id = $1
+    `;
+    
+    const result = await connectionPool.query(query, [id]);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project costs.');
+  }
+}
+
 /*
 
 import {
