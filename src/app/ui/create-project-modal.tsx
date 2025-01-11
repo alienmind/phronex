@@ -32,7 +32,7 @@ import { Calendar as CalendarIcon } from "lucide-react"
 
 import { useForm, FormProvider } from "react-hook-form"
 import { Input } from "@/components/ui/input"
-import { createProject, State } from '@/app/lib/actions';
+import { createProject, CreateProjectState } from '@/app/lib/actions';
 import { CreateProjectFormSchema } from '@/app/lib/schemas';
 import { useToast } from "@/hooks/use-toast"
 import { z } from 'zod';
@@ -107,17 +107,6 @@ export function CreateProjectModal() {
         </DialogHeader>
           <Form {...form}>
           <form action={formAction} >
-          {/*
-          onSubmit={form.handleSubmit(async (data) => {
-                  toast({
-                    title: "You submitted the following values:",
-                    description: (
-                      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                      </pre>
-                    )
-                  })})}>
-          */}
               <div className="grid gap-4 py-4">
               <FormField
                 name="project_id"

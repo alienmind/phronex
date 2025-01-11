@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Project, Person } from '@/app/lib/definitions';
 import { Button } from "@/components/ui/button";
@@ -22,11 +22,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/app/ui/date-picker";
+import { useRouter } from 'next/navigation';
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/hooks/use-toast"
+import { updateProject } from '@/app/lib/actions';
 
 export function ProjectDetailsForm({ project }: { project: Project }) {
   const [persons, setPersons] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { toast } = useToast()
   const form = useForm({
     defaultValues: {
       project_name: project.project_name,
@@ -46,21 +50,39 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
     fetchPersons();
   }, []);
 
-  async function onSubmit(data: any) {
-    setIsLoading(true);
-    try {
-      // TODO: Implement update action
-      console.log('Updating project with data:', data);
-    } catch (error) {
-      console.error('Failed to update project:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [errorMessage, formAction, isPending] = useActionState(
+    updateProject,
+    undefined,
+  );
+
+  // Effect for error message
+  // FIXME - iterate through all errors
+  useEffect(() => {
+    const error : string|undefined = errorMessage?.error;
+    if (!errorMessage) return;
+    toast({
+      title: "Error",
+      description: error,
+      action: (
+        <ToastAction altText="Back">Back</ToastAction>
+      ),
+    })
+  }, [errorMessage]);
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+      <form action={formAction} className="space-y-6">
+        <FormField
+          name="project_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+              <Input className="hidden" placeholder="Project Id" {...field} />
+              </FormControl>
+            </FormItem>
+          )} />
+
         <FormField
           control={form.control}
           name="project_name"
@@ -126,6 +148,8 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
             <FormItem className="max-w-xl">
               <FormLabel>Project Manager</FormLabel>
               <Select 
+                name="project_manager_id"
+                required
                 onValueChange={field.onChange} 
                 defaultValue={field.value}
               >
