@@ -129,6 +129,7 @@ export async function fetchProjectById(id: string) {
 
 export async function fetchCostDetailsForProjectId(id: string) {
   try {
+    console.log('AAA Fetching costs for project:', id);
     const query = `
       SELECT c.cost_id, estimate, real, period_start, period_end, cost_name, category_name
       FROM projects a
@@ -139,7 +140,7 @@ export async function fetchCostDetailsForProjectId(id: string) {
     `;
     
     const result = await connectionPool.query(query, [id]);
-    return result.rows[0];
+    return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch project costs.');
@@ -149,7 +150,7 @@ export async function fetchCostDetailsForProjectId(id: string) {
 export async function fetchResourcesForProjectId(id: string) {
   try {
     const query = `
-      SELECT person_name, role_description
+      SELECT person_name || ' ' || person_surname as person_name, role_description
       FROM projects a
       JOIN project_person_role b on a.project_id = b.project_id
       JOIN role c on b.role_id = c.role_id

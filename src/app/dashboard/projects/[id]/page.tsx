@@ -1,8 +1,8 @@
 import { fetchCostDetailsForProjectId, fetchProjectById, fetchResourcesForProjectId } from '@/app/lib/data';
 import { ProjectDetailsForm } from '@/app/ui/project-details-form';
 import { notFound } from 'next/navigation';
-import { ProjectCostsTable } from '@/app/ui/costs-table';
-import { ProjectResourcesTable } from '@/app/ui/resources-table';
+import ProjectCostsTable from '@/app/ui/project-costs-table';
+import ProjectResourcesTable from '@/app/ui/project-resources-table';
 
 
 
@@ -10,9 +10,12 @@ type Params = Promise<{ id: string }>
 
 export default async function Page( {params}: { params: Params } ) {
   const searchParams = await params;
+
+  console.log('Fetching project details for:', searchParams.id);
   const project = await fetchProjectById(searchParams.id);
   const resources = await fetchResourcesForProjectId(searchParams.id);
   const costs = await fetchCostDetailsForProjectId(searchParams.id);
+
   if (!project) {
     notFound();
   }

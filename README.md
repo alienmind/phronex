@@ -130,19 +130,25 @@ project-root/
 - [x] .. Projects dashboard
 - [x] .. Stop using static data and use actual database for the dashboard
 - [x] .. Add a mandatory project manager
-- [ ] .. Project detail screen inc. metadata, scope, reporting
-- [ ] .. Implement update project details
-- [ ] .. Implement delete project details with confirmation dialog
-- [ ] .. Implement registration screen
+- [x] .. Project detail screen inc. metadata, scope, reporting
+- [x] .. Implement update project details
+- [ ] .. Colors when expenditures are above the estimate
+- [ ] .. Colors when projects are delayed
+- [ ] .. Add / remove resources or costs to each project
+- [ ] .. Add / remove roles
+- [ ] .. Add / remove persons
+- [ ] .. Dedicated generic administration page for costs and categories
+
 
 # Extras
+- [ ] .. Implement registration screen
 - [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for scope summarization
 - [ ] .. Also use OpenAI for structured budgeting scaffolding based on the scope text - try to generate cost items based in the model output in JSON
 - [ ] .. OAuth 2.0 authentication with Google or Github
-- [x] .. Dark theme
-- [x] .. Doom
 - [ ] .. Create project form client validation (currently only in server)
 - [ ] .. Enhance server validation (error toast should iterate over all errors)
+- [x] .. Dark theme
+- [x] .. Doom
 
 ## Issues
 - [x] .. Create project form is broken again
@@ -160,27 +166,6 @@ Created from my Next JS demo project https://github.com/new?template_name=nextjs
 ... which was created by me with:
 npx create-next-app@latest phronex --example "https://github.com/vercel/next-learn/tree/main/dashboard/starter-example" --use-pnpm
 
-## References used
-- React Router 7 Tutorial - https://www.youtube.com/watch?v=pw8FAg07kdo
-- NextJS Tutorial - https://nextjs.org/learn/dashboard-app/getting-started
-- NextJS Tutorial with local PostgreSQL - https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
-- ShadCN UI components - https://ui.shadcn.com/docs/components
-- Lucide icons - https://lucide.dev/icons
-- TailwindCSS cheat sheet - https://nerdcave.com/tailwind-cheat-sheet
-- PostgreSQL locally with docker-compose https://medium.com/@agusmahari/docker-how-to-install-postgresql-using-docker-compose-d646c793f216
-- PostgreSQL official docker image https://hub.docker.com/_/postgres
-- Dockerize NextJS app https://nextjs.org/docs/app/building-your-application/deploying#docker-image
-- NextJS tutorial with local database https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
-- How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
-- Hybrid form validation client & server in Next : https://dev.to/bookercodes/nextjs-form-validation-on-the-client-and-server-with-zod-lbc
-- Fix passing date with date picker to nextjs server action: https://www.youtube.com/watch?v=4d2g-yAD7xY
-- Properly manage passwords with PostgreSQL: https://www.postgresql.org/docs/8.3/pgcrypto.html
-- Fix signIn / signOut in next-auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f
-- Great article on next auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f 
-- Adding OAuth authentication with nextauth.js: https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h
-- Migrating to latest Next JS Auth https://authjs.dev/getting-started/migrating-to-v5#authenticating-server-side and https://authjs.dev/concepts/session-strategies
-- Fix breaking changes on NextJS url params https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change
-- Properly handle route params in NextJS https://nextjs.org/docs/app/api-reference/file-conventions/route
 
 ## Shadcn for premade UI components
 I've been adding shadcn premade components to the project, together with tailwindcss theming.
@@ -259,3 +244,27 @@ Additional steps (potentially):
 12. Set up a DNS name for the ALB in Route 53
 13. Set up a certificate in ACM for the domain name
 ...
+
+
+## References used
+- React Router 7 Tutorial - https://www.youtube.com/watch?v=pw8FAg07kdo
+- NextJS Tutorial - https://nextjs.org/learn/dashboard-app/getting-started
+- NextJS Tutorial with local PostgreSQL - https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
+- ShadCN UI components - https://ui.shadcn.com/docs/components
+- Lucide icons - https://lucide.dev/icons
+- TailwindCSS cheat sheet - https://nerdcave.com/tailwind-cheat-sheet
+- PostgreSQL locally with docker-compose https://medium.com/@agusmahari/docker-how-to-install-postgresql-using-docker-compose-d646c793f216
+- PostgreSQL official docker image https://hub.docker.com/_/postgres
+- Dockerize NextJS app https://nextjs.org/docs/app/building-your-application/deploying#docker-image
+- NextJS tutorial with local database https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
+- How to use Docker with Next.js based on the [deployment documentation](https://nextjs.org/docs/deployment#docker-image).
+- Hybrid form validation client & server in Next : https://dev.to/bookercodes/nextjs-form-validation-on-the-client-and-server-with-zod-lbc
+- Fix passing date with date picker to nextjs server action: https://www.youtube.com/watch?v=4d2g-yAD7xY
+- Properly manage passwords with PostgreSQL: https://www.postgresql.org/docs/8.3/pgcrypto.html
+- Fix signIn / signOut in next-auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f
+- Great article on next auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f 
+- Adding OAuth authentication with nextauth.js: https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h
+- Migrating to latest Next JS Auth https://authjs.dev/getting-started/migrating-to-v5#authenticating-server-side and https://authjs.dev/concepts/session-strategies
+- Fix breaking changes on NextJS url params https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change
+- Properly handle route params in NextJS https://nextjs.org/docs/app/api-reference/file-conventions/route
+- Shadcn + Tanstack table https://ui.shadcn.com/docs/components/data-table

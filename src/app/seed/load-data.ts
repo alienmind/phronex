@@ -205,8 +205,9 @@ export const costs : Cost[] = [
 ];
 
 export const projectCostPeriods : ProjectCostPeriod[] = [
+  // Project Phoenix costs
   {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d', // Project 1
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
     cost_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f', // Cloud consumption
     estimate: 5000.00,
     real: 4800.00,
@@ -214,7 +215,7 @@ export const projectCostPeriods : ProjectCostPeriod[] = [
     period_end: new Date('2024-01-31')
   },
   {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d', // Project 1
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
     cost_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a', // Software Licenses
     estimate: 10000.00,
     real: 9500.00,
@@ -222,20 +223,54 @@ export const projectCostPeriods : ProjectCostPeriod[] = [
     period_end: new Date('2024-01-31')
   },
   {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e', // Project 2
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
     cost_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b', // HR Internal IT
+    estimate: 15000.00,
+    real: 14800.00,
+    period_start: new Date('2024-01-01'),
+    period_end: new Date('2024-01-31')
+  },
+  // Stellar Gateway costs
+  {
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    cost_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c', // HR External IT
     estimate: 7500.00,
     real: 7000.00,
     period_start: new Date('2024-02-01'),
     period_end: new Date('2024-02-28')
   },
   {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e', // Project 2
-    cost_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c', // HR External IT
-    estimate: 3000.00,
-    real: 3200.00,
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    cost_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
+    estimate: 12000.00,
+    real: 11800.00,
     period_start: new Date('2024-02-01'),
     period_end: new Date('2024-02-28')
+  },
+  // Super Lab PRO costs
+  {
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    cost_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
+    estimate: 8000.00,
+    real: 7900.00,
+    period_start: new Date('2024-03-01'),
+    period_end: new Date('2024-03-31')
+  },
+  {
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    cost_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b', 
+    estimate: 3000.00,
+    real: 3200.00,
+    period_start: new Date('2024-03-01'),
+    period_end: new Date('2024-03-31')
+  },
+  {
+    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
+    cost_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c', 
+    estimate: 3000.00,
+    real: 3200.00,
+    period_start: new Date('2024-03-01'),
+    period_end: new Date('2024-03-31')
   }
 ];
 
