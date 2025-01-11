@@ -8,19 +8,12 @@ export const metadata: Metadata = {
   title: 'Dashboard',
 }; 
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: {
-    limit?: string;
-  };
-}) {
-  const searchParamsLimit = await searchParams?.limit;
+type Params = Promise<{ limit: string }>
 
-  const limit = searchParamsLimit ? 
-    searchParamsLimit === 'all' ? undefined : parseInt(searchParamsLimit) 
-    : 6;
+export default async function Page( {params}: { params: Params } ) {
 
+  const searchParams = await params;
+  const limit : number | undefined = ( searchParams.limit === 'all' ? undefined : parseInt(searchParams.limit) );
   const initialProjects = await fetchMostRecentProjects(limit);
 
   return (
