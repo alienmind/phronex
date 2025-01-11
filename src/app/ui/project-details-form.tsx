@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Project, Person } from '@/app/lib/definitions';
 import { Button } from "@/components/ui/button";
@@ -22,13 +22,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/app/ui/date-picker";
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/hooks/use-toast"
+import { updateProjectAction } from '@/app/lib/actions';
+import Link from 'next/link';
 
 export function ProjectDetailsForm({ project }: { project: Project }) {
   const [persons, setPersons] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { toast } = useToast()
   const form = useForm({
     defaultValues: {
+      project_id: project.project_id,
       project_name: project.project_name,
       project_scope: project.project_scope || '',
       project_start_date: project.project_start_date ? new Date(project.project_start_date) : new Date(),
@@ -46,21 +51,40 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
     fetchPersons();
   }, []);
 
-  async function onSubmit(data: any) {
-    setIsLoading(true);
-    try {
-      // TODO: Implement update action
-      console.log('Updating project with data:', data);
-    } catch (error) {
-      console.error('Failed to update project:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [errorMessage, formAction, isPending] = useActionState(
+    updateProjectAction,
+    undefined,
+  );
+
+  // Effect for error message
+  // FIXME - iterate through all errors
+  useEffect(() => {
+    const error : string|undefined = errorMessage?.error;
+    if (!errorMessage) return;
+    toast({
+      variant: "destructive",
+      className: "text-white",
+      title: "Error",
+      description: error,
+      action: (
+        <ToastAction altText="Back">Back</ToastAction>
+      ),
+    })
+  }, [errorMessage]);
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form action={formAction} className="space-y-6">
+        <FormField
+          name="project_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+              <Input className="hidden" placeholder="Project Id" {...field} />
+              </FormControl>
+            </FormItem>
+          )} />
+
         <FormField
           control={form.control}
           name="project_name"
@@ -126,6 +150,8 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
             <FormItem className="max-w-xl">
               <FormLabel>Project Manager</FormLabel>
               <Select 
+                name="project_manager_id"
+                required
                 onValueChange={field.onChange} 
                 defaultValue={field.value}
               >
@@ -149,7 +175,9 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
 
         <div className="flex gap-4">
           <Button variant="outline" type="button">
-            Cancel
+            <Link href={`/dashboard`}>
+              Cancel
+            </Link>
           </Button>
           <Button type="submit" disabled={isLoading}>
             {isLoading ? 'Saving...' : 'Save Changes'}

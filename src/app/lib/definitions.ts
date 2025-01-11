@@ -76,6 +76,28 @@ export type ProjectWithPersonRole = {
   role_description: string;
 };
 
+
+// Derived schemas - custom joins for each view
+export type ProjectResource = {
+  project_id: string;
+  person_name: string;
+  person_surname: string;
+  role_description: string;
+};
+
+export type ProjectCost = {
+  project_id: string;
+  cost_id: string;
+  category_name: string;
+  cost_name: string;
+  estimate: number;
+  real: number;
+  period_start: Date;
+  period_end: Date;
+};
+
+
+
 /*
 
 export type Customer = {

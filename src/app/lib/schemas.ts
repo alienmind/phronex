@@ -9,3 +9,11 @@ export const CreateProjectFormSchema = z.object({
   project_manager_id: z.string().uuid({ message: 'Project manager is required.' }),
   project_scope: z.string().optional(),
 });
+
+export const UpdateProjectSchema = z.object({
+  project_name: z.string().min(2),
+  project_scope: z.string(),
+  project_start_date: z.date(),
+  project_end_date: z.date(),
+  project_manager_id: z.string().min(1)
+});
