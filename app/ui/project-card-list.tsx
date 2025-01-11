@@ -1,15 +1,34 @@
-import React from 'react';
-import { fetchMostRecentProjects } from '@/app/lib/data';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { ProjectCard } from '@/app/ui/project-card';
 import { ProjectListFilter } from '@/app/ui/project-list-filter';
 
-export async function ProjectCardList({ limit = 6 }: { limit?: number }) {
-  const projects = await fetchMostRecentProjects(limit);
+export function ProjectCardList({ initialProjects, limit = 6 }: { 
+  initialProjects: any[],
+  limit?: number 
+}) {
+  const [projects, setProjects] = useState(initialProjects);
+  const [currentLimit, setCurrentLimit] = useState(limit);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const response = await fetch(`/api/projects?limit=${currentLimit}`);
+      const data = await response.json();
+      setProjects(data);
+    }
+
+    fetchProjects();
+  }, [currentLimit]);
+
+  const handleLimitChange = (newLimit: number | undefined) => {
+    setCurrentLimit(newLimit || 0);
+  };
 
   return (
     <div className="flex flex-col w-full">
       <div className="flex justify-end mb-6 px-4">
-        <ProjectListFilter defaultValue={limit} />
+        <ProjectListFilter defaultValue={currentLimit} onLimitChange={handleLimitChange} />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-1 lg:grid-rows-3 gap-8 xl:gap-12">
         {projects.length > 0

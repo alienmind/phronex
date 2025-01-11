@@ -43,9 +43,9 @@ export async function addProject(project: Project) {
 }
 
 
-export async function fetchMostRecentProjects(limit: number) {
+export async function fetchMostRecentProjects(limit?: number) {
   try {
-    const data = await connectionPool.query(`
+    const query = `
     SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
        project_scope, person_name, person_surname, role_description
     FROM projects a
@@ -54,8 +54,10 @@ export async function fetchMostRecentProjects(limit: number) {
     LEFT OUTER JOIN person d on b.person_id = d.person_id
     WHERE role_description = 'Project Manager'
     ORDER BY a.project_start_date DESC
-    LIMIT ${limit}
-    `);
+    ${limit ? `LIMIT ${limit}` : ''}
+    `;
+
+    const data = await connectionPool.query(query);
 
     const mostRecentProjects = data.rows.map((project: ProjectWithPersonRole) => ({
       ...project,

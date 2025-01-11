@@ -9,19 +9,31 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export function ProjectListFilter({ defaultValue = 6 }: { defaultValue?: number }) {
+export function ProjectListFilter({ 
+  defaultValue = 6,
+  onLimitChange
+}: { 
+  defaultValue?: number,
+  onLimitChange?: (limit: number | undefined) => void 
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
   function handleFilterChange(value: string) {
     const params = new URLSearchParams(searchParams);
+    const newLimit = value === 'all' ? undefined : parseInt(value);
+    
     if (value === 'all') {
       params.delete('limit');
     } else {
       params.set('limit', value);
     }
     replace(`${pathname}?${params.toString()}`);
+    
+    if (onLimitChange) {
+      onLimitChange(newLimit);
+    }
   }
 
   return (
