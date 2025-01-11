@@ -5,8 +5,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateProjectSchema } from '@/app/lib/schemas';
-import { addProject } from './data';
-import { z } from 'zod';
+import { addProject, updateProject } from './data';
+import { Project } from './definitions';
 
 /*
  * User authentication
@@ -54,7 +54,7 @@ export type CreateProjectState = {
   };
   message?: string | null;
 };
-export async function createProject(prevState: CreateProjectState | undefined, formData: FormData) {
+export async function createProjectAction(prevState: CreateProjectState | undefined, formData: FormData) {
   console.log('Starting project creation with form data:', Object.fromEntries(formData));
 
   // Validate form using Zod
@@ -108,15 +108,14 @@ export async function createProject(prevState: CreateProjectState | undefined, f
   redirect('/dashboard');
 }
 
-export async function updateProject(
+export async function updateProjectAction(
   prevState: any,
   formData: FormData
 ) {
-  const f = await formData;
-  console.log(JSON.stringify(f));
+  console.log(JSON.stringify(formData));
 
-  const projectId = formData.get('project_id') as string;
   const data = {
+    project_id: formData.get('project_id'),
     project_name: formData.get('project_name'),
     project_scope: formData.get('project_scope'),
     project_start_date: new Date(formData.get('project_start_date') as string),
@@ -124,27 +123,19 @@ export async function updateProject(
     project_manager_id: formData.get('project_manager_id'),
   };
 
-  console.log(JSON.stringify(projectId));
-  console.log(JSON.stringify(data));
-
   try {
     const result = UpdateProjectSchema.safeParse(data);
-    console.log(JSON.stringify(result));
     if (!result.success) {
       return { error: 'Invalid form data' };
     }
-
-    await connectionPool.query({
-      text: `UPDATE projects SET project_name = $1, project_scope = $2, project_start_date = $3, project_end_date = $4, project_manager_id = $5 WHERE project_id = $6`,
-      values: [data.project_name, data.project_scope, data.project_start_date, data.project_end_date, data.project_manager_id, projectId]
-    });
-    console.log("Success!");
-
-    revalidatePath('/dashboard/projects/[id]');
-    return { success: true };
+    await updateProject(data as Project);
+    revalidatePath(`/dashboard/projects/${data.project_id}`);
   } catch (error) {
-    return { error: 'Failed to update project' };
+    console.log(JSON.stringify({ error: 'Failed to update project ' + JSON.stringify(error) }));
+    return { error: 'Failed to update project ' + JSON.stringify(error) };
   }
+  redirect('/dashboard');
+  //return { success: true };
 } 
 
 /*

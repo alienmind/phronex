@@ -32,7 +32,7 @@ import { Calendar as CalendarIcon } from "lucide-react"
 
 import { useForm, FormProvider } from "react-hook-form"
 import { Input } from "@/components/ui/input"
-import { createProject, CreateProjectState } from '@/app/lib/actions';
+import { createProjectAction, CreateProjectState } from '@/app/lib/actions';
 import { CreateProjectFormSchema } from '@/app/lib/schemas';
 import { useToast } from "@/hooks/use-toast"
 import { z } from 'zod';
@@ -59,7 +59,7 @@ export function CreateProjectModal() {
 
   const { toast } = useToast()
   const [errorMessage, formAction, isPending] = useActionState(
-    createProject,
+    createProjectAction,
     undefined,
   );
 

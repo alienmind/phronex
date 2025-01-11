@@ -24,7 +24,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/app/ui/date-picker";
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/hooks/use-toast"
-import { updateProject } from '@/app/lib/actions';
+import { updateProjectAction } from '@/app/lib/actions';
 import Link from 'next/link';
 
 export function ProjectDetailsForm({ project }: { project: Project }) {
@@ -33,6 +33,7 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
   const { toast } = useToast()
   const form = useForm({
     defaultValues: {
+      project_id: project.project_id,
       project_name: project.project_name,
       project_scope: project.project_scope || '',
       project_start_date: project.project_start_date ? new Date(project.project_start_date) : new Date(),
@@ -51,7 +52,7 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
   }, []);
 
   const [errorMessage, formAction, isPending] = useActionState(
-    updateProject,
+    updateProjectAction,
     undefined,
   );
 

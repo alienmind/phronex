@@ -70,6 +70,17 @@ export async function addProject(project: Project) {
   await connectionPool.query(`COMMIT`);
 }
 
+export async function updateProject(data: Project) {
+    const query = {
+      text: `UPDATE projects SET project_name = $1, project_scope = $2, project_start_date = $3, project_end_date = $4, project_manager_id = $5 WHERE project_id = $6`,
+      values: [data.project_name, data.project_scope, data.project_start_date, data.project_end_date, data.project_manager_id, data.project_id]
+    };
+    console.log('Executing query:', query.text);
+    console.log('With values:', query.values);
+    await connectionPool.query(query);
+    console.log("Update successful!");
+    await connectionPool.query("COMMIT");
+}
 
 export async function fetchMostRecentProjects(limit?: number) {
   try {
