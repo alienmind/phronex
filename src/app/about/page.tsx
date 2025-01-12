@@ -1,3 +1,4 @@
+"use client"
 /*
  * This is the about page
  * It will display information about the app
@@ -13,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { buttonVariants } from "@/components/ui/button"
+import { useState } from "react";
 
 /*
  * Main component for the about page
@@ -47,21 +49,37 @@ function AboutNavbar() {
   );
 };
 
+function SlidesIframe({src}: {src: string}) {
+  return <div style={{position: "fixed", top: 0, bottom: 0, left: 0, right: 0, backgroundColor: "rgba(0,0,0,0.5)"}}>
+    <iframe
+        title={src}
+        allowFullScreen
+        width="100%"
+        height="100%"
+        src={src}
+        frameBorder="0"
+    />
+  </div>
+}
+
 /*
  * Main content for the about page
  */ 
 function AboutPage() {
+  const [showSlides, setShowSlides] = useState(false)
+
   return (
     <main>
       <div className="flex relative px-6 md:px-24 flex-col items-center md:items-start justify-center min-h-[80dvh] h-full">
         <div className="flex flex-col items-center md:items-start justify-center gap-4">
 
           <p className="text-lg text-center md:text-left max-w-2xl">
-           This app has been done for learning purposes.
+           This app is part of a demo for a job interview. It's also been developed for learning purposes and upskilling on the latest React and Next.js features.
           </p>
-          <p className="text-lg text-center md:text-left max-w-2xl">
-          <Button><Link href="https://github.com/alienmind/phronex">Visit github</Link></Button><br/>
-          </p>
+          <div className="flex gap-4">
+            <Button><Link href="https://github.com/alienmind/phronex">Visit github</Link></Button>
+            {showSlides ? <SlidesIframe src="/slides/slides.html"/> : <Button onClick={() => setShowSlides(!showSlides)}>Slides</Button>}
+          </div>
           <p className="text-lg text-center md:text-left max-w-2xl">
           The following actions are dangerous, use with care!
           </p>
@@ -78,7 +96,7 @@ function AboutPage() {
                   src="/seed" 
                   width={800} 
                   height={600} 
-                  className="bg-black text-white font-mono p-4 overflow-auto rounded-md"
+                  className="font-mono p-4 overflow-auto rounded-md"
                 />
               </DialogContent>
             </Dialog>

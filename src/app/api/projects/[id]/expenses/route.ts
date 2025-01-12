@@ -1,17 +1,26 @@
 import { fetchProjectExpensesAndBudget } from '@/app/lib/dataaccess';
 import { NextRequest, NextResponse } from 'next/server';
 
+/*
+ * This is the API route for the expenses
+ * It is required purely for dynamically refreshing the expenses list in the project details page
+ * Could be replaced by a server action in the future
+ */
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest
 ) {
   const searchParams = request.nextUrl.searchParams;
+  const id = searchParams.get('id');
   const startDate = searchParams.get('start_date') || '1900-01-01';
   const endDate = searchParams.get('end_date') || '2100-01-01';
 
+  if (!id) {
+    return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
+  }
+
   try {
     const expenses = await fetchProjectExpensesAndBudget(
-      params.id,
+      id,
       new Date(startDate),
       new Date(endDate)
     );
