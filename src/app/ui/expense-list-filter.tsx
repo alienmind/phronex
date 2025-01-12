@@ -30,7 +30,7 @@ export function ExpenseListFilter() {
     if (range?.from) {
       params.set('expenses_start_date', range.from.toISOString().substring(0, 10));
     } else {
-      params.delete('expenses _start_date');
+      params.delete('expenses_start_date');
     }
     
     if (range?.to) {
@@ -39,7 +39,9 @@ export function ExpenseListFilter() {
       params.delete('expenses_end_date');
     }
 
+    console.log('***** router.push', `${pathname}?${params.toString()}`);
     router.push(`${pathname}?${params.toString()}`);
+    //revalidatePath(pathname);
   }
 
   return (

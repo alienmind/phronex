@@ -12,15 +12,16 @@ import { notFound } from 'next/navigation';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
 import ProjectExpensesTable from '@/app/ui/project-expenses-table';
 
-type Params = Promise<{ id: string, expenses_start_date: Date, expenses_end_date: Date }>
+type Params = Promise<{ id: string, expenses_start_date: string, expenses_end_date: string }>
 
 export default async function Page( {params}: { params: Params } ) {
   const searchParams = await params;
 
+  console.log('searchParams', JSON.stringify(searchParams));
   console.log('Fetching project details for:', searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
   const project = await fetchProjectById(searchParams.id);
   const resources = await fetchResourcesForProjectId(searchParams.id);
-  const expenses = await fetchProjectExpensesAndBudget(searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
+  const expenses = await fetchProjectExpensesAndBudget(searchParams.id, new Date(searchParams.expenses_start_date || '1900-01-01'), new Date(searchParams.expenses_end_date || '2100-01-01'));
 
   if (!project) {
     notFound();
