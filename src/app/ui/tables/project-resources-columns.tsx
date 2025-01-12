@@ -1,10 +1,9 @@
 "use client"
 
+import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { MoreHorizontal } from "lucide-react"
-import { Person, ProjectResourceTableView } from "@/app/lib/dataschemas"
-import { formatDateToLocal } from "@/app/lib/miscutils"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ProjectResourceTableView } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,6 +13,68 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const RoleFilter = ({ projectId, onResourcesChange }: { 
+  projectId: string;
+  onResourcesChange: (resources: any[]) => void;
+}) => {
+  const [roles, setRoles] = React.useState<{role_id: string, role_description: string}[]>([]);
+
+  React.useEffect(() => {
+    async function loadRoles() {
+      const response = await fetch('/api/roles');
+      const data = await response.json();
+      setRoles(data);
+    }
+    loadRoles();
+  }, []);
+
+  async function handleRoleChange(role: string) {
+    const params = new URLSearchParams();
+    if (role !== 'all') params.set('role', role);
+    
+    const response = await fetch(`/api/projects/${projectId}/resources?${params.toString()}`);
+    const resources = await response.json();
+    onResourcesChange(resources);
+  }
+
+  return (
+    <div className="flex items-center gap-2 w-full">
+      <div className="w-[70%]">
+        <Select onValueChange={handleRoleChange}>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Filter by role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All roles</SelectItem>
+            {roles.map(role => (
+              <SelectItem key={role.role_id} value={role.role_description}>
+                {role.role_description}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <Button 
+        variant="outline" 
+        className="w-[30%]"
+        onClick={() => handleRoleChange('all')}
+      >
+        Reset filter
+      </Button>
+    </div>
+  )
+}
+
+export { RoleFilter }
 
 async function deleteResource(personId: string) {
   // TODO: Implement delete functionality

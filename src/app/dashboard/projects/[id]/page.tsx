@@ -12,15 +12,20 @@ import { notFound } from 'next/navigation';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
 import ProjectExpensesTable from '@/app/ui/project-expenses-table';
 
-type Params = Promise<{ id: string, expenses_start_date: Date, expenses_end_date: Date }>
+type Params = Promise<{ id: string, expenses_start_date: string, expenses_end_date: string }>
 
 export default async function Page( {params}: { params: Params } ) {
   const searchParams = await params;
 
-  console.log('Fetching project details for:', searchParams.id);
+  console.log('searchParams', JSON.stringify(searchParams));
+  console.log('Fetching project details for:', searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
   const project = await fetchProjectById(searchParams.id);
   const resources = await fetchResourcesForProjectId(searchParams.id);
-  const expenses = await fetchProjectExpensesAndBudget(searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
+  const expenses = await fetchProjectExpensesAndBudget(
+    searchParams.id, 
+    new Date('1900-01-01'), 
+    new Date('2100-01-01')
+  );
 
   if (!project) {
     notFound();
@@ -42,11 +47,11 @@ export default async function Page( {params}: { params: Params } ) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Expenses</h2>
-              {expenses && <ProjectExpensesTable expenses={expenses} /> || <p>No expenses found</p>}
+              {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} /> || <p>No expenses found</p>}
             </div>
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Resources</h2>
-              {resources && <ProjectResourcesTable resources={resources} /> || <p>No resources found</p>}
+              {resources && <ProjectResourcesTable resources={resources} projectId={searchParams.id} /> || <p>No resources found</p>}
             </div>
           </div>
         </div>
