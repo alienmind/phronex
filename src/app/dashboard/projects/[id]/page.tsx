@@ -9,10 +9,10 @@
 import { fetchProjectExpensesAndBudget, fetchProjectById, fetchResourcesForProjectId } from '@/app/lib/dataaccess';
 import { ProjectDetailsForm } from '@/app/ui/project-details-form';
 import { notFound } from 'next/navigation';
-import ProjectCostsTable from '@/app/ui/project-expenses-table';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
+import ProjectExpensesTable from '@/app/ui/project-expenses-table';
 
-type Params = Promise<{ id: string }>
+type Params = Promise<{ id: string, expenses_start_date: Date, expenses_end_date: Date }>
 
 export default async function Page( {params}: { params: Params } ) {
   const searchParams = await params;
@@ -20,7 +20,7 @@ export default async function Page( {params}: { params: Params } ) {
   console.log('Fetching project details for:', searchParams.id);
   const project = await fetchProjectById(searchParams.id);
   const resources = await fetchResourcesForProjectId(searchParams.id);
-  const expenses = await fetchProjectExpensesAndBudget(searchParams.id);
+  const expenses = await fetchProjectExpensesAndBudget(searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
 
   if (!project) {
     notFound();
@@ -42,7 +42,7 @@ export default async function Page( {params}: { params: Params } ) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Expenses</h2>
-              {expenses && <ProjectCostsTable costs={expenses} /> || <p>No expenses found</p>}
+              {expenses && <ProjectExpensesTable expenses={expenses} /> || <p>No expenses found</p>}
             </div>
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Resources</h2>

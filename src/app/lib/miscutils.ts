@@ -24,3 +24,8 @@ export const formatDateToLocal = (
   const formatter = new Intl.DateTimeFormat(locale, options);
   return formatter.format(date);
 };
+
+export function addMonths(date: Date, months: number) {
+  date.setMonth(date.getMonth() + months);
+  return date;
+}

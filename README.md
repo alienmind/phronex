@@ -316,6 +316,7 @@ Additional steps (potentially):
 
 It would have been impossible to do this project without the following references, which are great for someone not fully expert in the latest frameworks.
 
+- Theo T3GG Channel and livecoding sessions - https://www.youtube.com/@t3dotgg 
 - React Router 7 Tutorial - https://www.youtube.com/watch?v=pw8FAg07kdo
 - NextJS Tutorial - https://nextjs.org/learn/dashboard-app/getting-started
 - NextJS Tutorial with local PostgreSQL - https://medium.com/@dekadekadeka/next-js-tutorial-with-local-database-quick-start-guide-394d48a0aada
@@ -334,6 +335,7 @@ It would have been impossible to do this project without the following reference
 - Great article on next auth https://medium.com/@youngjun625/next-js14-nextauth-v5-1-signin-signout-7e30cce52e7f 
 - Adding OAuth authentication with nextauth.js: https://dev.to/ndom91/adding-authentication-to-an-existing-serverless-next-js-app-in-no-time-with-nextauth-js-192h
 - Migrating to latest Next JS Auth https://authjs.dev/getting-started/migrating-to-v5#authenticating-server-side and https://authjs.dev/concepts/session-strategies
-- Fix breaking changes on NextJS url params https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change
+- Fix breaking changes on NextJS 15 URL params https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change
 - Properly handle route params in NextJS https://nextjs.org/docs/app/api-reference/file-conventions/route
 - Shadcn + Tanstack table https://ui.shadcn.com/docs/components/data-table
+- Shadcn + Tanstack table - Filtering customization https://tanstack.com/table/v8/docs/guide/filters

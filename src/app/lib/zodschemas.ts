@@ -21,3 +21,8 @@ export const UpdateProjectSchema = z.object({
   project_end_date: z.date(),
   project_manager_id: z.string().min(1)
 });
+
+export const UpdateExpenseListFilterSchema = z.object({
+  expense_start_date: z.date(),
+  expense_end_date: z.date(),
+});

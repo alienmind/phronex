@@ -153,7 +153,7 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
  * 
  * It does add a fake "all_columns" with all the columns concatenated to enable the filtering by any text
  */
-export async function fetchProjectExpensesAndBudget(id: string) : Promise<ProjectExpensesCategoryBudgetTableView[]> {
+export async function fetchProjectExpensesAndBudget(id: string, expenses_start_date: Date, expenses_end_date: Date) : Promise<ProjectExpensesCategoryBudgetTableView[]> {
   try {
     const query = {
       text: `
@@ -164,14 +164,17 @@ export async function fetchProjectExpensesAndBudget(id: string) : Promise<Projec
         LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
         LEFT OUTER JOIN category c ON b.category_id = c.category_id
         WHERE a.project_id = $1
+        AND a.expense_date >= $2
+        AND a.expense_date <= $3
+        ORDER BY a.expense_date DESC
       `,
-      values: [id]
+      values: [id, expenses_start_date, expenses_end_date]
     };
     
     console.log('Executing query:', query.text);
     console.log('With values:', query.values);
     
-    const result = await connectionPool.query(query, [id]);
+    const result = await connectionPool.query(query);
     console.log('Query result:', result.rows);
     
     return result.rows;

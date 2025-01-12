@@ -1,6 +1,7 @@
-import { ProjectExpensesCategoryBudget } from "../lib/dataschemas";
+import { ProjectExpensesCategoryBudgetTableView } from "../lib/dataschemas";
 import { columns } from "@/app/ui/tables/project-expenses-columns"
 import { DataTable } from "@/app/ui/data-table"
+import { ExpenseListFilter } from "@/app/ui/expense-list-filter";
 
 /*
  * This is the project expenses table (client) component
@@ -8,10 +9,15 @@ import { DataTable } from "@/app/ui/data-table"
  * customized for this particular view
  */
 
-export default async function ProjectExpensesTable({ costs }: { costs: ProjectExpensesCategoryBudget[] }) {
+export default async function ProjectExpensesTable({ expenses }: { expenses: ProjectExpensesCategoryBudgetTableView[] }) {
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={costs} />
+      <div className="flex justify-between items-center mb-6">
+        <div className="w-full">
+          <ExpenseListFilter />
+        </div>
+      </div>
+      <DataTable columns={columns} data={expenses} />
     </div>
   )
 }
