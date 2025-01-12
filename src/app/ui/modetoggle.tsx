@@ -1,3 +1,10 @@
+/*
+ * This is the theme mode toggle (client) component
+ * It is based on the shadcn/ui library
+ * 
+ * It allows to switch between light and dark themes at the user preference
+ * The theme is stored in the browser local storage and pervivies across sessions
+ */
 "use client"
 import * as React from "react"
 import { Moon, MoonIcon, Sun } from "lucide-react"

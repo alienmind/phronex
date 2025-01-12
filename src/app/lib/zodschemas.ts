@@ -1,3 +1,7 @@
+/*
+ * This file contains all the Zod schemas for for validation
+ * Only the schemas that are used in concrete forms the frontend are exported here
+ */
 import { z } from 'zod';
 
 export const CreateProjectFormSchema = z.object({

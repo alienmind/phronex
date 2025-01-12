@@ -1,5 +1,11 @@
 'use client';
 
+/*
+ * This is the project list filter (client) component
+ * It allows to limit the number of projects displayed in the project list
+ * 
+ * FIXME - some times the last option is not selected. Needs fixing.
+ */
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Select,

@@ -1,3 +1,10 @@
+/*
+ * This is the landing page (server) component
+ * It is the first page that the user sees
+ * It includes a dedicated navigation bar and a landing page content to keep it simple and contained
+ * It is a simple page with a title, a description and a button to get started that will point to the login page
+ */
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';

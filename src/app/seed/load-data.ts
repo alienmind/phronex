@@ -1,15 +1,26 @@
-import { Category, Cost, Person, Project, ProjectCostPeriod, ProjectPersonRole, Role } from "@/app/lib/definitions";
+/*
+ * This file contains synthetic data to be inserted into the database
+ * It is used for development purposes only
+ * 
+ * Can be triggered from the About page by clicking the "Load data" button
+ */
+import { User, Category, Person, Project, ProjectBudget, ProjectExpense, ProjectPersonRole, Role } from "@/app/lib/dataschemas";
 
-export const users = [
+export const users : User[] = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
     name: 'User',
     email: 'jaime.lopez@gmail.com',
-    password: '123456',
+    encpassword: '123456', // This will in fact not be the encoded password.
+                           // It will become something like $2a$04$zLey8yRY5eMhxN89lN5rOOY3lFkBsrcc8cEdVR4OImIK/dk8sQmq
+                           // at a later stage.
+    emailVerified: new Date(),
   },
 ];
 
 // Fake data for demo purposes
+// Any resemblance between these projects and actual projects is purely coincidental ;-)
+// For transparency, the content has been generated using OpenAI's GPT-4o model
 export const projects : Project[] = [
   {
     project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
@@ -98,52 +109,62 @@ export const persons : Person[] = [
   {
     person_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8',
     person_name: 'John',
-    person_surname: 'Doe'
+    person_surname: 'Doe',
+    person_email: 'john.doe@example.com'
   },
   {
     person_id: '7a6b9c12-3d4e-5f6a-7b8c-9d0e1f2a3b4c',
     person_name: 'Jane',
-    person_surname: 'Doe'
+    person_surname: 'Doe',
+    person_email: 'jane.doe@example.com'
   },
   {
     person_id: '2c3d4e5f-6a7b-8c9d-0e1f-2a3b4c5d6e7f',
     person_name: 'Robert',
-    person_surname: 'Smith'
+    person_surname: 'Smith',
+    person_email: 'robert.smith@example.com'
   },
   {
     person_id: '9e8d7c6b-5a4f-3e2d-1c0b-9a8b7c6d5e4f',
     person_name: 'LeChuck',
-    person_surname: 'The Skullmaster'
+    person_surname: 'The Skullmaster',
+    person_email: 'lechuck.theskullmaster@example.com'
   },
   {
     person_id: '1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d',
     person_name: 'Aragorn',
-    person_surname: 'Arathorn'
+    person_surname: 'Arathorn',
+    person_email: 'aragorn.arathorn@example.com'
   },
   {
     person_id: '2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e',
     person_name: 'Legolas',
-    person_surname: 'Greenleaf'
+    person_surname: 'Greenleaf',
+    person_email: 'legolas.greenleaf@example.com'
   },
   {
     person_id: '3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f',
     person_name: 'Herman',
-    person_surname: 'Toothrot'
+    person_surname: 'Toothrot',
+    person_email: 'herman.toothrot@example.com'
   },
   {
     person_id: '4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a',
     person_name: 'Gubrush',
-    person_surname: 'Threepwood'
+    person_surname: 'Threepwood',
+    person_email: 'gubrush.threepwood@example.com'
   },
   {
     person_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
     person_name: 'Gimli',
-    person_surname: 'Gloin'
+    person_surname: 'Gloin',
+    person_email: 'gimli.gloin@example.com'
   },
   {
     person_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
     person_name: 'Samwise',
-    person_surname: 'Gamgee'
+    person_surname: 'Gamgee',
+    person_email: 'samwise.gamgee@example.com'
   }
 ];
 
@@ -181,96 +202,129 @@ export const categories : Category[] = [
   },
 ];
 
-export const costs : Cost[] = [
+export const projectExpenses : ProjectExpense[] = [
   {
-    cost_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
-    cost_name: 'Cloud consumption',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b'
+    expense_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    expense_name: 'Cloud consumption',
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    expense_value: 5000.00,
+    expense_date: new Date("2024-10-05 10:00:00")
   },
   {
-    cost_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
-    cost_name: 'Software Licenses',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c'
+    expense_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    expense_name: 'Software Licenses',
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    expense_value: 10000.00,
+    expense_date: new Date("2024-10-01 10:00:00")
   },
   {
-    cost_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
-    cost_name: 'HR Internal IT',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d'
+    expense_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    expense_name: 'HR Internal IT',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    expense_value: 15000.00,
+    expense_date: new Date("2024-09-01 10:00:00")
   },
   {
-    cost_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
-    cost_name: 'HR External IT',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d'
+    expense_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    expense_name: 'HR External IT',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    expense_value: 7500.00,
+    expense_date: new Date("2024-12-01 10:00:00")
   }
 ];
 
-export const projectCostPeriods : ProjectCostPeriod[] = [
+export const projectBudget : ProjectBudget[] = [
   // Project Phoenix costs
   {
     project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    cost_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f', // Cloud consumption
-    estimate: 5000.00,
-    real: 4800.00,
-    period_start: new Date('2024-01-01'),
-    period_end: new Date('2024-01-31')
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    project_category_budget: 5000.00,
   },
   {
     project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    cost_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a', // Software Licenses
-    estimate: 10000.00,
-    real: 9500.00,
-    period_start: new Date('2024-01-01'),
-    period_end: new Date('2024-01-31')
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 10000.00,
   },
   {
     project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    cost_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b', // HR Internal IT
-    estimate: 15000.00,
-    real: 14800.00,
-    period_start: new Date('2024-01-01'),
-    period_end: new Date('2024-01-31')
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 15000.00,
   },
-  // Stellar Gateway costs
   {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
-    cost_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c', // HR External IT
-    estimate: 7500.00,
-    real: 7000.00,
-    period_start: new Date('2024-02-01'),
-    period_end: new Date('2024-02-28')
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 7500.00,
   },
   {
     project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
-    cost_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
-    estimate: 12000.00,
-    real: 11800.00,
-    period_start: new Date('2024-02-01'),
-    period_end: new Date('2024-02-28')
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    project_category_budget: 5000.00,
+  },
+  {
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 10000.00,
+  },
+  {
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 7500.00,
+  },
+  {
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 7500.00,
+  },
+  {
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    project_category_budget: 5000.00,
+  },
+  {
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 10000.00,
+  },
+  {
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 7500.00,
   },
   // Super Lab PRO costs
   {
     project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    cost_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
-    estimate: 8000.00,
-    real: 7900.00,
-    period_start: new Date('2024-03-01'),
-    period_end: new Date('2024-03-31')
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    project_category_budget: 8000.00,
   },
   {
     project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    cost_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b', 
-    estimate: 3000.00,
-    real: 3200.00,
-    period_start: new Date('2024-03-01'),
-    period_end: new Date('2024-03-31')
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 3000.00,
+  },
+  {
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 3200.00,
+  },
+  // Super Portal costs
+  {
+    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    project_category_budget: 3000.00,
   },
   {
     project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
-    cost_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c', 
-    estimate: 3000.00,
-    real: 3200.00,
-    period_start: new Date('2024-03-01'),
-    period_end: new Date('2024-03-31')
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 3200.00,
+  },
+  {
+    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 3200.00,
   }
 ];
 

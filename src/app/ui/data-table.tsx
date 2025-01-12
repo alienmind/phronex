@@ -1,3 +1,11 @@
+/*
+ * This is a generic data table (client) component
+ * It is used to display generically table of data
+ * It is based on the tanstack/react-table library
+ * 
+ * It will require to set up each column definition in the calling component
+ * By convention, we store all the column definitions under ui/tables/table-name-columns.tsx
+ */
 "use client"
 
 import {

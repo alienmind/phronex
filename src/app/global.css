@@ -1,3 +1,12 @@
+/*
+ This is the global CSS file
+ It is used to define the global styles for the application
+ 
+ It is based on the tailwind CSS library which is a utility classes CSS framework
+ It provides simplicity and flexibility while enabling themes
+ Very useful if you are not a CSS expert
+*/
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

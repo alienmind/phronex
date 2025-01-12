@@ -1,3 +1,8 @@
+/*
+ * This is the theme provider (client) component
+ * It is based on the next-themes library
+ * It is required to switch between light and dark themes
+ */
 "use client"
  
 import * as React from "react"

@@ -1,4 +1,12 @@
-'use client';
+/*
+ * This is the project card list (client) component
+ * It is used to display a list of projects in a grid layout
+ * ordered by creation date
+ * 
+ * It also allows to filter the number of projects to be displayed
+ * It is based on the shadcn/ui library
+ */
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import { ProjectCard } from '@/app/ui/project-card';
@@ -11,6 +19,7 @@ export function ProjectCardList({ initialProjects, limit = 6 }: {
   const [projects, setProjects] = useState(initialProjects);
   const [currentLimit, setCurrentLimit] = useState(limit);
 
+  // Fetch projects from the server
   useEffect(() => {
     async function fetchProjects() {
       const response = await fetch(`/api/projects?limit=${currentLimit}`);
@@ -25,6 +34,7 @@ export function ProjectCardList({ initialProjects, limit = 6 }: {
     setCurrentLimit(newLimit || 0);
   };
 
+  // For each project, display a ProjectCard component
   return (
     <div className="flex flex-col w-full">
       <div className="flex justify-end mb-6 px-4">

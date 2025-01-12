@@ -1,16 +1,23 @@
+/*
+ * This is the about page
+ * It will display information about the app
+ * and point to the github repository and documentation
+ */
 import Link from "next/link";
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { buttonVariants } from "@/components/ui/button"
 
-export default function Component() {
+/*
+ * Main component for the about page
+ */
+export default function About() {
   return (
     <>
     <AboutNavbar/>
@@ -19,6 +26,9 @@ export default function Component() {
   );
 }
 
+/*
+ * Navbar for the about page
+ */ 
 function AboutNavbar() {
   return (
     <nav className="flex items-center justify-between p-4 bg-gray-800">
@@ -37,6 +47,9 @@ function AboutNavbar() {
   );
 };
 
+/*
+ * Main content for the about page
+ */ 
 function AboutPage() {
   return (
     <main>
@@ -75,8 +88,9 @@ function AboutPage() {
               </DialogTrigger>
               <DialogContent className="min-w-[400px] max-w-[33vw]">
                 <DialogHeader>
-                  <DialogTitle>OK whatever...</DialogTitle>
+                  <DialogTitle>OK!</DialogTitle>
                 </DialogHeader>
+                { /* This is jus a joke - don't click */}
                 <iframe src="https://silentspacemarine.com/" width={800} height={600} scrolling="no"/>
               </DialogContent>
             </Dialog>

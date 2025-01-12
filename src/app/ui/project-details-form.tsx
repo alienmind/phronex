@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Project, Person } from '@/app/lib/definitions';
+import { Project, Person } from '@/app/lib/dataschemas';
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,6 +27,10 @@ import { useToast } from "@/hooks/use-toast"
 import { updateProjectAction } from '@/app/lib/actions';
 import Link from 'next/link';
 
+/*
+ * This is the project details form (client) component
+ * Allows to edit the project details
+ */
 export function ProjectDetailsForm({ project }: { project: Project }) {
   const [persons, setPersons] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState(false);

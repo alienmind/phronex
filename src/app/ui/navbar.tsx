@@ -1,3 +1,7 @@
+/*
+ * This is the navbar (client) component used in all pages under /dashboard
+ * It is based on the shadcn/ui library
+ */ 
 "use client"
 import Link from 'next/link';
 import { useSession } from 'next-auth/react'
@@ -28,6 +32,7 @@ import {
 
 import { ModeToggle } from "@/app/ui/modetoggle";
 
+// Main component
 export function AppNavbar() {
   const pathname = usePathname();
 
@@ -54,8 +59,8 @@ export function AppNavbar() {
       icon: UserGroupIcon,
     },
     {
-      title: "Cost Categories",
-      url: "/dashboard/costs",
+      title: "Expense Categories",
+      url: "/dashboard/categories",
       icon: BanknotesIcon,
     },
   ];

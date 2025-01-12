@@ -1,3 +1,8 @@
+/*
+ * This is the project card (client) component
+ * It is based on the shadcn/ui library
+ * It displays an individual project card
+ */
 "use client";
 import React from 'react';
 
@@ -23,8 +28,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { formatDateToLocal } from '@/app/lib/miscutils';
 import Link from 'next/link';
-//import { CreateOrEditAuditForm } from '@/components/CreateOrEditAuditForm';
 
+/*
+ * This is the project card (client) component
+ * Contains all the summarized info about a project
+ */ 
 export function ProjectCard (
   {id, name, scope, startDate, endDate, authorName, authorSurname } : {
    id: string;

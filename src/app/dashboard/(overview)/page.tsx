@@ -1,6 +1,6 @@
 import { ProjectCardListSkeleton } from '@/app/ui/skeletons';
 import { ProjectCardList } from '@/app/ui/project-card-list';
-import { fetchMostRecentProjects } from '@/app/lib/data';
+import { fetchMostRecentProjects } from '@/app/lib/dataaccess';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 

@@ -1,6 +1,12 @@
+/*
+ * This is the root layout (server) component
+ * It is the main layout for the application
+ * It defines the basic structure of the application page
+ * It includes the theme provider and the global styles in a single place
+ */
 import { ThemeProvider } from "@/app/ui/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import '@/app/ui/global.css';
+import '@/app/global.css';
 import { roboto } from '@/app/ui/fonts';
 import { Metadata } from 'next';
  

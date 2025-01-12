@@ -1,13 +1,22 @@
+/*
+ * This file contains the authentication flow for the project
+ * It is a requirement by the next-auth framework component
+ * 
+ * It is used by the actions.ts file to authenticate a user
+ * 
+ * It is also used by the client components to check if the user is authenticated
+ * 
+ * FIXME : The authentication flow is not complete and there's a temporary workaround relying in a hardcoded user
+ * FIXME - better use - OAuth https://authjs.dev/getting-started/authentication/oauth
+ * Avoid server only dependency from client
+ * import { getUser } from '@/app/lib/data';
+ */
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
-// FIXME - better use - OAuth https://authjs.dev/getting-started/authentication/oauth
 import { z } from 'zod';
-import { User } from '@/app/lib/definitions';
+import { User } from '@/app/lib/dataschemas';
 
-// FIXME - this needs to be sorted out
-// Avoid server only dependency from client
-//import { getUser } from '@/app/lib/data';
  
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   ...authConfig,

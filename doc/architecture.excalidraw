@@ -7949,10 +7949,10 @@
     {
       "id": "_QKo4DsEQYypUlu2BVEDb",
       "type": "arrow",
-      "x": -1511.0676897281703,
-      "y": -1997.5802048316305,
-      "width": 27.712718607425813,
-      "height": 88.74263675959855,
+      "x": -1506.179365092235,
+      "y": -1998.5802048316305,
+      "width": 25.54110804564516,
+      "height": 89.74263675959855,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -7968,11 +7968,11 @@
         "type": 2
       },
       "seed": 1510118307,
-      "version": 465,
-      "versionNonce": 96980429,
+      "version": 514,
+      "versionNonce": 2091046381,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428805474,
       "link": null,
       "locked": false,
       "points": [
@@ -7981,8 +7981,8 @@
           0
         ],
         [
-          27.712718607425813,
-          88.74263675959855
+          25.54110804564516,
+          89.74263675959855
         ]
       ],
       "lastCommittedPoint": null,
@@ -15516,10 +15516,10 @@
     {
       "id": "VbWK1u-1NoylpxkIjVHrl",
       "type": "rectangle",
-      "x": -1998.5553440942458,
-      "y": -2199.965643940522,
-      "width": 246.46129348200736,
-      "height": 203.5007849914385,
+      "x": -1997.5553440942458,
+      "y": -2225.965643940522,
+      "width": 241.4612934820073,
+      "height": 240.50078499143837,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "#ffec99",
@@ -15535,8 +15535,8 @@
         "type": 3
       },
       "seed": 722230445,
-      "version": 3012,
-      "versionNonce": 1807170787,
+      "version": 3059,
+      "versionNonce": 46834787,
       "isDeleted": false,
       "boundElements": [
         {
@@ -15552,17 +15552,17 @@
           "type": "arrow"
         }
       ],
-      "updated": 1736420238204,
+      "updated": 1736428982810,
       "link": null,
       "locked": false
     },
     {
       "id": "2DgradH0e2QTw-OJhDqui",
       "type": "text",
-      "x": -1973.7201259185258,
-      "y": -2182.4197374303,
-      "width": 190.1998291015625,
-      "height": 175,
+      "x": -1988.9900996734086,
+      "y": -2216.4197374303,
+      "width": 220.73977661132812,
+      "height": 225,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -15576,8 +15576,8 @@
       "index": "bbR",
       "roundness": null,
       "seed": 471219981,
-      "version": 3193,
-      "versionNonce": 1007793869,
+      "version": 3274,
+      "versionNonce": 1218607715,
       "isDeleted": false,
       "boundElements": [
         {
@@ -15593,16 +15593,16 @@
           "type": "arrow"
         }
       ],
-      "updated": 1736420238204,
+      "updated": 1736428974147,
       "link": null,
       "locked": false,
-      "text": "Project\n\nproject_id\nproject_name\nproject_scope\nproject_period\nproject_manager_id",
+      "text": "Project\n\nproject_id\nproject_name\nproject_scope\nproject_creation_date\nproject_start_date\nproject_end_date\nproject_manager_id",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": null,
-      "originalText": "Project\n\nproject_id\nproject_name\nproject_scope\nproject_period\nproject_manager_id",
+      "originalText": "Project\n\nproject_id\nproject_name\nproject_scope\nproject_creation_date\nproject_start_date\nproject_end_date\nproject_manager_id",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -15610,9 +15610,9 @@
       "id": "wghQb2YbOsKXvGtC4JvyC",
       "type": "rectangle",
       "x": -1654.6442934885454,
-      "y": -2189.225242539526,
+      "y": -2217.225242539526,
       "width": 314.2222043596927,
-      "height": 185,
+      "height": 212.99999999999997,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "#ffec99",
@@ -15628,8 +15628,8 @@
         "type": 3
       },
       "seed": 1786041709,
-      "version": 3021,
-      "versionNonce": 270772355,
+      "version": 3030,
+      "versionNonce": 531885133,
       "isDeleted": false,
       "boundElements": [
         {
@@ -15645,17 +15645,17 @@
           "type": "arrow"
         }
       ],
-      "updated": 1736420238204,
+      "updated": 1736428683258,
       "link": null,
       "locked": false
     },
     {
       "id": "r964C8ssg214okP0FE1O0",
       "type": "text",
-      "x": -1623.1090783645832,
-      "y": -2184.225242539526,
+      "x": -1616.1090783645832,
+      "y": -2210.225242539526,
       "width": 230.76495215348268,
-      "height": 175,
+      "height": 200,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -15669,8 +15669,8 @@
       "index": "bbT",
       "roundness": null,
       "seed": 1903271885,
-      "version": 3295,
-      "versionNonce": 866866477,
+      "version": 3336,
+      "versionNonce": 1166052835,
       "isDeleted": false,
       "boundElements": [
         {
@@ -15686,16 +15686,16 @@
           "type": "arrow"
         }
       ],
-      "updated": 1736420238204,
+      "updated": 1736428686483,
       "link": null,
       "locked": false,
-      "text": "Project_Expense\n\nproject_id\ncategory_id\nexpense_name\nexpense_date\nexpense_value",
+      "text": "Project_Expense\n\nexpense_id\nproject_id\ncategory_id\nexpense_name\nexpense_date\nexpense_value",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": null,
-      "originalText": "Project_Expense\n\nproject_id\ncategory_id\nexpense_name\nexpense_date\nexpense_value",
+      "originalText": "Project_Expense\n\nexpense_id\nproject_id\ncategory_id\nexpense_name\nexpense_date\nexpense_value",
       "autoResize": false,
       "lineHeight": 1.25
     },
@@ -15703,9 +15703,9 @@
       "id": "JXK3FghC0iwHJXEOc9I_I",
       "type": "arrow",
       "x": -1673.7412178477505,
-      "y": -2097.4392020669243,
-      "width": 72.5367181775132,
-      "height": 10.267892599558763,
+      "y": -2104.5369047290637,
+      "width": 76.53671817751342,
+      "height": 12.532486615619746,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "#ffec99",
@@ -15721,11 +15721,11 @@
         "type": 2
       },
       "seed": 767611213,
-      "version": 4265,
-      "versionNonce": 1494199789,
+      "version": 4334,
+      "versionNonce": 1331568643,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428982810,
       "link": null,
       "locked": false,
       "points": [
@@ -15734,8 +15734,8 @@
           0
         ],
         [
-          -72.5367181775132,
-          10.267892599558763
+          -76.53671817751342,
+          12.532486615619746
         ]
       ],
       "lastCommittedPoint": null,
@@ -16073,9 +16073,9 @@
       "id": "ms5T0LACIQY85KAg0OkXP",
       "type": "text",
       "x": -1981.6321888558546,
-      "y": -1886.281971692903,
+      "y": -1873.781971692903,
       "width": 207.57980346679688,
-      "height": 150,
+      "height": 125,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -16089,20 +16089,20 @@
       "index": "bbf",
       "roundness": null,
       "seed": 185660493,
-      "version": 3264,
-      "versionNonce": 693555053,
+      "version": 3267,
+      "versionNonce": 1207668749,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428924877,
       "link": null,
       "locked": false,
-      "text": "Project_Person_Role\n\nproject_id\nperson_id\nrole_id\nperson_role_period",
+      "text": "Project_Person_Role\n\nproject_id\nperson_id\nrole_id",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "Sam_r2d9bUUoTMdxrv2y5",
-      "originalText": "Project_Person_Role\n\nproject_id\nperson_id\nrole_id\nperson_role_period",
+      "originalText": "Project_Person_Role\n\nproject_id\nperson_id\nrole_id",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -16148,9 +16148,9 @@
     {
       "id": "vlemlsqtoBKng3xPx87HY",
       "type": "text",
-      "x": -1789.8928474967893,
+      "x": -1759.79290242843,
       "y": -1628.782510381001,
-      "width": 155.37982177734375,
+      "width": 95.179931640625,
       "height": 100,
       "angle": 0,
       "strokeColor": "#1e1e1e",
@@ -16165,20 +16165,20 @@
       "index": "bbh",
       "roundness": null,
       "seed": 179307789,
-      "version": 3498,
-      "versionNonce": 906254797,
+      "version": 3507,
+      "versionNonce": 883021123,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736430710196,
       "link": null,
       "locked": false,
-      "text": "Role\n\nrole_id\nrole_description",
+      "text": "Role\n\nrole_id\nrole_name",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "FJKRQCY3BLgQntihq4bli",
-      "originalText": "Role\n\nrole_id\nrole_description",
+      "originalText": "Role\n\nrole_id\nrole_name",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -16187,8 +16187,8 @@
       "type": "arrow",
       "x": -1867.3938548535452,
       "y": -1899.4176589348324,
-      "width": 1.4824037079552,
-      "height": 83.34741475339729,
+      "width": 0.7499579111258754,
+      "height": 67.34741475339729,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "#ffec99",
@@ -16204,11 +16204,11 @@
         "type": 2
       },
       "seed": 770038637,
-      "version": 3975,
-      "versionNonce": 1583396227,
+      "version": 4058,
+      "versionNonce": 2009806339,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428974149,
       "link": null,
       "locked": false,
       "points": [
@@ -16217,8 +16217,8 @@
           0
         ],
         [
-          -1.4824037079552,
-          -83.34741475339729
+          -0.7499579111258754,
+          -67.34741475339729
         ]
       ],
       "lastCommittedPoint": null,
@@ -16695,8 +16695,8 @@
       "type": "arrow",
       "x": -2206.6269131008776,
       "y": -1742.0915335186614,
-      "width": 198.31021644424436,
-      "height": 266.7268051279525,
+      "width": 199.31021644424436,
+      "height": 273.42792652923777,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "#ffec99",
@@ -16712,11 +16712,11 @@
         "type": 2
       },
       "seed": 491059405,
-      "version": 4417,
-      "versionNonce": 97803267,
+      "version": 4477,
+      "versionNonce": 524363683,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428982810,
       "link": null,
       "locked": false,
       "points": [
@@ -16729,8 +16729,8 @@
           -157.74579558881646
         ],
         [
-          198.31021644424436,
-          -266.7268051279525
+          199.31021644424436,
+          -273.42792652923777
         ]
       ],
       "lastCommittedPoint": null,
@@ -16832,7 +16832,7 @@
     {
       "id": "bVSjY5ua4ZVaJlDzbrAs4",
       "type": "rectangle",
-      "x": -1636.6317284179747,
+      "x": -1635.6317284179747,
       "y": -1901.4227225210211,
       "width": 281.78527160043745,
       "height": 140.9961241053784,
@@ -16851,8 +16851,8 @@
         "type": 3
       },
       "seed": 1698543373,
-      "version": 3768,
-      "versionNonce": 143383565,
+      "version": 3770,
+      "versionNonce": 941248397,
       "isDeleted": false,
       "boundElements": [
         {
@@ -16868,14 +16868,14 @@
           "type": "arrow"
         }
       ],
-      "updated": 1736420238204,
+      "updated": 1736428805474,
       "link": null,
       "locked": false
     },
     {
       "id": "Lr10NVBMIm8hmHy8X9kSM",
       "type": "text",
-      "x": -1620.118975430256,
+      "x": -1619.118975430256,
       "y": -1896.4227225210211,
       "width": 248.759765625,
       "height": 125,
@@ -16892,30 +16892,30 @@
       "index": "bbu",
       "roundness": null,
       "seed": 267210093,
-      "version": 4008,
-      "versionNonce": 2075752259,
+      "version": 4054,
+      "versionNonce": 423494307,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428827099,
       "link": null,
       "locked": false,
-      "text": "Project_Category\n\nproject_id\ncategory_id\nproject_category_budget",
+      "text": "Project_Budget\n\nproject_id\ncategory_id\nproject_category_budget",
       "fontSize": 20,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": "bVSjY5ua4ZVaJlDzbrAs4",
-      "originalText": "Project_Category\n\nproject_id\ncategory_id\nproject_category_budget",
+      "originalText": "Project_Budget\n\nproject_id\ncategory_id\nproject_category_budget",
       "autoResize": true,
       "lineHeight": 1.25
     },
     {
       "id": "fGuQNBkD8NR2tx09V9tez",
       "type": "arrow",
-      "x": -1342.2315907480993,
-      "y": -1823.8682449265425,
-      "width": 100.68860832200517,
-      "height": 3.2008338064599684,
+      "x": -1341.2315907480993,
+      "y": -1823.8863016421842,
+      "width": 99.68860832200517,
+      "height": 3.182777090818263,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -16931,11 +16931,11 @@
         "type": 2
       },
       "seed": 2018177741,
-      "version": 621,
-      "versionNonce": 1345245805,
+      "version": 623,
+      "versionNonce": 2131464269,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420238204,
+      "updated": 1736428805474,
       "link": null,
       "locked": false,
       "points": [
@@ -16944,8 +16944,8 @@
           0
         ],
         [
-          100.68860832200517,
-          -3.2008338064599684
+          99.68860832200517,
+          -3.182777090818263
         ]
       ],
       "lastCommittedPoint": null,
@@ -16968,8 +16968,8 @@
     {
       "id": "vWE_KsBY-dNmtpI2h75e7",
       "type": "rectangle",
-      "x": -2555.7948020958324,
-      "y": -2213.6922220237175,
+      "x": -2558.7948020958324,
+      "y": -2214.6922220237175,
       "width": 239.87026545300148,
       "height": 110.83178233589778,
       "angle": 0,
@@ -16987,8 +16987,8 @@
         "type": 3
       },
       "seed": 1959923853,
-      "version": 3143,
-      "versionNonce": 1759771853,
+      "version": 3146,
+      "versionNonce": 1209786659,
       "isDeleted": false,
       "boundElements": [
         {
@@ -16996,17 +16996,17 @@
           "id": "WZCsyKm-evGBsVIDhN3x0"
         }
       ],
-      "updated": 1736420238204,
+      "updated": 1736428638886,
       "link": null,
       "locked": false
     },
     {
       "id": "WZCsyKm-evGBsVIDhN3x0",
       "type": "text",
-      "x": -2508.763798397652,
-      "y": -2208.6922220237175,
-      "width": 145.80825805664062,
-      "height": 80,
+      "x": -2487.6277510343707,
+      "y": -2209.6922220237175,
+      "width": 97.53616333007812,
+      "height": 100,
       "angle": 0,
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
@@ -17020,20 +17020,20 @@
       "index": "bby",
       "roundness": null,
       "seed": 310157123,
-      "version": 148,
-      "versionNonce": 83935875,
+      "version": 166,
+      "versionNonce": 1146797603,
       "isDeleted": false,
       "boundElements": null,
-      "updated": 1736420238204,
+      "updated": 1736429275319,
       "link": null,
       "locked": false,
-      "text": "User\n\nuser_email\nencoded_password",
+      "text": "Users\n\nid\nuser_email\nencpassword",
       "fontSize": 16,
       "fontFamily": 5,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": "vWE_KsBY-dNmtpI2h75e7",
-      "originalText": "User\n\nuser_email\nencoded_password",
+      "originalText": "Users\n\nid\nuser_email\nencpassword",
       "autoResize": true,
       "lineHeight": 1.25
     },
@@ -19146,20 +19146,20 @@
       "index": "bhP",
       "roundness": null,
       "seed": 288557293,
-      "version": 5355,
-      "versionNonce": 1510621443,
+      "version": 5356,
+      "versionNonce": 970973155,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1736420217227,
+      "updated": 1736422260488,
       "link": null,
       "locked": false,
-      "text": "Architecture Decission Registry (ADR)\n\n\n1) Data model seems very relational. Makes room also for future data analytics over project expenditures. The business\nproblem can be easily modeled as a relational database in SQL. Therefore the natural choice is a RDBMS such as\nPosgreSQL\n\n2) Implementation as a SPA or PWA with server components\n\n- It could be optionally be done mostly as a SPA (client side) but interacting with APIs in the backend. However there's\nno strong requirement to have an API for automation and this adds additional complexity. There's a need for BoF\n(Backend for Frontend) though, because of the filtering, searching functionalities, etc.\n\nTherefore, we take a hybrid approach and use full-stack Javascript (Client and Server side) with React client/server\ncomponents and server actions.\n\nAs an extra one API will be created to showcase both integration methods.\n\n3) Technology choice\nAs a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application\ndevelopment with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which\nincreases maintainability.\n\n4) Cloud choice: we decide for AWS because of being the most widely used cloud service provider and having all of the\npotentially required infrastructure services that ensure high availability and horizontal scalability in the future.\n\n5) Deployment stack - Given the \"project budget restrictions\" - we won't implement the fully scalable solution nor a\nCI/CD pipeline, as we just have one week, but anyway will use containers (Docker) as it can be easily ported from local\nto the cloud using for instance ECS / Fargate, trying to provide as much automation as possible.\n\n6) Test cases: No test cases have been provided due to budget restrictions, but this would be completely unnacceptable\nin a real application.\n\n6) Security of Information: we are going to store personal information (People names and surnames). This should be\navoided in the production implementation, which should definitely rely in an external identity provider that provides also\nan API for enriching the identity information in the application tables.\n\nThis is considered but accepted being a demo project with synthetic data.",
+      "text": "Architecture Decision Registry (ADR)\n\n\n1) Data model seems very relational. Makes room also for future data analytics over project expenditures. The business\nproblem can be easily modeled as a relational database in SQL. Therefore the natural choice is a RDBMS such as\nPosgreSQL\n\n2) Implementation as a SPA or PWA with server components\n\n- It could be optionally be done mostly as a SPA (client side) but interacting with APIs in the backend. However there's\nno strong requirement to have an API for automation and this adds additional complexity. There's a need for BoF\n(Backend for Frontend) though, because of the filtering, searching functionalities, etc.\n\nTherefore, we take a hybrid approach and use full-stack Javascript (Client and Server side) with React client/server\ncomponents and server actions.\n\nAs an extra one API will be created to showcase both integration methods.\n\n3) Technology choice\nAs a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application\ndevelopment with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which\nincreases maintainability.\n\n4) Cloud choice: we decide for AWS because of being the most widely used cloud service provider and having all of the\npotentially required infrastructure services that ensure high availability and horizontal scalability in the future.\n\n5) Deployment stack - Given the \"project budget restrictions\" - we won't implement the fully scalable solution nor a\nCI/CD pipeline, as we just have one week, but anyway will use containers (Docker) as it can be easily ported from local\nto the cloud using for instance ECS / Fargate, trying to provide as much automation as possible.\n\n6) Test cases: No test cases have been provided due to budget restrictions, but this would be completely unnacceptable\nin a real application.\n\n6) Security of Information: we are going to store personal information (People names and surnames). This should be\navoided in the production implementation, which should definitely rely in an external identity provider that provides also\nan API for enriching the identity information in the application tables.\n\nThis is considered but accepted being a demo project with synthetic data.",
       "fontSize": 28,
       "fontFamily": 5,
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": "KUS_jB4AYv_IYb_oiU4iR",
-      "originalText": "Architecture Decission Registry (ADR)\n\n\n1) Data model seems very relational. Makes room also for future data analytics over project expenditures. The business problem can be easily modeled as a relational database in SQL. Therefore the natural choice is a RDBMS such as PosgreSQL\n\n2) Implementation as a SPA or PWA with server components\n\n- It could be optionally be done mostly as a SPA (client side) but interacting with APIs in the backend. However there's no strong requirement to have an API for automation and this adds additional complexity. There's a need for BoF (Backend for Frontend) though, because of the filtering, searching functionalities, etc.\n\nTherefore, we take a hybrid approach and use full-stack Javascript (Client and Server side) with React client/server components and server actions.\n\nAs an extra one API will be created to showcase both integration methods.\n\n3) Technology choice\nAs a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application development with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which increases maintainability.\n\n4) Cloud choice: we decide for AWS because of being the most widely used cloud service provider and having all of the potentially required infrastructure services that ensure high availability and horizontal scalability in the future.\n\n5) Deployment stack - Given the \"project budget restrictions\" - we won't implement the fully scalable solution nor a CI/CD pipeline, as we just have one week, but anyway will use containers (Docker) as it can be easily ported from local to the cloud using for instance ECS / Fargate, trying to provide as much automation as possible.\n\n6) Test cases: No test cases have been provided due to budget restrictions, but this would be completely unnacceptable in a real application.\n\n6) Security of Information: we are going to store personal information (People names and surnames). This should be avoided in the production implementation, which should definitely rely in an external identity provider that provides also an API for enriching the identity information in the application tables.\n\nThis is considered but accepted being a demo project with synthetic data.",
+      "originalText": "Architecture Decision Registry (ADR)\n\n\n1) Data model seems very relational. Makes room also for future data analytics over project expenditures. The business problem can be easily modeled as a relational database in SQL. Therefore the natural choice is a RDBMS such as PosgreSQL\n\n2) Implementation as a SPA or PWA with server components\n\n- It could be optionally be done mostly as a SPA (client side) but interacting with APIs in the backend. However there's no strong requirement to have an API for automation and this adds additional complexity. There's a need for BoF (Backend for Frontend) though, because of the filtering, searching functionalities, etc.\n\nTherefore, we take a hybrid approach and use full-stack Javascript (Client and Server side) with React client/server components and server actions.\n\nAs an extra one API will be created to showcase both integration methods.\n\n3) Technology choice\nAs a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application development with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which increases maintainability.\n\n4) Cloud choice: we decide for AWS because of being the most widely used cloud service provider and having all of the potentially required infrastructure services that ensure high availability and horizontal scalability in the future.\n\n5) Deployment stack - Given the \"project budget restrictions\" - we won't implement the fully scalable solution nor a CI/CD pipeline, as we just have one week, but anyway will use containers (Docker) as it can be easily ported from local to the cloud using for instance ECS / Fargate, trying to provide as much automation as possible.\n\n6) Test cases: No test cases have been provided due to budget restrictions, but this would be completely unnacceptable in a real application.\n\n6) Security of Information: we are going to store personal information (People names and surnames). This should be avoided in the production implementation, which should definitely rely in an external identity provider that provides also an API for enriching the identity information in the application tables.\n\nThis is considered but accepted being a demo project with synthetic data.",
       "autoResize": true,
       "lineHeight": 1.25
     },

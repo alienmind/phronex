@@ -1,6 +1,12 @@
+/*
+ * This is a date picker (client) component
+ * Allows to pick a date range
+ * It is based on the shadcn/ui library
+ * 
+ * Useful for configuring projects or search queries
+ */
 'use client';
 
-import { useState } from "react"
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
