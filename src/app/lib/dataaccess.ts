@@ -220,9 +220,11 @@ export async function fetchResourcesForProjectId(id: string, role?: string) : Pr
 export async function fetchPersons() {
   try {
     const query = `
-    SELECT person_id, person_name, person_surname, person_email
-    FROM person 
-    ORDER BY person_surname, person_name`;
+      SELECT person_id, person_name, person_surname, person_email,
+             person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+      FROM person 
+      ORDER BY person_surname, person_name
+    `;
     
     const data = await connectionPool.query(query);
     return data.rows;
@@ -245,6 +247,22 @@ export async function fetchRoles() {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch roles.');
+  }
+}
+
+export async function fetchCategories() {
+  try {
+    const query = `
+      SELECT category_id, category_name
+      FROM category
+      ORDER BY category_name
+    `;
+    
+    const result = await connectionPool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch categories.');
   }
 } 
 
