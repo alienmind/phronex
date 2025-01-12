@@ -71,8 +71,9 @@ Will do at best effort:
   It could be optionally be done mostly as a SPA (client side) but interacting with APIs in the backend.
   However there's no strong requirement to have an API for automation and this adds additional complexity to the solution.
   There's clearly a need for BoF (Backend for Frontend) though, because of the filtering and searching functionalities.
-  Therefore, we take a hybrid approach and decide to use server actions in full-stack Javascript (Client and Server side).
-  As an extra at least one RESTFul API will be implemented to showcase both integration methods, but it is not strictly required.
+  Therefore, we take a hybrid approach and decide to use:
+  - Server actions via direct call from the client component (which will get the info and later hydraated)
+  - Restful APIs for all of the operations (to test both integration methods)
 
 3. Technology stack.
   As a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application development with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which increases maintainability.
@@ -197,18 +198,19 @@ docker compose -f docker-compose.yml up -d
 - [x] .. Project detail screen inc. metadata, scope, reporting
 - [x] .. Implement update project details
 - [x] .. Dockerize the web app
-- [ ] .. Search expenses over time range
+- [x] .. Search expenses over time range
 - [ ] .. Add expenses to projects
 - [ ] .. Edit a expense
-- [ ] .. Colors when expenditures are above the estimate
-- [ ] .. Colors when projects are delayed
-- [ ] .. Add / remove resources or costs to each project in the project detail screen
+- [ ] .. Reassign / remove resources or costs to each project in the project detail screen
 
 Extra todos with priority:
 - [ ] .. Administration: manage budget per category
-- [ ] .. Administration: manage roles
-- [ ] .. Administration: manage persons
-- [ ] .. Administration: manage categories
+- [x] .. Administration: manage roles
+- [x] .. Administration: manage persons
+- [x] .. Administration: manage categories
+- [ ] .. Colors when expenditures are above the estimate
+- [ ] .. Colors when projects are delayed
+- [ ] .. Add / Delete both people (hire) and categories for expenditures
 
 Even more extras with less priority
 - [ ] .. Implement registration screen
@@ -220,13 +222,15 @@ Even more extras with less priority
 - [x] .. Dark theme
 - [x] .. Add easter egg
 
-## Issues during project development
+## Identified issues during the development - some of them are not fixed yet
 - [x] .. Some of the server / client components had crossed interdependencies which resulted in depending on pg (postgres) for the client component. Fixed.
 - [x] .. Create project form have been intermitently broken due to some refactors. Fixed.
 - [x] .. Back button not working in About because of security constraints. Fixed.
 - [x] .. User auth is broken again - login somehow is a client side component needs to become a proper api or server action. It's been worked around but requires more work.
-- [ ] .. Select box does not preselect to 6 projects (visually)
+- [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
+- [ ] .. Not all the management tables have working the free text search feature (something afoot with the fake all_columns column)
+- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be unified.
 
 # Appendix and references
 
