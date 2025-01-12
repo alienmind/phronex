@@ -8,6 +8,6 @@ fi
 # We create separate copies (.env.*) to avoid them being uploaded to github
 for i in docker/env.localhost docker/env.prebuild docker/env.build docker/env.docker; do
   ( . .secrets ;
-    envsubst '$POSTGRES_USER,$POSTGRES_PASSWORD,$POSTGRES_DATABASE,$AUTH_SECRET' < $i > .$i
+    envsubst '$POSTGRES_USER,$POSTGRES_PASSWORD,$POSTGRES_DATABASE,$AUTH_SECRET' < $i > docker/.`basename $i`
   )
 done

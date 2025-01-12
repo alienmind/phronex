@@ -11,6 +11,7 @@ services:
       dockerfile: docker/Dockerfile
       extra_hosts:
         - "host.docker.internal:host-gateway"
+      network: host
     ports:
       - 3000:3000
     env_file:
