@@ -205,7 +205,7 @@ export const categories : Category[] = [
 export const projectExpenses : ProjectExpense[] = [
   {
     expense_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
     expense_name: 'Cloud consumption',
     category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
     expense_value: 5000.00,
@@ -213,7 +213,7 @@ export const projectExpenses : ProjectExpense[] = [
   },
   {
     expense_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
     expense_name: 'Software Licenses',
     category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
     expense_value: 10000.00,
@@ -221,7 +221,7 @@ export const projectExpenses : ProjectExpense[] = [
   },
   {
     expense_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
     expense_name: 'HR Internal IT',
     category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
     expense_value: 15000.00,
@@ -229,7 +229,7 @@ export const projectExpenses : ProjectExpense[] = [
   },
   {
     expense_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
     expense_name: 'HR External IT',
     category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
     expense_value: 7500.00,

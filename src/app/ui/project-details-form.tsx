@@ -165,11 +165,12 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {persons.map((person) => (
+                  {persons.length > 0 ?
+                   persons.map((person) => (
                     <SelectItem key={person.person_id} value={person.person_id}>
                       {person.person_surname}, {person.person_name}
                     </SelectItem>
-                  ))}
+                  )) : "No persons found"}
                 </SelectContent>
               </Select>
               <FormMessage />

@@ -148,24 +148,32 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
 /*
  * This will fetch the project expenses (for one concrete project) combined for the budget for each category
  * It will include the individual expenses and the budgeted amount
- * This will enable the frontend to display the individual costs and which costs belong to categories
+ * This will enable the frontend to display the individual expenses and which expenses belong to categories
  * that are close to being spent
  */
 export async function fetchProjectExpensesAndBudget(id: string) : Promise<ProjectExpensesCategoryBudget[]> {
   try {
-    const query = `
-      SELECT a.expense_id, a.expense_name, a.expense_date, a.expense_value, a.category_name, b.project_category_budget
-      FROM project_expense a
-      JOIN project_budget b ON a.project_id = b.project_id
-      JOIN category c ON b.category_id = c.category_id
-      WHERE a.project_id = $1
-    `;
+    const query = {
+      text: `
+        SELECT a.expense_id, a.expense_name, a.expense_date, a.expense_value, c.category_name, b.project_category_budget
+        FROM project_expense a
+        JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
+        JOIN category c ON b.category_id = c.category_id
+        WHERE a.project_id = $1
+      `,
+      values: [id]
+    };
+    
+    console.log('Executing query:', query.text);
+    console.log('With values:', query.values);
     
     const result = await connectionPool.query(query, [id]);
+    console.log('Query result:', result.rows);
+    
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch project costs.');
+    throw new Error('Failed to fetch project expenses.');
   }
 }
 
@@ -175,20 +183,23 @@ export async function fetchProjectExpensesAndBudget(id: string) : Promise<Projec
  */
 export async function fetchResourcesForProjectId(id: string) {
   try {
-    const query = `
-      SELECT person_name || ' ' || person_surname as person_name, role_description
-      FROM project a
-      JOIN project_person_role b on a.project_id = b.project_id
-      JOIN role c on b.role_id = c.role_id
-      JOIN person d on b.person_id = d.person_id
-      WHERE a.project_id = $1
-    `;
+    const query = {
+      text: `
+        SELECT person_name || ' ' || person_surname as person_name, role_description
+        FROM project a
+        JOIN project_person_role b on a.project_id = b.project_id
+        JOIN role c on b.role_id = c.role_id
+        JOIN person d on b.person_id = d.person_id
+        WHERE a.project_id = $1
+      `,
+      values: [id]
+    };
     
     const result = await connectionPool.query(query, [id]);
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch project costs.');
+    throw new Error('Failed to fetch project expenses.');
   }
 }
 

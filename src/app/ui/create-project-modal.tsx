@@ -165,11 +165,11 @@ export function CreateProjectModal() {
                       </SelectTrigger>
                       </FormControl> 
                       <SelectContent>
-                        {persons.map((person : Person) => (
+                        {persons?.length > 0 ? persons.map((person : Person) => (
                           <SelectItem key={person.person_id} value={person.person_id}>
                             {person.person_surname}, {person.person_name}
                           </SelectItem>
-                        ))}
+                        )) : "No persons found"}
                       </SelectContent>
                     </Select>
 

@@ -279,7 +279,8 @@ async function seedPersons() {
     CREATE TABLE IF NOT EXISTS person (
       person_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       person_name VARCHAR(255) NOT NULL,
-      person_surname VARCHAR(255) NOT NULL
+      person_surname VARCHAR(255) NOT NULL,
+      person_email VARCHAR(255) NOT NULL
     );
   `;
   
@@ -288,11 +289,12 @@ async function seedPersons() {
 
   const insertedPersons = await Promise.all(
     persons.map(async (person : Person) => {
-      const insertQuery = `
-        INSERT INTO person (person_id, person_name, person_surname)
-        VALUES ('${person.person_id}', '${person.person_name}', '${person.person_surname}')
-        ON CONFLICT (person_id) DO NOTHING;
-      `;
+      const insertQuery = {
+        text: `INSERT INTO person (person_id, person_name, person_surname, person_email)
+        VALUES ($1,$2,$3,$4)
+        ON CONFLICT (person_id) DO NOTHING;`,
+        values: [person.person_id, person.person_name, person.person_surname, person.person_email]
+      };
       console.log('Executing query:', insertQuery);
       try {
         return await connectionPool.query(insertQuery);

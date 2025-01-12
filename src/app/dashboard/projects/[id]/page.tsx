@@ -9,7 +9,7 @@
 import { fetchProjectExpensesAndBudget, fetchProjectById, fetchResourcesForProjectId } from '@/app/lib/dataaccess';
 import { ProjectDetailsForm } from '@/app/ui/project-details-form';
 import { notFound } from 'next/navigation';
-import ProjectCostsTable from '@/app/ui/project-costs-table';
+import ProjectCostsTable from '@/app/ui/project-expenses-table';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
 
 type Params = Promise<{ id: string }>
