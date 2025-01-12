@@ -3,16 +3,16 @@
 #   docker compose -f docker-compose-prebuild.yml up -d
 #
 # The Docker image builder can access database through internal network (.internal:5432) to run SSR pre-rendering
-
 services:
   webapp:
-    image: phronex-web
+    image: alienmind/phronex-web
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: docker/Dockerfile
       extra_hosts:
         - "host.docker.internal:host-gateway"
+      network: host
     ports:
       - 3000:3000
     env_file:
-      - .env.internal
+      - .env.build

@@ -216,20 +216,28 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 
 ## Install on AWS EC2
-1. Set up a free tier EC2 instance
-2. Set up an ALB with a target group pointing to the EC2 instance, port 3000
-3. Install all software
+1. Set up an ubuntu free tier EC2 instance
+2. Install docker
 ```bash
-sudo yum install docker python3-pip git -y
-sudo pip install docker-compose
-sudo usermod -a -G docker ec2-user
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -a -G docker ubuntu
+newgrp docker
 sudo systemctl enable docker.service
 sudo systemctl start docker.service
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-. ~/.bashrc
-nvm install v20.11.1
-npm install -g pnpm@latest
-sudo npm install -g pm2
+
+DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+mkdir -p $DOCKER_CONFIG/cli-plugins
+curl -SL https://github.com/docker/compose/releases/download/v2.32.2/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+```
+
+3. Copy docker-dist.tar.gz to the instance
+
+4. Deploy the app
+```bash
+tar -xzvf docker-dist.tar.gz
+docker compose -f docker-compose.yml up -d
 ```
 
 4. Set up .env
@@ -239,6 +247,7 @@ sudo npm install -g pm2
 docker compose up -d
 ```
 Additional steps (potentially):
+2. Set up an ALB with a target group pointing to the EC2 instance, port 3000
 10. Set up a security group for the ALB with HTTP/HTTPS access
 11. Set up a security group for the EC2 instance with SSH access
 12. Set up a DNS name for the ALB in Route 53

@@ -1,3 +1,4 @@
+# Full production-like docker-compose
 services:
   postgres:
     image: postgres:14-alpine
@@ -14,13 +15,16 @@ services:
     ports:
       - 8080:8080
 
-#  webapp:
-#   image: phronex-web
-#   ports:
-#     - 3000:3000
-#   extra_hosts:
-#     - "host.docker.internal:host-gateway"
-#   env_file:
-#     - .env.docker
-#   depends_on:
-#     - postgres
+  webapp:
+   image: alienmind/phronex-web
+   build:
+     context: .
+     dockerfile: Dockerfile
+   ports:
+     - 3000:3000
+   extra_hosts:
+     - "host.docker.internal:host-gateway"
+   env_file:
+     - .env.docker
+   depends_on:
+     - postgres
