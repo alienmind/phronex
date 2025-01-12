@@ -78,7 +78,7 @@ function AboutPage() {
           </p>
           <div className="flex gap-4">
             <Button><Link href="https://github.com/alienmind/phronex">Visit github</Link></Button>
-            {showSlides ? <SlidesIframe src="/about/slides"/> : <Button onClick={() => setShowSlides(!showSlides)}>Slides</Button>}
+            {showSlides ? <SlidesIframe src="/slides/slides.html"/> : <Button onClick={() => setShowSlides(!showSlides)}>Slides</Button>}
           </div>
           <p className="text-lg text-center md:text-left max-w-2xl">
           The following actions are dangerous, use with care!
