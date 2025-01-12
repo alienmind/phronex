@@ -238,94 +238,37 @@ export const projectExpenses : ProjectExpense[] = [
 ];
 
 export const projectBudget : ProjectBudget[] = [
-  // Project Phoenix costs
+  {
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
+    project_category_budget: 50000.00,
+  },
+  {
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 50000.00,
+  },
+  {
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 100000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
+    project_category_budget: 150000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_category_budget: 75000.00,
+  },
   {
     project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
     category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 5000.00,
-  },
-  {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 10000.00,
-  },
-  {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 15000.00,
-  },
-  {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 7500.00,
-  },
-  {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 5000.00,
-  },
-  {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 10000.00,
-  },
-  {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 7500.00,
-  },
-  {
-    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 7500.00,
-  },
-  {
-    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 5000.00,
-  },
-  {
-    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 10000.00,
-  },
-  {
-    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 7500.00,
-  },
-  // Super Lab PRO costs
-  {
-    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 8000.00,
-  },
-  {
-    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 3000.00,
-  },
-  {
-    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 3200.00,
-  },
-  // Super Portal costs
-  {
-    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 3000.00,
-  },
-  {
-    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 3200.00,
-  },
-  {
-    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 3200.00,
+    project_category_budget: 75000.00,
   }
+
 ];
 
 

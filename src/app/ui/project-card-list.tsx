@@ -11,6 +11,7 @@
 import React, { useEffect, useState } from 'react';
 import { ProjectCard } from '@/app/ui/project-card';
 import { ProjectListFilter } from '@/app/ui/project-list-filter';
+import { Input } from '@/components/ui/input';
 
 export function ProjectCardList({ initialProjects, limit = 6 }: { 
   initialProjects: any[],
@@ -37,8 +38,13 @@ export function ProjectCardList({ initialProjects, limit = 6 }: {
   // For each project, display a ProjectCard component
   return (
     <div className="flex flex-col w-full">
-      <div className="flex justify-end mb-6 px-4">
-        <ProjectListFilter defaultValue={currentLimit} onLimitChange={handleLimitChange} />
+      <div className="flex justify-between items-center mb-6 px-4 gap-4">
+        <div className="w-2/3">
+          <Input type="text" placeholder="Search projects" />
+        </div>
+        <div className="w-1/4 flex justify-end">
+          <ProjectListFilter defaultValue={currentLimit} onLimitChange={handleLimitChange} />
+        </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-1 lg:grid-rows-3 gap-8 xl:gap-12">
         {projects.length > 0

@@ -197,6 +197,9 @@ docker compose -f docker-compose.yml up -d
 - [x] .. Project detail screen inc. metadata, scope, reporting
 - [x] .. Implement update project details
 - [x] .. Dockerize the web app
+- [ ] .. Search expenses over time range
+- [ ] .. Add expenses to projects
+- [ ] .. Edit a expense
 - [ ] .. Colors when expenditures are above the estimate
 - [ ] .. Colors when projects are delayed
 - [ ] .. Add / remove resources or costs to each project in the project detail screen

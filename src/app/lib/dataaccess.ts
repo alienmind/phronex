@@ -7,7 +7,7 @@
  * 
  * In order to get access to these functions, you need wrap them in a server action or in a API
  */
-import type { User, Project, ProjectExpense, ProjectBudget, ProjectPersonRole, ProjectResource, ProjectWithProjectManager, ProjectExpensesCategoryBudget } from '@/app/lib/dataschemas';
+import type { User, Project, ProjectExpense, ProjectBudget, ProjectPersonRole, ProjectResource, ProjectWithProjectManager, ProjectExpensesCategoryBudgetTableView, ProjectResourceTableView } from '@/app/lib/dataschemas';
 
 const connectionPool = require('@/app/lib/db');
 
@@ -150,15 +150,19 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
  * It will include the individual expenses and the budgeted amount
  * This will enable the frontend to display the individual expenses and which expenses belong to categories
  * that are close to being spent
+ * 
+ * It does add a fake "all_columns" with all the columns concatenated to enable the filtering by any text
  */
-export async function fetchProjectExpensesAndBudget(id: string) : Promise<ProjectExpensesCategoryBudget[]> {
+export async function fetchProjectExpensesAndBudget(id: string) : Promise<ProjectExpensesCategoryBudgetTableView[]> {
   try {
     const query = {
       text: `
-        SELECT a.expense_id, a.expense_name, a.expense_date, a.expense_value, c.category_name, b.project_category_budget
+        SELECT a.expense_id, a.expense_name, a.expense_date, a.expense_value, c.category_name, b.project_category_budget,
+               a.expense_id || ' ' || a.expense_name || ' ' || a.expense_date || ' ' || a.expense_value || ' ' || c.category_name || ' ' || b.project_category_budget
+               as all_columns
         FROM project_expense a
-        JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
-        JOIN category c ON b.category_id = c.category_id
+        LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
+        LEFT OUTER JOIN category c ON b.category_id = c.category_id
         WHERE a.project_id = $1
       `,
       values: [id]
@@ -181,11 +185,12 @@ export async function fetchProjectExpensesAndBudget(id: string) : Promise<Projec
  * This is the function to fetch the resources assigned to a project
  * @param id - the id of the project
  */
-export async function fetchResourcesForProjectId(id: string) {
+export async function fetchResourcesForProjectId(id: string) : Promise<ProjectResourceTableView[]> {
   try {
     const query = {
       text: `
-        SELECT person_name || ' ' || person_surname as person_name, role_description
+        SELECT person_name || ' ' || person_surname as person_name, role_description, b.person_id,
+               person_name || ' ' || person_surname || role_description as all_columns
         FROM project a
         JOIN project_person_role b on a.project_id = b.project_id
         JOIN role c on b.role_id = c.role_id

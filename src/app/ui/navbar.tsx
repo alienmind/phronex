@@ -44,11 +44,6 @@ export function AppNavbar() {
       icon: HomeIcon,
     },
     {
-      title: "Projects",
-      url: "/dashboard/projects",
-      icon: FolderIcon,
-    },
-    {
       title: "People",
       url: "/dashboard/people",
       icon: UsersIcon,

@@ -36,11 +36,19 @@ export default async function Page( {params}: { params: Params } ) {
         </div>
       </div>
       
-      {/* Bottom half - Reserved for future content */}
+      {/* Bottom half - Tables */}
       <div className="flex-1 p-6">
-        <div className="max-w-4xl mx-auto">
-        {expenses && <ProjectCostsTable costs={expenses} /> || <p>No expenses found</p>}
-        {resources && <ProjectResourcesTable resources={resources} /> || <p>No resources found</p>}
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="w-full">
+              <h2 className="text-xl font-semibold mb-4">Project Expenses</h2>
+              {expenses && <ProjectCostsTable costs={expenses} /> || <p>No expenses found</p>}
+            </div>
+            <div className="w-full">
+              <h2 className="text-xl font-semibold mb-4">Project Resources</h2>
+              {resources && <ProjectResourcesTable resources={resources} /> || <p>No resources found</p>}
+            </div>
+          </div>
         </div>
       </div>
     </div>
