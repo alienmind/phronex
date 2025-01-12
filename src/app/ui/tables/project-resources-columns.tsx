@@ -22,26 +22,51 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const RoleFilter = () => {
+const RoleFilter = ({ projectId, onResourcesChange }: { 
+  projectId: string;
+  onResourcesChange: (resources: any[]) => void;
+}) => {
+  const [roles, setRoles] = React.useState<{role_id: string, role_description: string}[]>([]);
+
+  React.useEffect(() => {
+    async function loadRoles() {
+      const response = await fetch('/api/roles');
+      const data = await response.json();
+      setRoles(data);
+    }
+    loadRoles();
+  }, []);
+
+  async function handleRoleChange(role: string) {
+    const params = new URLSearchParams();
+    if (role !== 'all') params.set('role', role);
+    
+    const response = await fetch(`/api/projects/${projectId}/resources?${params.toString()}`);
+    const resources = await response.json();
+    onResourcesChange(resources);
+  }
+
   return (
     <div className="flex items-center gap-2 w-full">
       <div className="w-[70%]">
-        <Select>
+        <Select onValueChange={handleRoleChange}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Filter by role" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All roles</SelectItem>
-            <SelectItem value="developer">Developer</SelectItem>
-            <SelectItem value="designer">Designer</SelectItem>
-            <SelectItem value="manager">Manager</SelectItem>
+            {roles.map(role => (
+              <SelectItem key={role.role_id} value={role.role_description}>
+                {role.role_description}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
       <Button 
         variant="outline" 
         className="w-[30%]"
-        onClick={() => console.log('Reset role filter')}
+        onClick={() => handleRoleChange('all')}
       >
         Reset filter
       </Button>

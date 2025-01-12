@@ -188,7 +188,7 @@ export async function fetchProjectExpensesAndBudget(id: string, expenses_start_d
  * This is the function to fetch the resources assigned to a project
  * @param id - the id of the project
  */
-export async function fetchResourcesForProjectId(id: string) : Promise<ProjectResourceTableView[]> {
+export async function fetchResourcesForProjectId(id: string, role?: string) : Promise<ProjectResourceTableView[]> {
   try {
     const query = {
       text: `
@@ -199,15 +199,16 @@ export async function fetchResourcesForProjectId(id: string) : Promise<ProjectRe
         JOIN role c on b.role_id = c.role_id
         JOIN person d on b.person_id = d.person_id
         WHERE a.project_id = $1
+        ${role ? 'AND c.role_description = $2' : ''}
       `,
-      values: [id]
+      values: role ? [id, role] : [id]
     };
     
-    const result = await connectionPool.query(query, [id]);
+    const result = await connectionPool.query(query);
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch project expenses.');
+    throw new Error('Failed to fetch project resources.');
   }
 }
 
@@ -228,6 +229,22 @@ export async function fetchPersons() {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch persons.');
+  }
+}
+
+export async function fetchRoles() {
+  try {
+    const query = `
+      SELECT role_id, role_description
+      FROM role
+      ORDER BY role_description
+    `;
+    
+    const result = await connectionPool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch roles.');
   }
 } 
 

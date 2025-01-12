@@ -51,7 +51,7 @@ export default async function Page( {params}: { params: Params } ) {
             </div>
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Resources</h2>
-              {resources && <ProjectResourcesTable resources={resources} /> || <p>No resources found</p>}
+              {resources && <ProjectResourcesTable resources={resources} projectId={searchParams.id} /> || <p>No resources found</p>}
             </div>
           </div>
         </div>
