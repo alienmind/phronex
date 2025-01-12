@@ -1,10 +1,9 @@
 "use client"
 
+import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { MoreHorizontal } from "lucide-react"
-import { Person, ProjectResourceTableView } from "@/app/lib/dataschemas"
-import { formatDateToLocal } from "@/app/lib/miscutils"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ProjectResourceTableView } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,6 +13,43 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+const RoleFilter = () => {
+  return (
+    <div className="flex items-center gap-2 w-full">
+      <div className="w-[70%]">
+        <Select>
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Filter by role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All roles</SelectItem>
+            <SelectItem value="developer">Developer</SelectItem>
+            <SelectItem value="designer">Designer</SelectItem>
+            <SelectItem value="manager">Manager</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <Button 
+        variant="outline" 
+        className="w-[30%]"
+        onClick={() => console.log('Reset role filter')}
+      >
+        Reset filter
+      </Button>
+    </div>
+  )
+}
+
+export { RoleFilter }
 
 async function deleteResource(personId: string) {
   // TODO: Implement delete functionality

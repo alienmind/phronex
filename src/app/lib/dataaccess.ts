@@ -164,11 +164,11 @@ export async function fetchProjectExpensesAndBudget(id: string, expenses_start_d
         LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
         LEFT OUTER JOIN category c ON b.category_id = c.category_id
         WHERE a.project_id = $1
-        AND a.expense_date >= $2
-        AND a.expense_date <= $3
+        AND a.expense_date > $2
+        AND a.expense_date < $3
         ORDER BY a.expense_date DESC
       `,
-      values: [id, expenses_start_date, expenses_end_date]
+      values: [id, (expenses_start_date ? expenses_start_date : '1900-01-01'), (expenses_end_date ? expenses_end_date : '2100-01-01')]
     };
     
     console.log('Executing query:', query.text);

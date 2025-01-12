@@ -17,7 +17,7 @@ type Params = Promise<{ id: string, expenses_start_date: Date, expenses_end_date
 export default async function Page( {params}: { params: Params } ) {
   const searchParams = await params;
 
-  console.log('Fetching project details for:', searchParams.id);
+  console.log('Fetching project details for:', searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
   const project = await fetchProjectById(searchParams.id);
   const resources = await fetchResourcesForProjectId(searchParams.id);
   const expenses = await fetchProjectExpensesAndBudget(searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);

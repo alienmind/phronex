@@ -11,11 +11,12 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { DateRangePicker } from './date-range-picker';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
+import { revalidatePath } from 'next/cache';
 
 export function ExpenseListFilter() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   // Default to last 6 months if no dates are set
   const defaultSelected: DateRange = {
@@ -27,18 +28,18 @@ export function ExpenseListFilter() {
     const params = new URLSearchParams(searchParams);
     
     if (range?.from) {
-      params.set('expense_start_date', range.from.toISOString());
+      params.set('expenses_start_date', range.from.toISOString().substring(0, 10));
     } else {
-      params.delete('expense_start_date');
+      params.delete('expenses _start_date');
     }
     
     if (range?.to) {
-      params.set('expense_end_date', range.to.toISOString());
+      params.set('expenses_end_date', range.to.toISOString().substring(0, 10));
     } else {
-      params.delete('expense_end_date');
+      params.delete('expenses_end_date');
     }
 
-    replace(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
