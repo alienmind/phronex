@@ -9,7 +9,7 @@ The demo project is deployed under http://phronex.alienmind.eu (or at least will
 The name is derived from the Greek word "Phronesis" (φρόνησις), which means practical wisdom or prudence—especially the kind used in decision-making, planning, and budgeting. The name Phronex captures the essence of thoughtful planning and managing resources, which fits perfectly for a project budgeting web application. Plus, it sounds modern and catchy 😉
 
 <p align="center">
-  <img src="doc/logo.jpg" alt="Phronex logo: derived from the Greek word 'Phronesis' (φρόνησις), which means practical wisdom or prudence—especially the kind used in decision-making, planning, and budgeting." style="width:350px; height:350px; border-radius:50%; float:right">
+  <img src="doc/logo.png" alt="Phronex logo: derived from the Greek word 'Phronesis' (φρόνησις), which means practical wisdom or prudence—especially the kind used in decision-making, planning, and budgeting." style="width:350px; height:350px; border-radius:50%; float:right">
 </p>
 
 # Requirement analysis
@@ -343,3 +343,4 @@ It would have been impossible to do this project without the following reference
 - Properly handle route params in NextJS https://nextjs.org/docs/app/api-reference/file-conventions/route
 - Shadcn + Tanstack table https://ui.shadcn.com/docs/components/data-table
 - Shadcn + Tanstack table - Filtering customization https://tanstack.com/table/v8/docs/guide/filters
+- React Day Picker - how to fix upgrade to latest version - https://daypicker.dev/upgrading#7-update-your-custom-components 
