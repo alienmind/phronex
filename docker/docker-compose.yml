@@ -7,7 +7,7 @@ services:
     volumes:
       - ~/data/postgres:/var/lib/postgresql/data
     env_file:
-      - env.docker
+      - .env.docker
 
   adminer:
     image: adminer
@@ -25,6 +25,6 @@ services:
    extra_hosts:
      - "host.docker.internal:host-gateway"
    env_file:
-     - env.docker
+     - .env.docker
    depends_on:
      - postgres

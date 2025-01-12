@@ -9,7 +9,7 @@ services:
     volumes:
       - ~/data/postgres:/var/lib/postgresql/data
     env_file:
-      - env.localhost
+      - .env.localhost
 
   adminer:
     image: adminer
