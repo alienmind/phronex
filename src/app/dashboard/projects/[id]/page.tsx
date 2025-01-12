@@ -21,7 +21,11 @@ export default async function Page( {params}: { params: Params } ) {
   console.log('Fetching project details for:', searchParams.id, searchParams.expenses_start_date, searchParams.expenses_end_date);
   const project = await fetchProjectById(searchParams.id);
   const resources = await fetchResourcesForProjectId(searchParams.id);
-  const expenses = await fetchProjectExpensesAndBudget(searchParams.id, new Date(searchParams.expenses_start_date || '1900-01-01'), new Date(searchParams.expenses_end_date || '2100-01-01'));
+  const expenses = await fetchProjectExpensesAndBudget(
+    searchParams.id, 
+    new Date('1900-01-01'), 
+    new Date('2100-01-01')
+  );
 
   if (!project) {
     notFound();
@@ -43,7 +47,7 @@ export default async function Page( {params}: { params: Params } ) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Expenses</h2>
-              {expenses && <ProjectExpensesTable expenses={expenses} /> || <p>No expenses found</p>}
+              {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} /> || <p>No expenses found</p>}
             </div>
             <div className="w-full">
               <h2 className="text-xl font-semibold mb-4">Project Resources</h2>
