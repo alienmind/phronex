@@ -200,9 +200,10 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Dockerize the web app
 - [x] .. Search expenses over time range
 - [x] .. Generic feature to edit values in a data table
+- [ ] .. Generic feature to add a new row to a data table
 - [x] .. Editing expenses values or descriptions live from the project detail screen
 - [ ] .. Add expenses to projects
-- [ ] .. Edit a expense detail in the project
+- [x] .. Edit a expense detail in the project
 - [ ] .. Reassign / remove resources or costs to each project in the project detail screen
 - [ ] .. Graph to show expensditures per category against budget
 - [ ] .. Graph resources assignment to projects

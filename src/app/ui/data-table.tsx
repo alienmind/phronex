@@ -35,11 +35,27 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
+import { PlusCircle } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+
+interface ColumnMetaType {
+  editable?: boolean;
+}
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
+  columns: ColumnDef<TData, TValue, ColumnMetaType>[]
   data: TData[]
   onRowUpdate?: (rowId: string, data: Partial<TData>) => Promise<void>
+  onRowCreate?: (data: Partial<TData>) => Promise<void>
   idField?: string
 }
 
@@ -47,15 +63,20 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   onRowUpdate,
-  idField = 'id', // by default, the id field is used to identify rows
+  onRowCreate,
+  idField = 'id',
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [editingCell, setEditingCell] = React.useState<{
-    rowId: string;
-    columnId: string;
-    value: any;
+  const [editingCell, setEditingCell] = React.useState<
+  {
+      rowId: string;
+      columnId: string;
+      value: any;
   } | null>(null)
+  const [editingValue, setEditingValue] = React.useState("")
+  const [showCreateDialog, setShowCreateDialog] = React.useState(false)
+  const [newRowData, setNewRowData] = React.useState<Partial<TData>>({})
   const { toast } = useToast()
 
   const table = useReactTable({
@@ -159,17 +180,92 @@ export function DataTable<TData, TValue>({
     );
   };
 
+  const handleNewRow = () => {
+    setShowCreateDialog(true)
+    setNewRowData({})
+  }
+
+  const handleNewRowSubmit = async () => {
+    if (!onRowCreate) return
+
+    try {
+      await onRowCreate(newRowData)
+      setShowCreateDialog(false)
+      setNewRowData({})
+      toast({
+        title: "Success",
+        description: "New record created successfully",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create new record",
+        variant: "destructive",
+      })
+    }
+  }
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex justify-between items-center py-4">
         <Input
-          placeholder="Text search..."
+          placeholder="Filter..."
           value={(table.getColumn("all_columns")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("all_columns")?.setFilterValue(event.target.value)
           }
-          className="w-full"
+          className="max-w-sm"
         />
+        {onRowCreate && (
+          <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+            <DialogTrigger asChild>
+              <Button onClick={handleNewRow} className="ml-4">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                New
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>New Entry</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                {columns.map((column) => {
+                  if (column.id === "actions" || 
+                      ("accessorKey" in column && column.accessorKey === "all_columns") ||
+                      !column.meta?.editable) {
+                    return null
+                  }
+                  const columnId = column.id || ("accessorKey" in column ? String(column.accessorKey) : "")
+                  const columnName = ("accessorKey" in column ? String(column.accessorKey) : column.id) || ""
+                  
+                  return (
+                    <div key={columnId} className="grid grid-cols-4 items-center gap-4">
+                      <Label className="text-right">
+                        {columnName.charAt(0).toUpperCase() + columnName.slice(1).replace(/_/g, ' ')}
+                      </Label>
+                      <Input
+                        className="col-span-3"
+                        value={String(newRowData[columnId as keyof TData] || "")}
+                        onChange={(e) => 
+                          setNewRowData(prev => ({
+                            ...prev,
+                            [columnId]: e.target.value
+                          }))
+                        }
+                      />
+                    </div>
+                  )
+                })}
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button onClick={handleNewRowSubmit}>Save</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

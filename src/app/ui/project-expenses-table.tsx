@@ -133,6 +133,26 @@ export default function ProjectExpensesTable({
     );
   };
 
+  const handleExpenseCreate = async (data: Partial<ProjectExpensesCategoryBudgetTableView>) => {
+    const response = await fetch(`/api/projects/${projectId}/expenses`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...data,
+        project_id: projectId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create expense');
+    }
+
+    const newExpense = await response.json();
+    setCurrentExpenses(prev => [...prev, newExpense.expense]);
+  };
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
@@ -147,6 +167,7 @@ export default function ProjectExpensesTable({
         columns={columns} 
         data={currentExpenses} 
         onRowUpdate={handleExpenseUpdate}
+        onRowCreate={handleExpenseCreate}
         idField="expense_id"
       />
     </div>
