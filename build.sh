@@ -31,12 +31,13 @@ docker image tag phronex-web alienmind/phronex-web:latest
 #docker push 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/postgres:latest
 
 # Publish in Dockerhub
-# Do docker login first
 docker image tag postgres:14-alpine alienmind/postgres:latest
 docker image tag phronex-web alienmind/phronex-web:latest
+docker login
+docker push alienmind/phronex-web:latest
 
 # Create the tarball for EC2
-tar -czvf docker-dist.tgz docker/docker-compose.yml docker/.env*
+tar -czvf prod-dist.tgz run.sh .secrets docker/docker-compose.yml docker/env.prod docker/fixenv.sh
 
 cat <<EOF
 Finished:

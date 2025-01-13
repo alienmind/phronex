@@ -74,7 +74,7 @@ function AboutPage() {
         <div className="flex flex-col items-center md:items-start justify-center gap-4">
 
           <p className="text-lg text-center md:text-left max-w-2xl">
-           This app is part of a demo for a job interview. It's also been developed for learning purposes and upskilling on the latest React and Next.js features.
+           This app is part of a demo for a job interview. It&apos;s also been developed for learning purposes and upskilling on the latest React and Next.js features.
           </p>
           <div className="flex gap-4">
             <Button><Link href="https://github.com/alienmind/phronex">Visit github</Link></Button>

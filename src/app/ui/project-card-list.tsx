@@ -38,15 +38,15 @@ export function ProjectCardList({ initialProjects, limit = 6 }: {
   // For each project, display a ProjectCard component
   return (
     <div className="flex flex-col w-full">
-      <div className="flex justify-between items-center mb-6 px-4 gap-4">
-        <div className="w-2/3">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 px-4 gap-4">
+        <div className="w-full sm:w-2/3">
           <Input type="text" placeholder="Search projects" />
         </div>
-        <div className="w-1/4 flex justify-end">
+        <div className="w-full sm:w-1/4 flex justify-end">
           <ProjectListFilter defaultValue={currentLimit} onLimitChange={handleLimitChange} />
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-1 lg:grid-rows-3 gap-8 xl:gap-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         {projects.length > 0
           ? projects.map((project: any) => (
               <ProjectCard

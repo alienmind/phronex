@@ -33,25 +33,32 @@ export default async function Page( {params}: { params: Params } ) {
 
   return (
     <div className="flex flex-col w-full min-h-screen">
-      {/* Top half - Project Details Form */}
-      <div className="w-full h-[50vh] min-h-[400px] p-6 bg-gray-50 dark:bg-gray-900 border-b">
+      {/* Top section - Project Details Form */}
+      <div className="w-full min-h-[400px] p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 border-b overflow-y-auto">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">Project Details</h1>
+          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Project Details</h1>
           <ProjectDetailsForm project={project} />
         </div>
       </div>
       
-      {/* Bottom half - Tables */}
-      <div className="flex-1 p-6">
+      {/* Bottom section - Tables */}
+      <div className="flex-1 p-4 sm:p-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Change to stack on mobile, side by side on larger screens */}
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6">
+            {/* Expenses section */}
             <div className="w-full">
-              <h2 className="text-xl font-semibold mb-4">Project Expenses</h2>
-              {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} /> || <p>No expenses found</p>}
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Expenses</h2>
+              <div className="overflow-x-auto">
+                {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} /> || <p>No expenses found</p>}
+              </div>
             </div>
+            {/* Resources section */}
             <div className="w-full">
-              <h2 className="text-xl font-semibold mb-4">Project Resources</h2>
-              {resources && <ProjectResourcesTable resources={resources} projectId={searchParams.id} /> || <p>No resources found</p>}
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Resources</h2>
+              <div className="overflow-x-auto">
+                {resources && <ProjectResourcesTable resources={resources} projectId={searchParams.id} /> || <p>No resources found</p>}
+              </div>
             </div>
           </div>
         </div>
