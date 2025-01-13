@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { ProjectExpensesCategoryBudgetTableView } from "../lib/dataschemas";
+import { ProjectExpensesWithCategoryBudget } from "../lib/dataschemas";
 import { formatDateToLocal } from "@/app/lib/miscutils"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
@@ -16,13 +16,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { updateExpenseAction, createExpenseAction } from '@/app/lib/actions';
 
 async function deleteExpense(expenseId: string) {
   // TODO: Implement delete functionality
   console.log('Deleting expense:', expenseId);
 }
 
-const columns: ColumnDef<ProjectExpensesCategoryBudgetTableView>[] = [
+const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
   {
     accessorKey: "expense_date",
     header: ({ column }) => {
@@ -60,8 +61,21 @@ const columns: ColumnDef<ProjectExpensesCategoryBudgetTableView>[] = [
     header: "Category",
     cell: ({ row }) => {
       const categoryName = row.getValue("category_name");
-      return <span>{categoryName ? String(categoryName) : "Unknown"}</span>
+      return <span>{categoryName ? String(categoryName) : "Unknown"}</span>;
     },
+    meta: {
+      editable: true,
+      selectableOptions: {
+        fetchOptions: async () => {
+          const categories = await fetch('/api/categories').then(res => res.json());
+          return categories.map((cat: any) => ({
+            id: cat.category_name,
+            label: cat.category_name,
+            hiddenValue: cat.category_id
+          }));
+        }
+      }
+    }
   },
   {
     accessorKey: "project_category_budget",
@@ -106,51 +120,36 @@ export default function ProjectExpensesTable({
   expenses,
   projectId 
 }: { 
-  expenses: ProjectExpensesCategoryBudgetTableView[],
+  expenses: ProjectExpensesWithCategoryBudget[],
   projectId: string 
 }) {
   const [currentExpenses, setCurrentExpenses] = useState(expenses);
 
-  const handleExpenseUpdate = async (rowId: string, data: Partial<ProjectExpensesCategoryBudgetTableView>) => {
-    const response = await fetch(`/api/expenses/${rowId}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
+  const handleExpenseUpdate = async (rowId: string, data: Partial<ProjectExpensesWithCategoryBudget>) => {
+    const result = await updateExpenseAction(rowId, data);
+    
+    if (!result.success) {
       throw new Error('Failed to update expense');
     }
 
-    // Refresh the expenses list
-    const updatedExpense = await response.json();
     setCurrentExpenses(prev => 
       prev.map(expense => 
-        expense.expense_id === rowId ? { ...expense, ...updatedExpense.expense } : expense
+        expense.expense_id === rowId ? { ...expense, ...result.expense } : expense
       )
     );
   };
 
-  const handleExpenseCreate = async (data: Partial<ProjectExpensesCategoryBudgetTableView>) => {
-    const response = await fetch(`/api/projects/${projectId}/expenses`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...data,
-        project_id: projectId,
-      }),
+  const handleExpenseCreate = async (data: Partial<ProjectExpensesWithCategoryBudget>) => {
+    const result = await createExpenseAction({
+      ...data,
+      project_id: projectId
     });
 
-    if (!response.ok) {
+    if (!result.success) {
       throw new Error('Failed to create expense');
     }
 
-    const newExpense = await response.json();
-    setCurrentExpenses(prev => [...prev, newExpense.expense]);
+    setCurrentExpenses(prev => [...prev, result.expense]);
   };
 
   return (

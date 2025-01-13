@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { ProjectResourceTableView } from "@/app/lib/dataschemas"
+import { ProjectResources } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
 import {
@@ -74,7 +74,7 @@ const RoleFilter = ({ projectId, onResourcesChange }: {
   )
 }
 
-const columns: ColumnDef<ProjectResourceTableView>[] = [
+const columns: ColumnDef<ProjectResources>[] = [
   {
     accessorKey: "person_name",
     header: ({ column }) => {
@@ -130,7 +130,7 @@ export default function ProjectResourcesTable({
   resources,
   projectId 
 }: { 
-  resources: ProjectResourceTableView[],
+  resources: ProjectResources[],
   projectId: string
 }) {
   const [currentResources, setCurrentResources] = useState(resources);

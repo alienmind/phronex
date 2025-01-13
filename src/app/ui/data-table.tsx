@@ -22,6 +22,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  RowData,
 } from "@tanstack/react-table"
 
 import {
@@ -46,18 +47,43 @@ import {
   DialogClose,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-
-interface ColumnMetaType {
-  editable?: boolean;
-}
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { SelectProps } from "@radix-ui/react-select";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue, ColumnMetaType>[]
+  columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onRowUpdate?: (rowId: string, data: Partial<TData>) => Promise<void>
   onRowCreate?: (data: Partial<TData>) => Promise<void>
   idField?: string
 }
+
+type CustomColumnMeta = {
+  editable?: boolean;
+  selectableOptions?: {
+    fetchOptions: () => Promise<{
+      id: string;
+      label: string;
+      hiddenValue?: string;
+    }[]>;
+  };
+};
+
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<TData extends RowData, TValue> extends CustomColumnMeta {}
+}
+
+type SelectOption = {
+  id: string;
+  label: string;
+  hiddenValue?: string;
+};
 
 export function DataTable<TData, TValue>({
   columns,
@@ -78,6 +104,22 @@ export function DataTable<TData, TValue>({
   const [showCreateDialog, setShowCreateDialog] = React.useState(false)
   const [newRowData, setNewRowData] = React.useState<Partial<TData>>({})
   const { toast } = useToast()
+  const [selectableOptions, setSelectableOptions] = React.useState<Record<string, SelectOption[]>>({});
+
+  React.useEffect(() => {
+    if (showCreateDialog) {
+      columns.forEach(async (column) => {
+        const meta = column.meta as CustomColumnMeta;
+        if (meta?.selectableOptions) {
+          const options = await meta.selectableOptions.fetchOptions();
+          setSelectableOptions(prev => ({
+            ...prev,
+            [column.id || String(("accessorKey" in column ? column.accessorKey : ""))]: options
+          }));
+        }
+      });
+    }
+  }, [showCreateDialog]);
 
   const table = useReactTable({
     data,
@@ -230,29 +272,56 @@ export function DataTable<TData, TValue>({
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 {columns.map((column) => {
+                  console.log("COLUMN=>",JSON.stringify(column));
                   if (column.id === "actions" || 
                       ("accessorKey" in column && column.accessorKey === "all_columns") ||
-                      !column.meta?.editable) {
+                      !column.meta || !column.meta.editable) {
                     return null
                   }
                   const columnId = column.id || ("accessorKey" in column ? String(column.accessorKey) : "")
                   const columnName = ("accessorKey" in column ? String(column.accessorKey) : column.id) || ""
+                  const options = selectableOptions[columnId] as SelectOption[];
                   
                   return (
                     <div key={columnId} className="grid grid-cols-4 items-center gap-4">
                       <Label className="text-right">
-                        {columnName.charAt(0).toUpperCase() + columnName.slice(1).replace(/_/g, ' ')}
+                        {(typeof column.header === 'string' ? column.header : columnName.charAt(0).toUpperCase() + columnName.slice(1).replace(/_/g, ' '))}
                       </Label>
-                      <Input
-                        className="col-span-3"
-                        value={String(newRowData[columnId as keyof TData] || "")}
-                        onChange={(e) => 
-                          setNewRowData(prev => ({
-                            ...prev,
-                            [columnId]: e.target.value
-                          }))
-                        }
-                      />
+                      {column.meta?.selectableOptions ? (
+                        <Select
+                          value={String(newRowData[columnId as keyof TData] || "")}
+                          onValueChange={(value) => {
+                            const option = options?.find(opt => opt.id === value);
+                            setNewRowData(prev => ({
+                              ...prev,
+                              [columnId]: value,
+                              ...(option?.hiddenValue ? { category_id: option.hiddenValue } : {})
+                            }));
+                          }}
+                        >
+                          <SelectTrigger className="col-span-3">
+                            <SelectValue placeholder={`Select ${typeof column.header === 'string' ? column.header : columnName}`} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {options?.map(option => (
+                              <SelectItem key={option.id} value={option.id}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          className="col-span-3"
+                          value={String(newRowData[columnId as keyof TData] || "")}
+                          onChange={(e) => 
+                            setNewRowData(prev => ({
+                              ...prev,
+                              [columnId]: e.target.value
+                            }))
+                          }
+                        />
+                      )}
                     </div>
                   )
                 })}
