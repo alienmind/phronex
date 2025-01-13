@@ -11,6 +11,25 @@ import type { User, Project, ProjectExpense, ProjectBudget, ProjectPersonRole, P
 
 const connectionPool = require('@/app/lib/db');
 
+const logQuery = async (query: string | { text: string, values: any[] }, values?: any[]) => {
+  const queryText = typeof query === 'string' ? query : query.text;
+  const queryValues = typeof query === 'string' ? values : query.values;
+  
+  console.log('\n=== Database Query ===');
+  console.log('SQL:', queryText);
+  console.log('Values:', queryValues);
+  
+  try {
+    const result = await connectionPool.query(query, values);
+    console.log('Result rows:', result.rows);
+    console.log('Row count:', result.rowCount);
+    console.log('===================\n');
+    return result;
+  } catch (error) {
+    console.error('Query Error:', error);
+    throw error;
+  }
+};
 
 /*
  * This is the authentication flow for a user. It will match the provided username and password against the database
@@ -31,7 +50,7 @@ const connectionPool = require('@/app/lib/db');
  */
 export async function getUser(email: string, password: string): Promise<User | undefined> {
   try {
-    const user = await connectionPool.query(`SELECT * FROM users WHERE email='${email}' and encpassword = crypt('${password}', encpassword)`);
+    const user = await logQuery(`SELECT * FROM users WHERE email='${email}' and encpassword = crypt('${password}', encpassword)`);
     return user.rows[0];
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -50,7 +69,7 @@ export async function getUser(email: string, password: string): Promise<User | u
 export async function addProject(project: Project) {
   // Insert data into the database
   try {
-    await connectionPool.query({
+    await logQuery({
       text: `INSERT INTO project (
         project_name, 
         project_scope,
@@ -82,12 +101,11 @@ export async function addProject(project: Project) {
  * This is the function to update a project in the database
  */
 export async function updateProject(data: Project) {
-    const query = {
-      text: `UPDATE project SET project_name = $1, project_scope = $2, project_start_date = $3, project_end_date = $4, project_manager_id = $5 WHERE project_id = $6`,
-      values: [data.project_name, data.project_scope, data.project_start_date, data.project_end_date, data.project_manager_id, data.project_id]
-    };
-    await connectionPool.query(query);
-    await connectionPool.query("COMMIT");
+  await logQuery({
+    text: `UPDATE project SET project_name = $1, project_scope = $2, project_start_date = $3, project_end_date = $4, project_manager_id = $5 WHERE project_id = $6`,
+    values: [data.project_name, data.project_scope, data.project_start_date, data.project_end_date, data.project_manager_id, data.project_id]
+  });
+  await logQuery("COMMIT");
 }
 
 /*
@@ -100,21 +118,21 @@ export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectW
     if (limit && limit <= 0) {
       limit = undefined;
     }
-    const query = `
-    SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
-       project_scope, person_name, person_surname
-    FROM project a
-    LEFT OUTER JOIN person b on a.project_manager_id = b.person_id
-    ORDER BY a.project_start_date DESC
-    ${limit ? `LIMIT ${limit}` : ''}
-    `;
+    const data = await logQuery({
+      text: `
+        SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
+           project_scope, person_name, person_surname
+        FROM project a
+        LEFT OUTER JOIN person b on a.project_manager_id = b.person_id
+        ORDER BY a.project_start_date DESC
+        ${limit ? `LIMIT ${limit}` : ''}
+      `,
+      values: []
+    });
 
-    const data = await connectionPool.query(query);
-
-    const mostRecentProjects = data.rows.map((project: ProjectWithProjectManager) => ({
+    return data.rows.map((project: ProjectWithProjectManager) => ({
       ...project,
     }));
-    return mostRecentProjects;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch most recent projects.');
@@ -128,16 +146,17 @@ export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectW
  */
 export async function fetchProjectById(id: string) : Promise<ProjectWithProjectManager> {
   try {
-    const query = `
-      SELECT p.*, 
-             person.person_name, 
-             person.person_surname
-      FROM project p
-      LEFT JOIN person ON p.project_manager_id = person.person_id
-      WHERE p.project_id = $1
-    `;
-    
-    const result = await connectionPool.query(query, [id]);
+    const result = await logQuery({
+      text: `
+        SELECT p.*, 
+               person.person_name, 
+               person.person_surname
+        FROM project p
+        LEFT JOIN person ON p.project_manager_id = person.person_id
+        WHERE p.project_id = $1
+      `,
+      values: [id]
+    });
     return result.rows[0] as ProjectWithProjectManager;
   } catch (error) {
     console.error('Database Error:', error);
@@ -219,14 +238,15 @@ export async function fetchResourcesForProjectId(id: string, role?: string) : Pr
  */
 export async function fetchPersons() {
   try {
-    const query = `
-      SELECT person_id, person_name, person_surname, person_email,
-             person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
-      FROM person 
-      ORDER BY person_surname, person_name
-    `;
-    
-    const data = await connectionPool.query(query);
+    const data = await logQuery({
+      text: `
+        SELECT person_id, person_name, person_surname, person_email,
+               person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+        FROM person 
+        ORDER BY person_surname, person_name
+      `,
+      values: []
+    });
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
@@ -236,13 +256,14 @@ export async function fetchPersons() {
 
 export async function fetchRoles() {
   try {
-    const query = `
-      SELECT role_id, role_description
-      FROM role
-      ORDER BY role_description
-    `;
-    
-    const result = await connectionPool.query(query);
+    const result = await logQuery({
+      text: `
+        SELECT role_id, role_description
+        FROM role
+        ORDER BY role_description
+      `,
+      values: []
+    });
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
@@ -252,13 +273,14 @@ export async function fetchRoles() {
 
 export async function fetchCategories() {
   try {
-    const query = `
-      SELECT category_id, category_name
-      FROM category
-      ORDER BY category_name
-    `;
-    
-    const result = await connectionPool.query(query);
+    const result = await logQuery({
+      text: `
+        SELECT category_id, category_name
+        FROM category
+        ORDER BY category_name
+      `,
+      values: []
+    });
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
@@ -269,15 +291,18 @@ export async function fetchCategories() {
 // Add this function to handle expense updates
 export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   try {
-    const result = await connectionPool.query(`
-      UPDATE project_expense 
-      SET 
-        expense_name = COALESCE($1, expense_name),
-        expense_value = COALESCE($2, expense_value),
-        expense_date = COALESCE($3, expense_date)
-      WHERE expense_id = $4
-      RETURNING *;
-    `, [data.expense_name, data.expense_value, data.expense_date, id]);
+    const result = await logQuery({
+      text: `
+        UPDATE project_expense 
+        SET 
+          expense_name = COALESCE($1, expense_name),
+          expense_value = COALESCE($2, expense_value),
+          expense_date = COALESCE($3, expense_date)
+        WHERE expense_id = $4
+        RETURNING *;
+      `,
+      values: [data.expense_name, data.expense_value, data.expense_date, id]
+    });
 
     if (result.rows.length === 0) {
       throw new Error('Expense not found');
@@ -287,6 +312,35 @@ export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to update expense');
+  }
+} 
+
+export async function createExpense(data: Partial<ProjectExpense>) {
+  try {
+    const result = await logQuery({
+      text: `
+        INSERT INTO project_expense (
+          project_id,
+          expense_name,
+          expense_value,
+          expense_date,
+          category_id
+        ) VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;
+      `,
+      values: [
+        data.project_id,
+        data.expense_name,
+        data.expense_value,
+        data.expense_date || new Date(),
+        data.category_id
+      ]
+    });
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create expense');
   }
 } 
 
