@@ -344,3 +344,4 @@ It would have been impossible to do this project without the following reference
 - Shadcn + Tanstack table https://ui.shadcn.com/docs/components/data-table
 - Shadcn + Tanstack table - Filtering customization https://tanstack.com/table/v8/docs/guide/filters
 - React Day Picker - how to fix upgrade to latest version - https://daypicker.dev/upgrading#7-update-your-custom-components 
+- RevealJS slides https://revealjs.com/installation/

@@ -78,51 +78,69 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
 
   return (
     <Form {...form}>
-      <form action={formAction} className="space-y-6">
+      <form action={formAction} className="space-y-4 sm:space-y-6">
         <FormField
           name="project_id"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-              <Input className="hidden" placeholder="Project Id" {...field} />
+                <Input className="hidden" {...field} />
               </FormControl>
-            </FormItem>
-          )} />
-
-        <FormField
-          control={form.control}
-          name="project_name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Name</FormLabel>
-              <FormControl>
-                <Input {...field} className="max-w-xl" />
-              </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="project_scope"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Project Scope</FormLabel>
-              <FormControl>
-                <Textarea {...field} className="max-w-xl h-32" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="grid grid-cols-2 gap-4 max-w-xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           <FormField
-            control={form.control}
-            name="project_start_date"
+            name="project_name"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>Project Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Project name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="project_manager_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Project Manager</FormLabel>
+                <Select 
+                  name="project_manager_id"
+                  required
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a project manager" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {persons.length > 0 ?
+                      persons.map((person) => (
+                        <SelectItem key={person.person_id} value={person.person_id}>
+                          {person.person_surname}, {person.person_name}
+                        </SelectItem>
+                      )) : "No persons found"}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <FormField
+            name="project_start_date"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
                 <FormLabel>Start Date</FormLabel>
                 <FormControl>
                   <DatePicker {...field} />
@@ -133,10 +151,9 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
           />
 
           <FormField
-            control={form.control}
             name="project_end_date"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col">
                 <FormLabel>End Date</FormLabel>
                 <FormControl>
                   <DatePicker {...field} />
@@ -148,43 +165,27 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
         </div>
 
         <FormField
-          control={form.control}
-          name="project_manager_id"
+          name="project_scope"
           render={({ field }) => (
-            <FormItem className="max-w-xl">
-              <FormLabel>Project Manager</FormLabel>
-              <Select 
-                name="project_manager_id"
-                required
-                onValueChange={field.onChange} 
-                defaultValue={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a project manager" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {persons.length > 0 ?
-                   persons.map((person) => (
-                    <SelectItem key={person.person_id} value={person.person_id}>
-                      {person.person_surname}, {person.person_name}
-                    </SelectItem>
-                  )) : "No persons found"}
-                </SelectContent>
-              </Select>
+            <FormItem>
+              <FormLabel>Project Scope</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Project scope" 
+                  className="min-h-[100px]" 
+                  {...field} 
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="flex gap-4">
-          <Button variant="outline" type="button">
-            <Link href={`/dashboard`}>
-              Cancel
-            </Link>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-4">
+          <Button variant="outline" type="button" className="w-full sm:w-auto">
+            <Link href="/dashboard">Cancel</Link>
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
             {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
