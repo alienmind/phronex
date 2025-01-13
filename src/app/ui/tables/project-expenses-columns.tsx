@@ -47,10 +47,16 @@ export const columns: ColumnDef<ProjectExpensesCategoryBudgetTableView>[] = [
   {
     accessorKey: "expense_name",
     header: "Name",
+    meta: {
+      editable: true,
+    },
   },
   {
     accessorKey: "expense_value",
     header: "Value",
+    meta: {
+      editable: true,
+    },
   },
   {
     accessorKey: "category_name",

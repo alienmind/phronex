@@ -21,6 +21,28 @@ export default function ProjectExpensesTable({
 }) {
   const [currentExpenses, setCurrentExpenses] = useState(expenses);
 
+  const handleExpenseUpdate = async (rowId: string, data: Partial<ProjectExpensesCategoryBudgetTableView>) => {
+    const response = await fetch(`/api/expenses/${rowId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update expense');
+    }
+
+    // Refresh the expenses list
+    const updatedExpense = await response.json();
+    setCurrentExpenses(prev => 
+      prev.map(expense => 
+        expense.expense_id === rowId ? { ...expense, ...updatedExpense.expense } : expense
+      )
+    );
+  };
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
@@ -31,7 +53,12 @@ export default function ProjectExpensesTable({
           />
         </div>
       </div>
-      <DataTable columns={columns} data={currentExpenses} />
+      <DataTable
+        columns={columns} 
+        data={currentExpenses} 
+        onRowUpdate={handleExpenseUpdate}
+        idField="expense_id"
+      />
     </div>
   )
 }
