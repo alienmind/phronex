@@ -264,5 +264,29 @@ export async function fetchCategories() {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch categories.');
   }
+}
+
+// Add this function to handle expense updates
+export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
+  try {
+    const result = await connectionPool.query(`
+      UPDATE project_expense 
+      SET 
+        expense_name = COALESCE($1, expense_name),
+        expense_value = COALESCE($2, expense_value),
+        expense_date = COALESCE($3, expense_date)
+      WHERE expense_id = $4
+      RETURNING *;
+    `, [data.expense_name, data.expense_value, data.expense_date, id]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Expense not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update expense');
+  }
 } 
 
