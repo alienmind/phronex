@@ -77,6 +77,13 @@ export type Role = {
 // They include additional fields (when relevant) to make easier the update (composite_id) or the search (all_columns)
 // Notation: they have V prefix to indicate they are sort of UI views not actual database tables
 
+// Project with total budget and total spent plus the all_columns to enable filtering
+export type VProjectCard = Project & {
+  all_columns: string;
+  total_budget: number;
+  total_spent: number;
+};
+
 // Project combined with project manager
 export type VProjectWithProjectManager = {
   project_id: string;

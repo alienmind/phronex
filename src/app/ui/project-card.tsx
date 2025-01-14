@@ -26,112 +26,54 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button";
-import { formatDateToLocal } from '@/app/lib/miscutils';
+import { formatDateToLocal, formatCurrency } from '@/app/lib/miscutils';
 import Link from 'next/link';
+import { Project, VProjectCard } from '../lib/dataschemas';
 
 /*
  * This is the project card (client) component
  * Contains all the summarized info about a project
  */ 
-export function ProjectCard (
-  {id, name, scope, startDate, endDate, authorName, authorSurname } : {
-   id: string;
-   name: string;
-   scope: string;
-   startDate: string;
-   endDate: string;
-   authorName?: string;
-   authorSurname?: string;
-  }) {
+interface ProjectCardProps {
+  project: VProjectCard;
+}
 
-  const deleteDialog = 
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-        <Button className="w-full m-2" variant="destructive">
-          Delete
-        </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the selected project.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteProject()}>
-              <Button variant="destructive">
-                Yes, delete it!
-              </Button>
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-  ;
-
-  function deleteProject() {
-    // TODO - emit event
-    console.log("Delete project with id: " + id);
-  }
-
-  const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.setData('text/plain', id);
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragEnd = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
+export function ProjectCard({ project }: ProjectCardProps) {
+  // Calculate percentage of budget spent
+  const percentSpent = project.total_budget ? (project.total_spent / project.total_budget) * 100 : 0;
+  const spentColor = percentSpent > 100 ? 'text-destructive' : 'text-muted-foreground';
 
   return (
-    <>
-      <div 
-        className="w-full cursor-move"
-        draggable="true"
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <Card className="w-full h-full">
-          <CardHeader className="bg-emerald-50 dark:bg-emerald-950/30 border-b border-emerald-100 dark:border-emerald-900">
-            <CardTitle className="text-lg font-semibold text-emerald-900 dark:text-emerald-100">
-              {name}
-            </CardTitle>
-            <CardDescription className="text-emerald-600 dark:text-emerald-400">
-              Created on {formatDateToLocal(startDate)}
-              {authorName && authorSurname && (
-                <div className="mt-1 text-sm">
-                  by {authorName} {authorSurname}
-                </div>
-              )}
-            </CardDescription>
-          </CardHeader>
-          
-          <CardContent className="pt-4 bg-white dark:bg-gray-950">
-            <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-              <div className="flex justify-between">
-                <span>Start Date:</span>
-                <span className="font-medium">{formatDateToLocal(startDate)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>End Date:</span>
-                <span className="font-medium">{formatDateToLocal(endDate)}</span>
-              </div>
-              <div className="mt-4">
-                <p className="text-gray-700 dark:text-gray-200">{scope}</p>
-              </div>
+    <Card className="hover:bg-muted/50">
+      <Link href={`/dashboard/projects/${project.project_id}`}>
+        <CardHeader>
+          <CardTitle>{project.project_name}</CardTitle>
+          <CardDescription>{project.project_scope}</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-2">
+          <div className="grid grid-cols-2 text-sm">
+            <span className="text-muted-foreground">Start Date:</span>
+            <span>{project.project_start_date ? formatDateToLocal(project.project_start_date.toString()) : 'Not set'}</span>
+            <span className="text-muted-foreground">End Date:</span>
+            <span>{project.project_end_date ? formatDateToLocal(project.project_end_date.toString()) : 'Not set'}</span>
+          </div>
+          <div className="mt-2 grid grid-cols-2 text-sm">
+            <span className="text-muted-foreground">Total Budget:</span>
+            <span>{formatCurrency(project.total_budget)}</span>
+            <span className="text-muted-foreground">Total Spent:</span>
+            <span className={spentColor}>{formatCurrency(project.total_spent)}</span>
+          </div>
+          {/* Progress bar */}
+          <div className="mt-2">
+            <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+              <div 
+                className={`h-full ${percentSpent > 100 ? 'bg-destructive' : 'bg-primary'}`}
+                style={{ width: `${Math.min(percentSpent, 100)}%` }}
+              />
             </div>
-          </CardContent>
-          <CardFooter className="flex gap-2">
-            <Link href={`/dashboard/projects/${id}`} className="flex-1">
-              <Button className="w-full m-2">
-                Open
-              </Button>
-            </Link>
-            {deleteDialog}
-          </CardFooter>
-        </Card>
-      </div>
-    </>
-  );
-};
+          </div>
+        </CardContent>
+      </Link>
+    </Card>
+  )
+}

@@ -8,34 +8,28 @@
  */
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ProjectCard } from '@/app/ui/project-card';
 import { ProjectListFilter } from '@/app/ui/project-list-filter';
 import { Input } from '@/components/ui/input';
+import { fetchProjectsAction } from '@/app/lib/actions';
+import { VProjectCard } from '@/app/lib/dataschemas';
 
 export function ProjectCardList({ initialProjects, limit = 6 }: { 
-  initialProjects: any[],
+  initialProjects: VProjectCard[],
   limit?: number 
 }) {
   const [projects, setProjects] = useState(initialProjects);
   const [currentLimit, setCurrentLimit] = useState(limit);
 
-  // Fetch projects from the server
-  useEffect(() => {
-    async function fetchProjects() {
-      const response = await fetch(`/api/projects?limit=${currentLimit}`);
-      const data = await response.json();
-      setProjects(data);
+  const handleLimitChange = async (newLimit: number | undefined) => {
+    const result = await fetchProjectsAction(newLimit || 0);
+    if (result?.success && result?.data) {
+      setProjects(result.data);
+      setCurrentLimit(newLimit || 0);
     }
-
-    fetchProjects();
-  }, [currentLimit]);
-
-  const handleLimitChange = (newLimit: number | undefined) => {
-    setCurrentLimit(newLimit || 0);
   };
 
-  // For each project, display a ProjectCard component
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 px-4 gap-4">
@@ -48,16 +42,10 @@ export function ProjectCardList({ initialProjects, limit = 6 }: {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
         {projects.length > 0
-          ? projects.map((project: any) => (
+          ? projects.map((project) => (
               <ProjectCard
                 key={project.project_id}
-                id={project.project_id}
-                name={project.project_name}
-                scope={project.project_scope}
-                startDate={project.project_start_date}
-                endDate={project.project_end_date}
-                authorName={project.person_name}
-                authorSurname={project.person_surname}
+                project={project}
               />
             ))
           : ""}
