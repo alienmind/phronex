@@ -135,6 +135,9 @@ export default function ProjectExpensesTable({
           : expense
       )
     );
+
+    // Dispatch an event to trigger the chart update
+    window.dispatchEvent(new Event('expense-amount-changed'));
   };
 
   const handleExpenseCreate = async (data: Partial<ProjectExpense>) => {

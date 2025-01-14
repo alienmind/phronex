@@ -11,6 +11,10 @@ import { VProjectBudgetReport } from "../lib/dataschemas"
 import { fetchProjectBudgetAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
 
+// Create a global event bus for expense changes
+export const expenseChangeEventName = 'expense-amount-changed'
+export const expenseChangeEvent = new Event(expenseChangeEventName)
+
 const chartConfig = {
   budget: {
     label: "Budget",
@@ -51,6 +55,19 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export function ProjectChart({ projectId }: { projectId: string }) {
   const [chartData, setChartData] = useState<VProjectBudgetReport[]>([])
   const [maxDomain, setMaxDomain] = useState<number>(0)
+  const [updateTrigger, setUpdateTrigger] = useState(0)
+
+  useEffect(() => {
+    // Add event listener for expense changes
+    const handleExpenseChange = () => {
+      setUpdateTrigger(prev => prev + 1)
+    }
+
+    window.addEventListener(expenseChangeEventName, handleExpenseChange)
+    return () => {
+      window.removeEventListener(expenseChangeEventName, handleExpenseChange)
+    }
+  }, [])
 
   useEffect(() => {
     async function loadBudgetData() {
@@ -71,7 +88,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
     }
 
     loadBudgetData()
-  }, [projectId])
+  }, [projectId, updateTrigger]) // Add updateTrigger to dependencies
 
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
