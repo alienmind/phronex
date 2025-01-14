@@ -19,7 +19,7 @@ export default async function Page( {params}: { params: Params } ) {
   return (
     <main>
       <div className="flex flex-1 gap-4 p-4 pt-0">
-        <div className="grid grid-cols-1 lg:grid-cols-2 grid-rows-1 lg:grid-rows-3 gap-8 xl:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-1 grid-rows-1 lg:grid-rows-2 gap-8 xl:gap-12">
           <Suspense fallback={<ProjectCardListSkeleton />}>
             <ProjectCardList initialProjects={initialProjects} limit={limit} />
           </Suspense>
