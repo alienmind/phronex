@@ -1,97 +1,69 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Plus } from "lucide-react"
 import { ProjectResources } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-
-const RoleFilter = ({ projectId, onResourcesChange }: { 
-  projectId: string;
-  onResourcesChange: (resources: any[]) => void;
-}) => {
-  const [roles, setRoles] = useState<{role_id: string, role_description: string}[]>([]);
-
-  useEffect(() => {
-    async function loadRoles() {
-      const response = await fetch('/api/roles');
-      const data = await response.json();
-      setRoles(data);
-    }
-    loadRoles();
-  }, []);
-
-  async function handleRoleChange(role: string) {
-    const params = new URLSearchParams();
-    if (role !== 'all') params.set('role', role);
-    
-    const response = await fetch(`/api/projects/${projectId}/resources?${params.toString()}`);
-    const resources = await response.json();
-    onResourcesChange(resources);
-  }
-
-  return (
-    <div className="flex items-center gap-2 w-full">
-      <div className="w-[70%]">
-        <Select onValueChange={handleRoleChange}>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Filter by role" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All roles</SelectItem>
-            {roles.map(role => (
-              <SelectItem key={role.role_id} value={role.role_description}>
-                {role.role_description}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-      <Button 
-        variant="outline" 
-        className="w-[30%]"
-        onClick={() => handleRoleChange('all')}
-      >
-        Reset filter
-      </Button>
-    </div>
-  )
-}
+import { updateProjectResourceAction, createProjectResourceAction, deleteProjectResourceAction } from '@/app/lib/actions';
 
 const columns: ColumnDef<ProjectResources>[] = [
   {
-    accessorKey: "person_name",
+    accessorKey: "person_name_surname",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          Person
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
+    meta: {
+      editable: true,
+      selectableOptions: {
+        fetchOptions: async () => {
+          const persons = await fetch('/api/persons').then(res => res.json());
+          return persons.map((person: any) => ({
+            id: person.person_id,
+            label: person.person_name_surname,
+            value: person.person_name_surname,
+            hiddenValue: {
+              field: 'person_id',
+              value: person.person_id,
+              additionalFields: {
+                person_name: person.person_name,
+                person_surname: person.person_surname,
+                person_name_surname: person.person_name_surname,
+              }
+            }
+          }));
+        }
+      }
+    }
   },
   {
     accessorKey: "role_description",
     header: "Role",
+    meta: {
+      editable: true,
+      selectableOptions: {
+        fetchOptions: async () => {
+          const roles = await fetch('/api/roles').then(res => res.json());
+          return roles.map((role: any) => ({
+            id: role.role_description,
+            label: role.role_description,
+            hiddenValue: {
+              field: 'role_id',
+              value: role.role_id
+            }
+          }));
+        }
+      }
+    }
   },
   {
     accessorKey: "all_columns",
@@ -101,30 +73,13 @@ const columns: ColumnDef<ProjectResources>[] = [
     },
   },
   {
-    id: "actions",
+    accessorKey: "composite_id",
+    header: "",
     cell: ({ row }) => {
-      const resource = row.original
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Remove from project</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Change role</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      return <input type="hidden" value={row.original.composite_id} />;
     },
-  },
+  }
 ];
-
-export { RoleFilter };
 
 export default function ProjectResourcesTable({ 
   resources,
@@ -135,17 +90,62 @@ export default function ProjectResourcesTable({
 }) {
   const [currentResources, setCurrentResources] = useState(resources);
 
+  const handleResourceUpdate = async (rowId: string, data: Partial<ProjectResources>) => {
+    const [projectId, personId] = rowId.split('_');
+    console.log("**** Im going to update resources for: ", projectId, personId, JSON.stringify(data));
+    const result = await updateProjectResourceAction(projectId, personId, data);
+    
+    if (!result.success) {
+      throw new Error('Failed to update resource');
+    }
+
+    setCurrentResources(prev => 
+      prev.map(resource => 
+        resource.person_id === personId && resource.project_id === projectId
+          ? { ...resource, ...result.resource }
+          : resource
+      )
+    );
+  };
+
+  const handleResourceCreate = async (data: Partial<ProjectResources>) => {
+    const result = await createProjectResourceAction({
+      ...data,
+      project_id: projectId
+    });
+
+    if (!result.success) {
+      throw new Error('Failed to create resource');
+    }
+
+    setCurrentResources(prev => [...prev, result.resource]);
+  };
+
+  const handleResourceDelete = async (rowId: string) => {
+    const [projectId, personId] = rowId.split('_');
+    const result = await deleteProjectResourceAction(projectId, personId);
+    
+    if (!result.success) {
+      throw new Error('Failed to delete resource');
+    }
+
+    setCurrentResources(prev => 
+      prev.filter(resource => 
+        !(resource.person_id === personId && resource.project_id === projectId)
+      )
+    );
+  };
+
   return (
     <div className="container mx-auto py-10">
-      <div className="flex justify-between items-center mb-6">
-        <div className="w-full">
-          <RoleFilter 
-            projectId={projectId}
-            onResourcesChange={setCurrentResources}
-          />
-        </div>
-      </div>
-      <DataTable columns={columns} data={currentResources} />
+      <DataTable 
+        columns={columns} 
+        data={currentResources}
+        onRowUpdate={handleResourceUpdate}
+        onRowCreate={handleResourceCreate}
+        onRowDelete={handleResourceDelete}
+        idField="composite_id"
+      />
     </div>
-  )
+  );
 }

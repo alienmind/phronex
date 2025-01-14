@@ -227,7 +227,18 @@ export function DataTable<TData, TValue>({
         setDeleteDialogOpen(true);
       },
     },
-    getRowId: (row: any) => String(row[idField]),
+    getRowId: (row: any) => {
+      console.log("Getting row id for: ", JSON.stringify(row));
+      let ret: string;
+      if ('composite_id' in row) {
+        ret= String(row.composite_id);
+      }
+      else {
+        ret= String((row as any)[idField]);
+      }
+      console.log("Returning row id: ", ret);
+      return ret;
+    },
   });
 
   // Custom cell renderer that handles editable cells
@@ -383,7 +394,6 @@ export function DataTable<TData, TValue>({
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 {columns.map((column) => {
-                  console.log("COLUMN=>",JSON.stringify(column));
                   if (column.id === "actions" || 
                       ("accessorKey" in column && column.accessorKey === "all_columns") ||
                       !column.meta || !column.meta.editable) {

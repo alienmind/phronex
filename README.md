@@ -205,7 +205,7 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Add expenses to projects
 - [x] .. Edit a expense detail in the project
 - [x] .. Delete an expense from the project
-- [ ] .. Reassign / remove resources or costs to each project in the project detail screen
+- [x] .. Reassign / remove resources or costs to each project in the project detail screen
 - [ ] .. Graph to show expenditures per category against budget
 - [ ] .. Graph resources assignment to projects
 
@@ -237,11 +237,13 @@ Even more extras with less priority
 - [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [x] .. Filtering by date range is not fully working
-- [ ] .. Adding a new expense does not apply the right category ("Unknown")
+- [x] .. Adding a new expense does not apply the right category ("Unknown")
 - [x] .. Not all the management tables have working the free text search feature (something afoot with the fake all_columns column)
-- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
-- [ ] .. Filtering expenses over time range is not working - HTTP 400
+- [x] .. Filtering expenses over time range is not working - HTTP 400
 - [x] .. Calendar picker layout has gone crazy
+- [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
+- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
+-
 
 ## Test plan (on every major release)
 - [ ] .. Landing page: click on About, click on seed, click on presentation

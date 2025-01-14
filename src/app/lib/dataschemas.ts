@@ -74,6 +74,7 @@ export type Role = {
 
 // Derived schemas
 // We explicit these joins between certain tables as per the front-end needs
+// They include additional fields (when relevant) to make easier the update (composite_id) or the search (all_columns)
 
 // Resources assigned to a project
 export type ProjectResource = {
@@ -117,7 +118,10 @@ export type ProjectResources = {
   person_id: string;
   person_name: string;
   person_surname: string;
+  person_name_surname: string; // Artificial field to enable filtering and editing
+  role_id: string;
   role_description: string;
+  composite_id: string; // Concatenation of project_id and person_id to make easier the update
   all_columns: string;
 };
 

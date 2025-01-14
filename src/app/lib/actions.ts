@@ -11,8 +11,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense } from './dataaccess';
-import { Project, ProjectExpense, ProjectExpensesWithCategoryBudget } from './dataschemas';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource } from './dataaccess';
+import { Project, ProjectExpense, ProjectExpensesWithCategoryBudget, ProjectResources } from './dataschemas';
 
 /*
  * User authentication
@@ -198,5 +198,33 @@ export async function deleteExpenseAction(expenseId: string) {
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to delete expense' };
+  }
+}
+
+export async function updateProjectResourceAction(projectId: string, personId: string, data: Partial<ProjectResources>) {
+  try {
+    console.log('******** Updating project resource:', projectId, personId, JSON.stringify(data));
+    const updatedResource = await updateProjectResource(projectId, personId, data);
+    return { success: true, resource: updatedResource };
+  } catch (error) {
+    return { success: false, error: 'Failed to update project resource' };
+  }
+}
+
+export async function createProjectResourceAction(data: Partial<ProjectResources>) {
+  try {
+    const newResource = await createProjectResource(data);
+    return { success: true, resource: newResource };
+  } catch (error) {
+    return { success: false, error: 'Failed to create project resource' };
+  }
+}
+
+export async function deleteProjectResourceAction(projectId: string, personId: string) {
+  try {
+    await deleteProjectResource(projectId, personId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete project resource' };
   }
 } 
