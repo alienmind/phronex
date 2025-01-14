@@ -128,4 +128,9 @@ export type VRole = Role & {
   all_columns: string;
 };
 
+// A category with all_columns to enable filtering
+export type VCategory = Category & {
+  all_columns: string;
+};
+
 

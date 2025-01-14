@@ -14,7 +14,8 @@ import type { User, Project, ProjectExpense, Person,
               VPerson,
               Category,
               Role,
-              VRole
+              VRole,
+              VCategory
 } from '@/app/lib/dataschemas';
 
 const connectionPool = require('@/app/lib/db');
@@ -661,5 +662,79 @@ export async function fetchCategories() : Promise<Category[]> {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch categories.');
+  }
+}
+
+export async function updateCategory(categoryId: string, data: Partial<VCategory>) {
+  try {
+    const result = await logQuery(`
+      UPDATE category 
+      SET category_name = COALESCE($1, category_name)
+      WHERE category_id = $2
+      RETURNING *;
+    `, [data.category_name, categoryId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Category not found');
+    }
+
+    // Fetch the updated category with all fields
+    const updatedCategory = await logQuery(`
+      SELECT 
+        category_id,
+        category_name,
+        category_name as all_columns
+      FROM category
+      WHERE category_id = $1
+    `, [categoryId]);
+
+    return updatedCategory.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update category');
+  }
+}
+
+export async function createCategory(data: Partial<VCategory>) {
+  try {
+    const result = await logQuery(`
+      INSERT INTO category (category_name)
+      VALUES ($1)
+      RETURNING *;
+    `, [data.category_name]);
+
+    // Fetch the complete category data
+    const newCategory = await logQuery(`
+      SELECT 
+        category_id,
+        category_name,
+        category_name as all_columns
+      FROM category
+      WHERE category_id = $1
+    `, [result.rows[0].category_id]);
+
+    return newCategory.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create category');
+  }
+}
+
+export async function deleteCategory(categoryId: string) {
+  try {
+    const result = await logQuery(`
+      DELETE FROM category
+      WHERE category_id = $1
+      RETURNING *;
+    `, [categoryId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Category not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete category');
   }
 }

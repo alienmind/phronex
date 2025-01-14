@@ -11,8 +11,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole } from './dataaccess';
-import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role } from './dataschemas';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory } from './dataaccess';
+import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
  * User authentication
@@ -280,5 +280,32 @@ export async function deleteRoleAction(roleId: string) {
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to delete role' };
+  }
+}
+
+export async function updateCategoryAction(categoryId: string, data: Partial<VCategory>) {
+  try {
+    const updatedCategory = await updateCategory(categoryId, data);
+    return { success: true, category: updatedCategory };
+  } catch (error) {
+    return { success: false, error: 'Failed to update category' };
+  }
+}
+
+export async function createCategoryAction(data: Partial<VCategory>) {
+  try {
+    const newCategory = await createCategory(data);
+    return { success: true, category: newCategory };
+  } catch (error) {
+    return { success: false, error: 'Failed to create category' };
+  }
+}
+
+export async function deleteCategoryAction(categoryId: string) {
+  try {
+    await deleteCategory(categoryId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete category' };
   }
 } 
