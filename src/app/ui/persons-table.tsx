@@ -1,30 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Plus } from "lucide-react"
+import { Person } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-type Person = {
-  person_id: string;
-  person_name: string;
-  person_surname: string;
-  person_email: string;
-  all_columns: string;
-}
-
-async function deletePerson(personId: string) {
-  // TODO: Implement delete functionality
-  console.log('Deleting person:', personId);
-}
+import { updatePersonAction, createPersonAction, deletePersonAction } from '@/app/lib/actions';
 
 const columns: ColumnDef<Person>[] = [
   {
@@ -40,6 +22,9 @@ const columns: ColumnDef<Person>[] = [
         </Button>
       )
     },
+    meta: {
+      editable: true,
+    }
   },
   {
     accessorKey: "person_surname",
@@ -54,54 +39,77 @@ const columns: ColumnDef<Person>[] = [
         </Button>
       )
     },
+    meta: {
+      editable: true,
+    }
   },
   {
     accessorKey: "person_email",
     header: "Email",
+    meta: {
+      editable: true,
+    }
   },
   {
     accessorKey: "all_columns",
     header: "",
     cell: ({ row }) => {
-      return <input type="hidden" value={row.getValue("all_columns")} />
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const person = row.original
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => deletePerson(person.person_id)}
-            >
-              Delete person
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit person</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      return <input type="hidden" value={row.original.all_columns} />
     },
   }
 ];
 
-export default function PersonsTable({ 
-  persons 
-}: { 
-  persons: Person[]
-}) {
+export default function PersonsTable({ persons }: { persons: Person[] }) {
+  const [currentPersons, setCurrentPersons] = useState(persons);
+
+  const handlePersonUpdate = async (rowId: string, data: Partial<Person>) => {
+    const result = await updatePersonAction(rowId, data);
+    
+    if (!result.success) {
+      throw new Error('Failed to update person');
+    }
+
+    setCurrentPersons(prev => 
+      prev.map(person => 
+        person.person_id === rowId
+          ? { ...person, ...result.person }
+          : person
+      )
+    );
+  };
+
+  const handlePersonCreate = async (data: Partial<Person>) => {
+    const result = await createPersonAction(data);
+
+    if (!result.success) {
+      throw new Error('Failed to create person');
+    }
+
+    setCurrentPersons(prev => [...prev, result.person]);
+  };
+
+  const handlePersonDelete = async (rowId: string) => {
+    const result = await deletePersonAction(rowId);
+    
+    if (!result.success) {
+      throw new Error('Failed to delete person');
+    }
+
+    setCurrentPersons(prev => 
+      prev.filter(person => person.person_id !== rowId)
+    );
+  };
+
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={persons} />
+      <DataTable 
+        columns={columns} 
+        data={currentPersons}
+        onRowUpdate={handlePersonUpdate}
+        onRowCreate={handlePersonCreate}
+        onRowDelete={handlePersonDelete}
+        idField="person_id"
+      />
     </div>
-  )
+  );
 } 

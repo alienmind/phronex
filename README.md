@@ -234,15 +234,19 @@ Even more extras with less priority
 - [x] .. Create project form have been intermitently broken due to some refactors. Fixed.
 - [x] .. Back button not working in About because of security constraints. Fixed.
 - [x] .. User auth is broken again - login somehow is a client side component needs to become a proper api or server action. It's been worked around but requires more work.
-- [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
-- [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [x] .. Filtering by date range is not fully working
 - [x] .. Adding a new expense does not apply the right category ("Unknown")
 - [x] .. Not all the management tables have working the free text search feature (something afoot with the fake all_columns column)
 - [x] .. Filtering expenses over time range is not working - HTTP 400
 - [x] .. Calendar picker layout has gone crazy
+- [x] .. Fixed People tab since the big refactor of data-table.tsx
+- [ ] .. Fixed Roles tab since the big refactor
+- [ ] .. Fixed Expense Categories (... you know the drill)
 - [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
+- [ ] .. Also editing the category should update the budget
 - [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
+- [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
+- [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
 
 ## Test plan (on every major release)

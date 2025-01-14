@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { ProjectExpensesWithCategoryBudget } from "../lib/dataschemas";
+import { ProjectExpense, VProjectExpensesWithCategoryBudget } from "../lib/dataschemas";
 import { formatDateToLocal } from "@/app/lib/miscutils"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { updateExpenseAction, createExpenseAction, deleteExpenseAction } from '@/app/lib/actions';
 
-const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
+const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
   {
     accessorKey: "expense_date",
     header: ({ column }) => {
@@ -116,12 +116,12 @@ export default function ProjectExpensesTable({
   expenses,
   projectId 
 }: { 
-  expenses: ProjectExpensesWithCategoryBudget[],
+  expenses: VProjectExpensesWithCategoryBudget[],
   projectId: string 
 }) {
   const [currentExpenses, setCurrentExpenses] = useState(expenses);
 
-  const handleExpenseUpdate = async (rowId: string, data: Partial<ProjectExpensesWithCategoryBudget>) => {
+  const handleExpenseUpdate = async (rowId: string, data: Partial<VProjectExpensesWithCategoryBudget>) => {
     const result = await updateExpenseAction(rowId, data);
     
     if (!result.success) {
@@ -137,7 +137,7 @@ export default function ProjectExpensesTable({
     );
   };
 
-  const handleExpenseCreate = async (data: Partial<ProjectExpensesWithCategoryBudget>) => {
+  const handleExpenseCreate = async (data: Partial<ProjectExpense>) => {
     const result = await createExpenseAction({
       ...data,
       project_id: projectId

@@ -7,10 +7,16 @@
  * 
  * In order to get access to these functions, you need wrap them in a server action or in a API
  */
-import type { User, Project, ProjectExpense, ProjectBudget, ProjectPersonRole, ProjectResource, ProjectWithProjectManager, ProjectExpensesWithCategoryBudget, ProjectResources } from '@/app/lib/dataschemas';
+import type { User, Project, ProjectExpense, Person,
+              ProjectBudget, ProjectPersonRole,
+              VProjectResources, VProjectWithProjectManager,
+              VProjectExpensesWithCategoryBudget,
+              VPerson,
+              Category,
+              Role
+} from '@/app/lib/dataschemas';
 
 const connectionPool = require('@/app/lib/db');
-
 
 /*
  * This generic function runs a query and logs it to the console
@@ -121,7 +127,7 @@ export async function updateProject(data: Project) {
  * It will return the projects in the projects table
  * It will also join the person table to get the project manager's name
  */
-export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectWithProjectManager[]> {
+export async function fetchMostRecentProjects(limit?: number) : Promise<VProjectWithProjectManager[]> {
   try {
     if (limit && limit <= 0) {
       limit = undefined;
@@ -137,7 +143,7 @@ export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectW
 
     const data = await connectionPool.query(query);
 
-    const mostRecentProjects = data.rows.map((project: ProjectWithProjectManager) => ({
+    const mostRecentProjects = data.rows.map((project: VProjectWithProjectManager) => ({
       ...project,
     }));
     return mostRecentProjects;
@@ -152,7 +158,7 @@ export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectW
  * It will return the project in the projects table combined with the project manager's name
  * It will also join the person table to get the project manager's name
  */
-export async function fetchProjectById(id: string) : Promise<ProjectWithProjectManager> {
+export async function fetchProjectById(id: string) : Promise<VProjectWithProjectManager> {
   try {
     const result = await logQuery({
       text: `
@@ -165,7 +171,7 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
       `,
       values: [id]
     });
-    return result.rows[0] as ProjectWithProjectManager;
+    return result.rows[0] as VProjectWithProjectManager;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch project.');
@@ -183,7 +189,7 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
  * 
  * It does add a fake "all_columns" with all the columns concatenated to enable the filtering by any text
  */
-export async function fetchProjectExpensesAndBudget(id: string, expenses_start_date: Date, expenses_end_date: Date) : Promise<ProjectExpensesWithCategoryBudget[]> {
+export async function fetchProjectExpensesAndBudget(id: string, expenses_start_date: Date, expenses_end_date: Date) : Promise<VProjectExpensesWithCategoryBudget[]> {
   try {
     const query = {
       text: `
@@ -239,7 +245,7 @@ export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   }
 } 
 
-export async function createExpense(data: Partial<ProjectExpensesWithCategoryBudget>) {
+export async function createExpense(data: Partial<ProjectExpense>) {
   try {
     const result = await logQuery({
       text: `
@@ -298,7 +304,7 @@ export async function deleteExpense(id: string) {
  * This is the function to fetch the resources assigned to a project
  * @param id - the id of the project
  */
-export async function fetchResourcesForProjectId(id: string, role?: string): Promise<ProjectResources[]> {
+export async function fetchResourcesForProjectId(id: string, role?: string): Promise<VProjectResources[]> {
   try {
     const query = {
       text: `
@@ -329,7 +335,7 @@ export async function fetchResourcesForProjectId(id: string, role?: string): Pro
  * It will update the role assignment and return the updated resource
  * The action can come either for having changed the role or the person
  */
-export async function updateProjectResource(projectId: string, personId: string, data: Partial<ProjectResources>) {
+export async function updateProjectResource(projectId: string, personId: string, data: Partial<VProjectResources>) {
   try {
     let result;
 
@@ -383,7 +389,7 @@ export async function updateProjectResource(projectId: string, personId: string,
   }
 }
 
-export async function createProjectResource(data: Partial<ProjectResources>) {
+export async function createProjectResource(data: Partial<VProjectResources>) {
   try {
     // First insert the role assignment
     const result = await logQuery(`
@@ -448,7 +454,7 @@ export async function deleteProjectResource(projectId: string, personId: string)
  * It will return the persons in the person table
  * It is mostly used from the persons API to fill out dynamically any resource assignment select box
  */
-export async function fetchPersons() {
+export async function fetchPersons() : Promise<VPerson[]> {
   try {
     const query = `
       SELECT person_id, person_name, person_surname, person_email, person_name || ' ' || person_surname as person_name_surname,
@@ -465,9 +471,91 @@ export async function fetchPersons() {
   }
 }
 
+export async function updatePerson(personId: string, data: Partial<VPerson>) {
+  try {
+    const result = await logQuery(`
+      UPDATE person 
+      SET 
+        person_name = COALESCE($1, person_name),
+        person_surname = COALESCE($2, person_surname),
+        person_email = COALESCE($3, person_email)
+      WHERE person_id = $4
+      RETURNING *;
+    `, [data.person_name, data.person_surname, data.person_email, personId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Person not found');
+    }
+
+    // Fetch the updated person with all fields
+    const updatedPerson = await logQuery(`
+      SELECT 
+        person_id,
+        person_name,
+        person_surname,
+        person_email,
+        person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+      FROM person
+      WHERE person_id = $1
+    `, [personId]);
+
+    return updatedPerson.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update person');
+  }
+}
+
+export async function createPerson(data: Partial<VPerson>) {
+  try {
+    const result = await logQuery(`
+      INSERT INTO person (person_name, person_surname, person_email)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `, [data.person_name, data.person_surname, data.person_email]);
+
+    // Fetch the complete person data
+    const newPerson = await logQuery(`
+      SELECT 
+        person_id,
+        person_name,
+        person_surname,
+        person_email,
+        person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+      FROM person
+      WHERE person_id = $1
+    `, [result.rows[0].person_id]);
+
+    return newPerson.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create person');
+  }
+}
+
+export async function deletePerson(personId: string) : Promise<VPerson> {
+  try {
+    const result = await logQuery(`
+      DELETE FROM person
+      WHERE person_id = $1
+      RETURNING *;
+    `, [personId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Person not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete person');
+  }
+}
+
+
 /********************************* ROLES *********************************/
 
-export async function fetchRoles() {
+export async function fetchRoles() : Promise<Role[]> {
   try {
     const query = `
       SELECT role_id, role_description
@@ -485,7 +573,7 @@ export async function fetchRoles() {
 
 /********************************* CATEGORIES *********************************/
 
-export async function fetchCategories() {
+export async function fetchCategories() : Promise<Category[]> {
   try {
     const query = `
       SELECT category_id, category_name

@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Plus } from "lucide-react"
-import { ProjectResources } from "@/app/lib/dataschemas"
+import { VProjectResources } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
 import { updateProjectResourceAction, createProjectResourceAction, deleteProjectResourceAction } from '@/app/lib/actions';
 
-const columns: ColumnDef<ProjectResources>[] = [
+const columns: ColumnDef<VProjectResources>[] = [
   {
     accessorKey: "person_name_surname",
     header: ({ column }) => {
@@ -85,12 +85,12 @@ export default function ProjectResourcesTable({
   resources,
   projectId 
 }: { 
-  resources: ProjectResources[],
+  resources: VProjectResources[],
   projectId: string
 }) {
   const [currentResources, setCurrentResources] = useState(resources);
 
-  const handleResourceUpdate = async (rowId: string, data: Partial<ProjectResources>) => {
+  const handleResourceUpdate = async (rowId: string, data: Partial<VProjectResources>) => {
     const [projectId, personId] = rowId.split('_');
     console.log("**** Im going to update resources for: ", projectId, personId, JSON.stringify(data));
     const result = await updateProjectResourceAction(projectId, personId, data);
@@ -108,7 +108,7 @@ export default function ProjectResourcesTable({
     );
   };
 
-  const handleResourceCreate = async (data: Partial<ProjectResources>) => {
+  const handleResourceCreate = async (data: Partial<VProjectResources>) => {
     const result = await createProjectResourceAction({
       ...data,
       project_id: projectId

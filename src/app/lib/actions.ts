@@ -11,8 +11,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource } from './dataaccess';
-import { Project, ProjectExpense, ProjectExpensesWithCategoryBudget, ProjectResources } from './dataschemas';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson } from './dataaccess';
+import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person } from './dataschemas';
 
 /*
  * User authentication
@@ -182,7 +182,7 @@ export async function updateExpenseAction(expenseId: string, data: Partial<Proje
   }
 }
 
-export async function createExpenseAction(data: Partial<ProjectExpensesWithCategoryBudget>) {
+export async function createExpenseAction(data: Partial<VProjectExpensesWithCategoryBudget>) {
   try {
     console.log('Creating expense:', JSON.stringify(data));
     const newExpense = await createExpense(data);
@@ -201,7 +201,7 @@ export async function deleteExpenseAction(expenseId: string) {
   }
 }
 
-export async function updateProjectResourceAction(projectId: string, personId: string, data: Partial<ProjectResources>) {
+export async function updateProjectResourceAction(projectId: string, personId: string, data: Partial<VProjectResources>) {
   try {
     console.log('******** Updating project resource:', projectId, personId, JSON.stringify(data));
     const updatedResource = await updateProjectResource(projectId, personId, data);
@@ -211,7 +211,7 @@ export async function updateProjectResourceAction(projectId: string, personId: s
   }
 }
 
-export async function createProjectResourceAction(data: Partial<ProjectResources>) {
+export async function createProjectResourceAction(data: Partial<VProjectResources>) {
   try {
     const newResource = await createProjectResource(data);
     return { success: true, resource: newResource };
@@ -226,5 +226,32 @@ export async function deleteProjectResourceAction(projectId: string, personId: s
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to delete project resource' };
+  }
+}
+
+export async function updatePersonAction(personId: string, data: Partial<VPerson>) {
+  try {
+    const updatedPerson = await updatePerson(personId, data);
+    return { success: true, person: updatedPerson };
+  } catch (error) {
+    return { success: false, error: 'Failed to update person' };
+  }
+}
+
+export async function createPersonAction(data: Partial<VPerson>) {
+  try {
+    const newPerson = await createPerson(data);
+    return { success: true, person: newPerson };
+  } catch (error) {
+    return { success: false, error: 'Failed to create person' };
+  }
+}
+
+export async function deletePersonAction(personId: string) {
+  try {
+    await deletePerson(personId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete person' };
   }
 } 
