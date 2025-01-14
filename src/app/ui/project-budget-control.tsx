@@ -4,14 +4,21 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Wand2 } from "lucide-react";
 import { 
   fetchProjectBudgetAction, 
   updateBudgetAction,
-  fetchCategoriesAction 
+  fetchCategoriesAction,
+  fetchProjectReportAction,
+  fetchProjectByIdAction,
 } from "@/app/lib/actions";
+import { 
+  suggestBudgets
+} from "@/app/lib/ai";
 import { formatCurrency } from "@/app/lib/miscutils";
 import { BudgetEditModal } from "./project-budget-modal";
+import { useToast } from "@/hooks/use-toast";
+import { VProjectBudgetReport } from "../lib/dataschemas";
 
 interface CategoryBudget {
   category_id: string;
@@ -20,6 +27,7 @@ interface CategoryBudget {
 }
 
 export function ProjectBudgetControls({ projectId }: { projectId: string }) {
+  const { toast } = useToast();
   const [categories, setCategories] = useState<CategoryBudget[]>([]);
   const [debouncedUpdates, setDebouncedUpdates] = useState<{[key: string]: NodeJS.Timeout}>({});
   const [showAddModal, setShowAddModal] = useState(false);
@@ -113,13 +121,97 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
     }
   };
 
+  const handleSuggestBudgets = async () => {
+    try {
+      // Fetch project details to get the scope
+      const projectResult = await fetchProjectByIdAction(projectId);
+      if (!projectResult) {
+        throw new Error('Failed to fetch project details');
+      }
+
+      // Fetch all categories
+      const categoriesResult = await fetchCategoriesAction();
+      if (!categoriesResult?.success) {
+        throw new Error('Failed to fetch categories');
+      }
+
+      const startDate = projectResult.data?.project_start_date ? new Date(projectResult.data.project_start_date) : new Date();
+      const endDate = projectResult.data?.project_end_date ? new Date(projectResult.data.project_end_date) : new Date();
+
+      // Get budget suggestions. We need to pass the categories, the scope and the duration in days
+      const suggestions = await suggestBudgets(
+        categoriesResult.data,
+        projectResult.data?.project_scope || '',
+        Math.ceil((endDate.getTime() - startDate.getTime()) / 
+          (1000 * 60 * 60 * 24)).toString() + ' days'
+      );
+
+      // Update budgets for each suggestion
+      for (const suggestion of suggestions) {
+        const category = categoriesResult.data.find(
+          cat => cat.category_name === suggestion.category_name
+        );
+        
+        if (category) {
+          await updateBudgetAction(
+            projectId,
+            category.category_id,
+            suggestion.budget
+          );
+        }
+      }
+
+      // Refresh budgets display
+      const refreshResult = await fetchProjectBudgetAction(projectId);
+      if (refreshResult?.success && refreshResult?.data) {
+        setCategories(refreshResult.data.map(item => ({
+          category_id: item.category_id,
+          category_name: item.category_name,
+          budget: item.budget
+        })));
+      }
+
+      // Notify success
+      toast({
+        title: "Budget Suggestions Applied",
+        description: "AI-generated budgets have been set for the project categories.",
+      });
+
+      // Trigger chart update
+      window.dispatchEvent(new Event('amount-or-budget-changed'));
+
+    } catch (error) {
+      console.error('Error suggesting budgets:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to apply budget suggestions.",
+      });
+    }
+  };
+
   if (categories.length === 0) {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <Button variant="outline" size="icon" className="h-8 w-8">
-            <Plus className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-8 w-8"
+              onClick={() => setShowAddModal(true)}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={handleSuggestBudgets}
+            >
+              <Wand2 className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         <p className="text-muted-foreground text-sm">No budget assigned yet</p>
       </div>
@@ -129,14 +221,24 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="h-8 w-8"
-          onClick={() => setShowAddModal(true)}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8"
+            onClick={() => setShowAddModal(true)}
+          >
+            <Plus className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-8 w-8"
+            onClick={handleSuggestBudgets}
+          >
+            <Wand2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
       {categories.map((category) => (
         <div key={category.category_id} className="grid grid-cols-4 gap-4 items-center">

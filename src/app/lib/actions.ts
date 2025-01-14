@@ -18,7 +18,7 @@ import { createProject, updateProject, updateExpense, createExpense, deleteExpen
          updateCategory, createCategory, deleteCategory,
          fetchProjectBudgetReport, updateProjectCategoryBudget,
          deleteProject, fetchTopProjects,
-         fetchCategories } from './dataaccess';
+         fetchCategories, fetchProjectById } from './dataaccess';
 import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
@@ -387,6 +387,28 @@ export async function fetchCategoriesAction(): Promise<{ success: boolean; data:
       success: false,
       data: [],
       error: 'Failed to fetch categories'
+    };
+  }
+}
+
+export async function fetchProjectByIdAction(projectId: string): Promise<{ success: boolean; data?: Project; error?: string }> {
+  try {
+    const project = await fetchProjectById(projectId);
+    if (!project) {
+      return {
+        success: false,
+        error: 'Project not found'
+      };
+    }
+    return {
+      success: true,
+      data: project
+    };
+  } catch (error) {
+    console.error('Failed to fetch project:', error);
+    return {
+      success: false,
+      error: 'Failed to fetch project'
     };
   }
 } 
