@@ -5,10 +5,15 @@
  * but they are useful for formatting, etc
  */
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('en-UK', {
-    style: 'currency',
-    currency: 'EUR',
-  });
+  if (amount < 1000) {
+    return amount.toLocaleString('en-UK', {
+      style: 'currency',
+      currency: 'EUR',
+    });
+  }
+  else {
+    return (amount/1000) + "K"
+  }
 };
 
 export const formatDateToLocal = (

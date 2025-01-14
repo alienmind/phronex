@@ -1,10 +1,15 @@
 "use client"
+/*
+ * This component displays a chart of the project budget and spent
+ * It is used in the project details page
+ */
 
 import { useEffect, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { VProjectBudgetReport } from "../lib/dataschemas"
 import { fetchProjectBudgetAction } from "../lib/actions"
+import { formatCurrency } from "../lib/miscutils"
 
 const chartConfig = {
   budget: {
@@ -47,7 +52,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(value) => value.toLocaleString('en-UK', { style: 'currency', currency: 'EUR' })}
+          tickFormatter={(value) => formatCurrency(value)}
         />
         <Bar dataKey="budget" fill="var(--color-budget)" radius={4} />
         <Bar dataKey="spent" fill="var(--color-spent)" radius={4} />
