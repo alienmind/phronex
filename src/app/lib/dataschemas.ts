@@ -139,6 +139,7 @@ export type VProjectBudgetReport = {
   category_name: string;
   budget: number;
   spent: number;
+  max_value?: number; // Optional max value for scaling
 };
 
 
