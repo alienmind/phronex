@@ -202,6 +202,7 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Generic feature to add a new row to a data table
 - [x] .. Generic feature to delete a row from a data table
 - [x] .. Editing expenses values or descriptions live from the project detail screen
+- [ ] .. Set up budget for the project
 - [x] .. Add expenses to projects
 - [x] .. Edit a expense detail in the project
 - [x] .. Delete an expense from the project
@@ -257,10 +258,12 @@ The extras:
 - [ ] .. Filter out to 3 projects
 - [ ] .. Search for a project by free text
 - [ ] .. Add a new project
+- [ ] .. Adjust project budget per category
 - [ ] .. Click on a project card
 - [ ] .. Check all info is OK (expenses, resources, metadata)
 - [ ] .. Edit metadata of the project
 - [ ] .. Edit a expense amount or description
+- [ ] .. Categorize an expense
 - [ ] .. Add a new expense to the project
 - [ ] .. Reassign a resource to the project
 - [ ] .. Remove a expense
