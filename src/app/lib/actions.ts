@@ -11,7 +11,7 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense } from './dataaccess';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense } from './dataaccess';
 import { Project, ProjectExpense, ProjectExpensesWithCategoryBudget } from './dataschemas';
 
 /*
@@ -188,5 +188,14 @@ export async function createExpenseAction(data: Partial<ProjectExpensesWithCateg
     return { success: true, expense: newExpense };
   } catch (error) {
     return { success: false, error: 'Failed to create expense' };
+  }
+}
+
+export async function deleteExpenseAction(expenseId: string) {
+  try {
+    await deleteExpense(expenseId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete expense' };
   }
 } 

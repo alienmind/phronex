@@ -16,12 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { updateExpenseAction, createExpenseAction } from '@/app/lib/actions';
-
-async function deleteExpense(expenseId: string) {
-  // TODO: Implement delete functionality
-  console.log('Deleting expense:', expenseId);
-}
+import { updateExpenseAction, createExpenseAction, deleteExpenseAction } from '@/app/lib/actions';
 
 const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
   {
@@ -90,8 +85,8 @@ const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const expense = row.original
+    cell: ({ row, table }) => {
+      const expense = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -103,12 +98,10 @@ const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => deleteExpense(expense.expense_id)}
+              onClick={() => (table.options.meta as any).deleteRow(row.id)}
             >
               Delete expense
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View expense details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -152,6 +145,16 @@ export default function ProjectExpensesTable({
     setCurrentExpenses(prev => [...prev, result.expense]);
   };
 
+  const handleExpenseDelete = async (rowId: string) => {
+    const result = await deleteExpenseAction(rowId);
+    
+    if (!result.success) {
+      throw new Error('Failed to delete expense');
+    }
+
+    setCurrentExpenses(prev => prev.filter(expense => expense.expense_id !== rowId));
+  };
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex justify-between items-center mb-6">
@@ -167,6 +170,7 @@ export default function ProjectExpensesTable({
         data={currentExpenses} 
         onRowUpdate={handleExpenseUpdate}
         onRowCreate={handleExpenseCreate}
+        onRowDelete={handleExpenseDelete}
         idField="expense_id"
       />
     </div>

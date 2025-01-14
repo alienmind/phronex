@@ -55,12 +55,23 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { SelectProps } from "@radix-ui/react-select";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onRowUpdate?: (rowId: string, data: Partial<TData>) => Promise<void>
   onRowCreate?: (data: Partial<TData>) => Promise<void>
+  onRowDelete?: (rowId: string) => Promise<void>
   idField?: string
 }
 
@@ -85,11 +96,39 @@ type SelectOption = {
   hiddenValue?: string;
 };
 
+const DeleteDialog = ({ 
+  open, 
+  onOpenChange, 
+  onConfirm 
+}: { 
+  open: boolean; 
+  onOpenChange: (open: boolean) => void; 
+  onConfirm: () => void;
+}) => {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
 export function DataTable<TData, TValue>({
   columns,
   data,
   onRowUpdate,
   onRowCreate,
+  onRowDelete,
   idField = 'id',
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -105,6 +144,8 @@ export function DataTable<TData, TValue>({
   const [newRowData, setNewRowData] = React.useState<Partial<TData>>({})
   const { toast } = useToast()
   const [selectableOptions, setSelectableOptions] = React.useState<Record<string, SelectOption[]>>({});
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [rowToDelete, setRowToDelete] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (showCreateDialog) {
@@ -120,6 +161,27 @@ export function DataTable<TData, TValue>({
       });
     }
   }, [showCreateDialog]);
+
+  const handleDelete = async () => {
+    if (!rowToDelete || !onRowDelete) return;
+    
+    try {
+      await onRowDelete(rowToDelete);
+      toast({
+        title: "Success",
+        description: "Record deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete record",
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setRowToDelete(null);
+    }
+  };
 
   const table = useReactTable({
     data,
@@ -153,6 +215,10 @@ export function DataTable<TData, TValue>({
             description: "Failed to update data",
           });
         }
+      },
+      deleteRow: (rowId: string) => {
+        setRowToDelete(rowId);
+        setDeleteDialogOpen(true);
       },
     },
     getRowId: (row: any) => String(row[idField]),
@@ -249,6 +315,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <DeleteDialog 
+        open={deleteDialogOpen} 
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+      />
       <div className="flex justify-between items-center py-4">
         <Input
           placeholder="Filter..."

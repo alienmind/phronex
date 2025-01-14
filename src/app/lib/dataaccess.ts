@@ -339,3 +339,25 @@ export async function createExpense(data: Partial<ProjectExpensesWithCategoryBud
   }
 } 
 
+export async function deleteExpense(id: string) {
+  try {
+    const result = await logQuery({
+      text: `
+        DELETE FROM project_expense 
+        WHERE expense_id = $1
+        RETURNING *;
+      `,
+      values: [id]
+    });
+
+    if (result.rows.length === 0) {
+      throw new Error('Expense not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete expense');
+  }
+}
+
