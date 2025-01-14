@@ -138,7 +138,6 @@ export default function ProjectExpensesTable({
   };
 
   const handleExpenseCreate = async (data: Partial<ProjectExpense>) => {
-    console.log("****** CREATE EXPENSE", JSON.stringify(data));
     const result = await createExpenseAction({
       ...data,
       project_id: projectId

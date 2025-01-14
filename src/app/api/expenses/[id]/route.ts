@@ -6,7 +6,6 @@ export async function POST(
 ) {
   try {
     const data = await request.json();
-    console.log("data:::", JSON.stringify(data));
     const updatedExpense = await updateExpense(data.expense_id, data);
     return NextResponse.json({ expense: updatedExpense });
   } catch (error) {
