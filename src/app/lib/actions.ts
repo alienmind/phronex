@@ -11,7 +11,7 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory, fetchProjectBudgetReport } from './dataaccess';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory, fetchProjectBudgetReport, updateProjectCategoryBudget } from './dataaccess';
 import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
@@ -320,5 +320,19 @@ export async function fetchProjectBudgetAction(projectId: string) {
     return { success: true, data: budgetReport };
   } catch (error) {
     return { success: false, error: 'Failed to fetch project budget' };
+  }
+}
+
+export async function updateProjectCategoryBudgetAction(
+  projectId: string,
+  categoryId: string,
+  budget: number
+) {
+  try {
+    console.log("UPDATE project_budget", projectId, categoryId, budget)
+    await updateProjectCategoryBudget(projectId, categoryId, budget);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to update category budget' };
   }
 } 

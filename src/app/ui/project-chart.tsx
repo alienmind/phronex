@@ -8,8 +8,9 @@ import { useEffect, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell, Tooltip } from "recharts"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { VProjectBudgetReport } from "../lib/dataschemas"
-import { fetchProjectBudgetAction } from "../lib/actions"
+import { fetchProjectBudgetAction, updateProjectCategoryBudgetAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
+import { BudgetEditModal } from "./budget-edit-modal"
 
 // Create a global event bus for expense changes
 export const expenseChangeEventName = 'expense-amount-changed'
@@ -56,6 +57,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
   const [chartData, setChartData] = useState<VProjectBudgetReport[]>([])
   const [maxDomain, setMaxDomain] = useState<number>(0)
   const [updateTrigger, setUpdateTrigger] = useState(0)
+  const [selectedCategory, setSelectedCategory] = useState<VProjectBudgetReport | null>(null)
 
   useEffect(() => {
     // Add event listener for expense changes
@@ -90,47 +92,81 @@ export function ProjectChart({ projectId }: { projectId: string }) {
     loadBudgetData()
   }, [projectId, updateTrigger]) // Add updateTrigger to dependencies
 
+  const handleBudgetClick = (data: VProjectBudgetReport) => {
+    setSelectedCategory(data)
+  }
+
+  const handleBudgetUpdate = async (newAmount: number) => {
+    if (!selectedCategory) return
+
+    console.log("NEW amount", newAmount)
+    const result = await updateProjectCategoryBudgetAction(
+      projectId,
+      selectedCategory.category_id,
+      newAmount
+    )
+
+    if (result.success) {
+      // Trigger chart refresh
+      window.dispatchEvent(expenseChangeEvent)
+      setSelectedCategory(null)
+    }
+  }
+
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="category_name"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          tickFormatter={(value) => value}
-        />
-        <YAxis
-          dataKey="budget"
-          tickLine={false}
-          tickMargin={10}
-          axisLine={false}
-          domain={[0, maxDomain]}
-          tickFormatter={(value) => formatCurrency(value)}
-        />
-        <Tooltip 
-          content={CustomTooltip}
-          cursor={{ fill: 'transparent' }}
-        />
-        <Bar 
-          name="Budget"
-          dataKey="budget" 
-          fill={`hsl(var(--chart-1))`} 
-          radius={4} 
-        />
-        <Bar 
-          name="Spent"
-          dataKey="spent" 
-          radius={4}
-          fillOpacity={0.8}
-          stroke="none"
-        >
-          {chartData.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={getSpentColor(entry.spent, entry.budget)} />
-          ))}
-        </Bar>
-      </BarChart>
-    </ChartContainer>
+    <>
+      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+        <BarChart accessibilityLayer data={chartData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="category_name"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value}
+          />
+          <YAxis
+            dataKey="budget"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            domain={[0, maxDomain]}
+            tickFormatter={(value) => formatCurrency(value)}
+          />
+          <Tooltip 
+            content={CustomTooltip}
+            cursor={{ fill: 'transparent' }}
+          />
+          <Bar 
+            name="Budget"
+            dataKey="budget" 
+            fill={`hsl(var(--chart-1))`} 
+            radius={4}
+            onClick={(data) => handleBudgetClick(data)}
+            style={{ cursor: 'pointer' }}
+          />
+          <Bar 
+            name="Spent"
+            dataKey="spent" 
+            radius={4}
+            fillOpacity={0.8}
+            stroke="none"
+            onClick={(data) => handleBudgetClick(data)}
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getSpentColor(entry.spent, entry.budget)} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ChartContainer>
+
+      <BudgetEditModal
+        isOpen={!!selectedCategory}
+        onClose={() => setSelectedCategory(null)}
+        onSubmit={handleBudgetUpdate}
+        categoryName={selectedCategory?.category_name || ''}
+        currentAmount={selectedCategory?.budget || 0}
+      />
+    </>
   )
 }
