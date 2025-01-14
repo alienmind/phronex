@@ -756,3 +756,17 @@ export async function deleteCategory(categoryId: string) {
     throw new Error('Failed to delete category');
   }
 }
+
+export async function updateProjectCategoryBudget(
+  projectId: string,
+  categoryId: string,
+  budget: number
+): Promise<void> {
+  console.log("UPDATE project_budget", projectId, categoryId, budget)
+  const sql = `
+    UPDATE project_budget   
+    SET project_category_budget = $3
+    WHERE project_id = $1 AND category_id = $2
+  `;
+  await logQuery(sql, [projectId, categoryId, budget]);
+}

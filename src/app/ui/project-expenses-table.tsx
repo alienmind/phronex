@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, LineChart } from "lucide-react"
 import { ProjectExpense, VProjectExpensesWithCategoryBudget } from "../lib/dataschemas";
 import { formatDateToLocal } from "@/app/lib/miscutils"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { updateExpenseAction, createExpenseAction, deleteExpenseAction } from '@/app/lib/actions';
+import { ExpensesChartModal } from "./expenses-chart-modal"
 
 const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
   {
@@ -76,10 +77,6 @@ const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
     }
   },
   {
-    accessorKey: "project_category_budget",
-    header: "Budget",
-  },
-  {
     accessorKey: "all_columns",
     header: "",
     cell: ({ row }) => {
@@ -114,12 +111,15 @@ const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
 
 export default function ProjectExpensesTable({ 
   expenses,
-  projectId 
+  projectId,
+  projectName
 }: { 
   expenses: VProjectExpensesWithCategoryBudget[],
-  projectId: string 
+  projectId: string,
+  projectName: string
 }) {
   const [currentExpenses, setCurrentExpenses] = useState(expenses);
+  const [isChartOpen, setIsChartOpen] = useState(false)
 
   const handleExpenseUpdate = async (rowId: string, data: Partial<VProjectExpensesWithCategoryBudget>) => {
     const result = await updateExpenseAction(rowId, data);
@@ -172,6 +172,15 @@ export default function ProjectExpensesTable({
             onExpensesChange={setCurrentExpenses}
           />
         </div>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline"
+            onClick={() => setIsChartOpen(true)}
+          >
+            <LineChart className="h-4 w-4 mr-2" />
+            Show Graph
+          </Button>
+        </div>
       </div>
       <DataTable
         columns={columns} 
@@ -180,6 +189,12 @@ export default function ProjectExpensesTable({
         onRowCreate={handleExpenseCreate}
         onRowDelete={handleExpenseDelete}
         idField="expense_id"
+      />
+      <ExpensesChartModal
+        isOpen={isChartOpen}
+        onClose={() => setIsChartOpen(false)}
+        expenses={currentExpenses}
+        projectName={projectName}
       />
     </div>
   )

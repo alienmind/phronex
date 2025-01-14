@@ -61,7 +61,7 @@ export default async function Page( {params}: { params: Params } ) {
             <div>
               <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Expenses</h2>
               <div className="overflow-x-auto">
-                {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} /> || <p>No expenses found</p>}
+                {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} projectName={project.project_name} /> || <p>No expenses found</p>}
               </div>
             </div>
             {/* Resources section */}
