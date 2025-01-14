@@ -214,9 +214,9 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Show expenses chart over time in the project expenses table
 - [x] .. Project dashboard: expenses vs budget grouped by category
 - [x] .. Colors when expenditures are above the estimate
-- [ ] .. Colors the project cards based on their overexpend ratio
-- [ ] .. Remove the Delete button from the project cards
-- [ ] .. Search functionality in the main page
+- [x] .. Colors the project cards based on their overexpend ratio
+- [x] .. Remove the Delete button from the project cards
+- [x] .. Search functionality in the main page
 
 ## Identified issues during the development - some of them are not fixed yet
 - [x] .. Some of the server / client components had crossed interdependencies which resulted in depending on pg (postgres) for the client component. Fixed.
@@ -231,23 +231,23 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Fixed People tab since the big refactor of data-table.tsx
 - [x] .. Fixed Roles tab since the big refactor
 - [x] .. Fixed Expense Categories (... you know the drill)
+- [x] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Adding a new resource to the project does not work again
 - [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
 - [ ] .. Also editing the category in the project details form should update the budget
 - [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
-- [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
 - [ ] .. Enhance server validation (error toast should iterate over all errors)
 
 The extras:
+- [x] .. Dark theme
+- [x] .. Add easter egg
 - [ ] .. Implement registration screen
 - [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for scope summarization (would be neat)
 - [ ] .. Also use OpenAI for structured budgeting scaffolding based on the scope text - try to generate cost items based in the model output in JSON (would be even more neat)
 - [ ] .. OAuth 2.0 authentication with Google or Github
 - [ ] .. Create project form client validations (currently only in server)
-- [x] .. Dark theme
-- [x] .. Add easter egg
 - [ ] .. Graph resources assignment to projects
 
 # Test plan (on every major release)
