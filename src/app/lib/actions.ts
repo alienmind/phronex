@@ -17,7 +17,7 @@ import { createProject, updateProject, updateExpense, createExpense, deleteExpen
          updateRole, createRole, deleteRole,
          updateCategory, createCategory, deleteCategory,
          fetchProjectBudgetReport, updateProjectCategoryBudget,
-         deleteProject, fetchTopProjects, fetchProjectBudget
+         deleteProject, fetchTopProjects,
 } from './dataaccess';
 import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 

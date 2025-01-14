@@ -55,19 +55,6 @@ export default async function Page( {params}: { params: Params } ) {
         </div>
       </div>
 
-      {/* Budget Distribution */}
-      <div className="md:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Budget Distribution</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProjectBudgetControls projectId={searchParams.id} />
-          </CardContent>
-        </Card>
-      </div>
- 
-
       {/* Bottom section - Tables */}
       <div className="p-4 sm:p-6 md:col-span-2">
         <div className="max-w-[1400px] mx-auto">

@@ -11,6 +11,8 @@ import { VProjectBudgetReport } from "../lib/dataschemas"
 import { fetchProjectReportAction, updateProjectReportAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
 import { BudgetEditModal } from "./budget-edit-modal"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { ProjectBudgetControls } from "@/app/ui/project-budget-control"
 
 // Create a global event bus for expense changes
 export const expenseChangeEventName = 'expense-amount-changed'
@@ -115,50 +117,61 @@ export function ProjectChart({ projectId }: { projectId: string }) {
 
   return (
     <>
-      <ChartContainer config={chartConfig} className="h-[300px] w-full">
-        <BarChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="category_name"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value}
-          />
-          <YAxis
-            dataKey="budget"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            domain={[0, maxDomain]}
-            tickFormatter={(value) => formatCurrency(value)}
-          />
-          <Tooltip 
-            content={CustomTooltip}
-            cursor={{ fill: 'transparent' }}
-          />
-          <Bar 
-            name="Budget"
-            dataKey="budget" 
-            fill={`hsl(var(--chart-1))`} 
-            radius={4}
-            onClick={(data) => handleBudgetClick(data)}
-            style={{ cursor: 'pointer' }}
-          />
-          <Bar 
-            name="Spent"
-            dataKey="spent" 
-            radius={4}
-            fillOpacity={0.8}
-            stroke="none"
-            onClick={(data) => handleBudgetClick(data)}
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getSpentColor(entry.spent, entry.budget)} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ChartContainer>
+      <div className="space-y-6">
+        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="category_name"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value}
+            />
+            <YAxis
+              dataKey="budget"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              domain={[0, maxDomain]}
+              tickFormatter={(value) => formatCurrency(value)}
+            />
+            <Tooltip 
+              content={CustomTooltip}
+              cursor={{ fill: 'transparent' }}
+            />
+            <Bar 
+              name="Budget"
+              dataKey="budget" 
+              fill={`hsl(var(--chart-1))`} 
+              radius={4}
+              onClick={(data) => handleBudgetClick(data)}
+              style={{ cursor: 'pointer' }}
+            />
+            <Bar 
+              name="Spent"
+              dataKey="spent" 
+              radius={4}
+              fillOpacity={0.8}
+              stroke="none"
+              onClick={(data) => handleBudgetClick(data)}
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getSpentColor(entry.spent, entry.budget)} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Budget Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProjectBudgetControls projectId={projectId} />
+          </CardContent>
+        </Card>
+      </div>
 
       <BudgetEditModal
         isOpen={!!selectedCategory}
