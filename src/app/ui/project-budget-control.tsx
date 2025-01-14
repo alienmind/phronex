@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { fetchProjectBudgetAction, updateProjectReportAction } from "@/app/lib/actions";
+import { 
+  fetchProjectBudgetAction, 
+  updateProjectReportAction,
+  fetchCategoriesAction 
+} from "@/app/lib/actions";
 import { formatCurrency } from "@/app/lib/miscutils";
+import { BudgetEditModal } from "./project-budget-modal";
 
 interface CategoryBudget {
   category_id: string;
@@ -17,6 +22,27 @@ interface CategoryBudget {
 export function ProjectBudgetControls({ projectId }: { projectId: string }) {
   const [categories, setCategories] = useState<CategoryBudget[]>([]);
   const [debouncedUpdates, setDebouncedUpdates] = useState<{[key: string]: NodeJS.Timeout}>({});
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [availableCategories, setAvailableCategories] = useState<Array<{id: string, name: string}>>([]);
+
+  // Load available categories when opening modal
+  useEffect(() => {
+    if (showAddModal) {
+      fetchCategoriesAction().then(result => {
+        if (result.success && result.data) {
+          // Filter out categories that are already in use
+          const usedCategoryIds = new Set(categories.map(c => c.category_id));
+          const availableCats = result.data
+            .filter(cat => !usedCategoryIds.has(cat.category_id))
+            .map(cat => ({
+              id: cat.category_id,
+              name: cat.category_name
+            }));
+          setAvailableCategories(availableCats);
+        }
+      });
+    }
+  }, [showAddModal, categories]);
 
   useEffect(() => {
     async function loadBudgetData() {
@@ -78,6 +104,23 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
     }));
   };
 
+  const handleAddBudget = async (categoryId: string, amount: number) => {
+    const result = await updateProjectReportAction(
+      projectId,
+      categoryId,
+      amount
+    );
+
+    if (result.success) {
+      // Refresh the budget data
+      const refreshResult = await fetchProjectBudgetAction(projectId);
+      if (refreshResult?.success && refreshResult?.data) {
+        setCategories(refreshResult.data);
+      }
+      window.dispatchEvent(new Event('expense-amount-changed'));
+    }
+  };
+
   if (categories.length === 0) {
     return (
       <div className="flex flex-col gap-4">
@@ -94,7 +137,12 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
-        <Button variant="outline" size="icon" className="h-8 w-8">
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="h-8 w-8"
+          onClick={() => setShowAddModal(true)}
+        >
           <Plus className="h-4 w-4" />
         </Button>
       </div>
@@ -116,6 +164,16 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
           </div>
         </div>
       ))}
+
+      <BudgetEditModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSubmit={handleAddBudget}
+        categoryName=""
+        currentAmount={0}
+        availableCategories={availableCategories}
+        showCategorySelect={true}
+      />
     </div>
   );
 }

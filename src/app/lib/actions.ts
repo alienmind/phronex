@@ -18,7 +18,7 @@ import { createProject, updateProject, updateExpense, createExpense, deleteExpen
          updateCategory, createCategory, deleteCategory,
          fetchProjectBudgetReport, updateProjectCategoryBudget,
          deleteProject, fetchTopProjects,
-} from './dataaccess';
+         fetchCategories } from './dataaccess';
 import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
@@ -368,5 +368,25 @@ export async function fetchProjectBudgetAction(projectId: string) {
     return { success: true, data: budgets };
   } catch (error) {
     return { success: false, error: 'Failed to fetch project budget sliders' };
+  }
+}
+
+export async function fetchCategoriesAction(): Promise<{ success: boolean; data: VCategory[]; error?: string }> {
+  try {
+    const categories = await fetchCategories();
+    return {
+      success: true,
+      data: categories.map(cat => ({
+        ...cat,
+        all_columns: `${cat.category_name}`
+      }))
+    };
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+    return {
+      success: false,
+      data: [],
+      error: 'Failed to fetch categories'
+    };
   }
 } 

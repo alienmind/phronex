@@ -10,7 +10,7 @@ import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { VProjectBudgetReport } from "../lib/dataschemas"
 import { fetchProjectReportAction, updateProjectReportAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
-import { BudgetEditModal } from "./budget-edit-modal"
+import { BudgetEditModal } from "./project-budget-modal"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { ProjectBudgetControls } from "@/app/ui/project-budget-control"
 
@@ -98,13 +98,13 @@ export function ProjectChart({ projectId }: { projectId: string }) {
     setSelectedCategory(data)
   }
 
-  const handleBudgetUpdate = async (newAmount: number) => {
+  const handleBudgetUpdate = async (categoryId: string, newAmount: number) => {
     if (!selectedCategory) return
 
-    console.log("NEW amount", newAmount)
+    console.log("****** HANDLE BUDGET UPDATE: ", categoryId, newAmount)
     const result = await updateProjectReportAction(
       projectId,
-      selectedCategory.category_id,
+      categoryId,
       newAmount
     )
 
@@ -178,6 +178,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
         onClose={() => setSelectedCategory(null)}
         onSubmit={handleBudgetUpdate}
         categoryName={selectedCategory?.category_name || ''}
+        categoryId={selectedCategory?.category_id || ''}
         currentAmount={selectedCategory?.budget || 0}
       />
     </>
