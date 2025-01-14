@@ -128,37 +128,46 @@ export async function updateProject(data: Project) {
  * This is the function to fetch the most expensive projects in terms of expenses
  * It will return the projects in the projects table
  * It will also join the person table to get the project manager's name
+ * 
+ * It allows for a limit and a search term
  */
-export async function fetchTopProjects(limit?: number) {
+export async function fetchTopProjects(limit?: number, search?: string) {
   try {
+    limit = limit || 100
     const query = {
       text: `
         SELECT 
-          p.project_id, 
+          p.project_id,
           p.project_name,
           p.project_scope,
           p.project_start_date,
           p.project_end_date,
-          p.project_creation_date,
-          person.person_name,
-          person.person_surname,
-          COALESCE(SUM(pb.project_category_budget), 0) as total_budget,
           COALESCE(SUM(e.expense_value), 0) as total_spent,
-          CONCAT(p.project_name, ' ', p.project_scope) as all_columns
+          COALESCE(SUM(pb.project_category_budget), 0) as total_budget
         FROM project p
-        LEFT JOIN person ON p.project_manager_id = person.person_id
-        LEFT JOIN project_budget pb ON p.project_id = pb.project_id
         LEFT JOIN project_expense e ON p.project_id = e.project_id
-        GROUP BY p.project_id, p.project_name, p.project_scope, p.project_start_date, p.project_end_date, 
-                 p.project_creation_date, person.person_name, person.person_surname
+        LEFT JOIN project_budget pb ON p.project_id = pb.project_id
+        WHERE 
+          CASE 
+            WHEN $2::text IS NOT NULL THEN 
+              LOWER(p.project_name) LIKE LOWER($2) OR 
+              LOWER(COALESCE(project_name, '')) LIKE LOWER($2)
+            ELSE true
+          END
+        GROUP BY 
+          p.project_id, 
+          p.project_name,
+          p.project_scope,
+          p.project_start_date,
+          p.project_end_date
         ORDER BY total_spent DESC
-        ${limit ? 'LIMIT $1' : ''}
+        LIMIT $1
       `,
-      values: limit ? [limit] : []
+      values: [limit, search ? `%${search}%` : null],
     };
 
-    const result = await logQuery(query);
-    return result.rows;
+    const { rows } = await logQuery(query);
+    return rows;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch projects');

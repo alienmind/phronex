@@ -346,9 +346,9 @@ export async function deleteProjectAction(id: string) {
   }
 }
 
-export async function fetchProjectsAction(limit: number) {
+export async function fetchProjectsAction(limit: number, search?: string) {
   try {
-    const projects = await fetchTopProjects(limit);
+    const projects = await fetchTopProjects(limit, search);
     return { success: true, data: projects };
   } catch (error) {
     return { success: false, error: 'Failed to fetch projects' };
