@@ -125,11 +125,11 @@ export async function updateProject(data: Project) {
 }
 
 /*
- * This is the function to fetch the most recent projects from the database
+ * This is the function to fetch the most expensive projects in terms of expenses
  * It will return the projects in the projects table
  * It will also join the person table to get the project manager's name
  */
-export async function fetchMostRecentProjects(limit?: number) {
+export async function fetchTopProjects(limit?: number) {
   try {
     const query = {
       text: `
@@ -151,7 +151,7 @@ export async function fetchMostRecentProjects(limit?: number) {
         LEFT JOIN project_expense e ON p.project_id = e.project_id
         GROUP BY p.project_id, p.project_name, p.project_scope, p.project_start_date, p.project_end_date, 
                  p.project_creation_date, person.person_name, person.person_surname
-        ORDER BY p.project_creation_date DESC
+        ORDER BY total_spent DESC
         ${limit ? 'LIMIT $1' : ''}
       `,
       values: limit ? [limit] : []
