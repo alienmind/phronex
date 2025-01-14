@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/select"
 
 import { Calendar as CalendarIcon } from "lucide-react"
+import { Plus } from "lucide-react"
 
 import { useForm, FormProvider } from "react-hook-form"
 import { Input } from "@/components/ui/input"
@@ -100,17 +101,21 @@ export function CreateProjectModal() {
     })
   }, [errorMessage]);
 
+  const [isOpen, setIsOpen] = useState(false)
 
   // The component consist itself in a dialog trigger (button) and a dialog content
   // The dialog content contains a form with the fields for the project
   // The form is submitted for processing and validation in the server action
   return (
-    <>
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="w-full m-2" >New</Button>
-
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Button 
+        onClick={() => setIsOpen(true)} 
+        variant="default" 
+        size="icon"
+        className="h-9 w-9"
+      >
+        <Plus className="h-4 w-4" />
+      </Button>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>New project</DialogTitle>
@@ -208,6 +213,5 @@ export function CreateProjectModal() {
           </Form>
       </DialogContent>
     </Dialog>
-    </>
   );
 };

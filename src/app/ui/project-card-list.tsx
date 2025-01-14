@@ -14,6 +14,7 @@ import { ProjectListFilter } from '@/app/ui/project-list-filter';
 import { Input } from '@/components/ui/input';
 import { fetchProjectsAction } from '@/app/lib/actions';
 import { VProjectCard } from '@/app/lib/dataschemas';
+import { CreateProjectModal } from './create-project-modal';
 
 export function ProjectCardList({ initialProjects, limit = 6 }: { 
   initialProjects: VProjectCard[],
@@ -33,6 +34,7 @@ export function ProjectCardList({ initialProjects, limit = 6 }: {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 px-4 gap-4">
+        <CreateProjectModal/>
         <div className="w-full sm:w-2/3">
           <Input type="text" placeholder="Search projects" />
         </div>

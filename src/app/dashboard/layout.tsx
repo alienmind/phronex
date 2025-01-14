@@ -39,8 +39,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />                
-              <CreateProjectModal />
-            </div>
+           </div>
           </header>
           {children}
         </SidebarInset>
