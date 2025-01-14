@@ -66,15 +66,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </CardHeader>
         <CardContent className="grid gap-2">
           <div className="grid grid-cols-2 text-sm">
-            <span className="text-muted-foreground">Start Date:</span>
+            <span className="text-muted-foreground font-bold">Start Date:</span>
             <span>{project.project_start_date ? formatDateToLocal(project.project_start_date.toString()) : 'Not set'}</span>
-            <span className="text-muted-foreground">End Date:</span>
+            <span className="text-muted-foreground font-bold">End Date:</span>
             <span>{project.project_end_date ? formatDateToLocal(project.project_end_date.toString()) : 'Not set'}</span>
           </div>
           <div className="mt-2 grid grid-cols-2 text-sm">
-            <span className="text-muted-foreground">Total Budget:</span>
+            <span className="text-muted-foreground font-bold">Total Budget:</span>
             <span>{formatCurrency(project.total_budget)}</span>
-            <span className="text-muted-foreground">Total Spent:</span>
+            <span className="text-muted-foreground font-bold">Total Spent:</span>
             <span className={spentColor}>{formatCurrency(project.total_spent)}</span>
           </div>
           {/* Progress bar */}
