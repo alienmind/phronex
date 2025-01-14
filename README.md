@@ -212,10 +212,11 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Administration: manage budget per category per project
 - [x] .. Graph to show expenditures per category against budget
 - [x] .. Show expenses chart over time in the project expenses table
-- [ ] .. Search functionality in the main page
 - [x] .. Project dashboard: expenses vs budget grouped by category
 - [x] .. Colors when expenditures are above the estimate
-- [n] .. Colors when projects are overexpending in the project dashboard
+- [ ] .. Colors the project cards based on their overexpend ratio
+- [ ] .. Remove the Delete button from the project cards
+- [ ] .. Search functionality in the main page
 
 ## Identified issues during the development - some of them are not fixed yet
 - [x] .. Some of the server / client components had crossed interdependencies which resulted in depending on pg (postgres) for the client component. Fixed.
@@ -230,8 +231,9 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Fixed People tab since the big refactor of data-table.tsx
 - [x] .. Fixed Roles tab since the big refactor
 - [x] .. Fixed Expense Categories (... you know the drill)
+- [ ] .. Adding a new resource to the project does not work again
 - [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
-- [ ] .. Also editing the category should update the budget
+- [ ] .. Also editing the category in the project details form should update the budget
 - [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
