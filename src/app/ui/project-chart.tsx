@@ -8,14 +8,14 @@ import { useEffect, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell, Tooltip } from "recharts"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { VProjectBudgetReport } from "../lib/dataschemas"
-import { fetchProjectReportAction, updateProjectReportAction } from "../lib/actions"
+import { fetchProjectReportAction, updateBudgetAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
 import { BudgetEditModal } from "./project-budget-modal"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { ProjectBudgetControls } from "@/app/ui/project-budget-control"
 
 // Create a global event bus for expense changes
-export const expenseChangeEventName = 'expense-amount-changed'
+export const expenseChangeEventName = 'amount-or-budget-changed'
 export const expenseChangeEvent = new Event(expenseChangeEventName)
 
 const chartConfig = {
@@ -101,8 +101,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
   const handleBudgetUpdate = async (categoryId: string, newAmount: number) => {
     if (!selectedCategory) return
 
-    console.log("****** HANDLE BUDGET UPDATE: ", categoryId, newAmount)
-    const result = await updateProjectReportAction(
+    const result = await updateBudgetAction(
       projectId,
       categoryId,
       newAmount

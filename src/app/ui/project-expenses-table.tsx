@@ -67,10 +67,7 @@ const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
           return categories.map((cat: any) => ({
             id: cat.category_name,
             label: cat.category_name,
-            hiddenValue: {
-              field: 'category_id',
-              value: cat.category_id
-            }
+            hiddenValue: cat.category_id
           }));
         }
       }
@@ -137,10 +134,11 @@ export default function ProjectExpensesTable({
     );
 
     // Dispatch an event to trigger the chart update
-    window.dispatchEvent(new Event('expense-amount-changed'));
+    window.dispatchEvent(new Event('amount-or-budget-changed'));
   };
 
   const handleExpenseCreate = async (data: Partial<ProjectExpense>) => {
+    console.log("****** CREATE EXPENSE", JSON.stringify(data));
     const result = await createExpenseAction({
       ...data,
       project_id: projectId

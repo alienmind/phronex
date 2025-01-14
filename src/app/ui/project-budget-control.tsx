@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { 
   fetchProjectBudgetAction, 
-  updateProjectReportAction,
+  updateBudgetAction,
   fetchCategoriesAction 
 } from "@/app/lib/actions";
 import { formatCurrency } from "@/app/lib/miscutils";
@@ -27,21 +27,13 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
 
   // Load available categories when opening modal
   useEffect(() => {
-    if (showAddModal) {
-      fetchCategoriesAction().then(result => {
-        if (result.success && result.data) {
-          // Filter out categories that are already in use
-          const usedCategoryIds = new Set(categories.map(c => c.category_id));
-          const availableCats = result.data
-            .filter(cat => !usedCategoryIds.has(cat.category_id))
-            .map(cat => ({
-              id: cat.category_id,
-              name: cat.category_name
-            }));
-          setAvailableCategories(availableCats);
-        }
-      });
+    async function loadCategories() {
+      const result = await fetchCategoriesAction();
+      if (result?.success && result?.data) {
+        setAvailableCategories(result?.data.map(cat => ({ id: cat.category_id, name: cat.category_name })));
+      }
     }
+    loadCategories();
   }, [showAddModal, categories]);
 
   useEffect(() => {
@@ -60,14 +52,14 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
   }, [projectId]);
 
   const updateBudget = async (categoryId: string, newValue: number) => {
-    const result = await updateProjectReportAction(
+    const result = await updateBudgetAction(
       projectId,
       categoryId,
       newValue
     );
 
     if (result.success) {
-      window.dispatchEvent(new Event('expense-amount-changed'));
+      window.dispatchEvent(new Event('amount-or-budget-changed'));
     }
   };
 
@@ -105,7 +97,7 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
   };
 
   const handleAddBudget = async (categoryId: string, amount: number) => {
-    const result = await updateProjectReportAction(
+    const result = await updateBudgetAction(
       projectId,
       categoryId,
       amount
@@ -117,7 +109,7 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
       if (refreshResult?.success && refreshResult?.data) {
         setCategories(refreshResult.data);
       }
-      window.dispatchEvent(new Event('expense-amount-changed'));
+      window.dispatchEvent(new Event('amount-or-budget-changed'));
     }
   };
 

@@ -188,7 +188,7 @@ export async function updateExpenseAction(expenseId: string, data: Partial<Proje
   }
 }
 
-export async function createExpenseAction(data: Partial<VProjectExpensesWithCategoryBudget>) {
+export async function createExpenseAction(data: Partial<ProjectExpense>) {
   try {
     console.log('Creating expense:', JSON.stringify(data));
     const newExpense = await createExpense(data);
@@ -329,7 +329,7 @@ export async function fetchProjectReportAction(projectId: string) {
   }
 }
 
-export async function updateProjectReportAction(
+export async function updateBudgetAction(
   projectId: string,
   categoryId: string,
   budget: number
