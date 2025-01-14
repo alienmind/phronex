@@ -209,13 +209,13 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Administration: manage roles
 - [x] .. Administration: manage persons
 - [x] .. Administration: manage categories
-- [ ] .. Administration: manage budget per category per project
-- [ ] .. Graph to show expenditures per category against budget
-- [ ] .. Graph resources assignment to projects
+- [x] .. Administration: manage budget per category per project
+- [x] .. Graph to show expenditures per category against budget
+- [x] .. Show expenses chart over time in the project expenses table
 - [ ] .. Search functionality in the main page
-- [ ] .. Project dashboard: expenses vs budget grouped by category
-- [ ] .. Colors when expenditures are above the estimate
-- [ ] .. Colors when projects are overexpending in the project dashboard
+- [x] .. Project dashboard: expenses vs budget grouped by category
+- [x] .. Colors when expenditures are above the estimate
+- [n] .. Colors when projects are overexpending in the project dashboard
 
 ## Identified issues during the development - some of them are not fixed yet
 - [x] .. Some of the server / client components had crossed interdependencies which resulted in depending on pg (postgres) for the client component. Fixed.
@@ -246,6 +246,7 @@ The extras:
 - [ ] .. Create project form client validations (currently only in server)
 - [x] .. Dark theme
 - [x] .. Add easter egg
+- [ ] .. Graph resources assignment to projects
 
 # Test plan (on every major release)
 - [ ] .. Landing page: click on About, click on seed, click on presentation
