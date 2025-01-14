@@ -81,7 +81,10 @@ type CustomColumnMeta = {
     fetchOptions: () => Promise<{
       id: string;
       label: string;
-      hiddenValue?: string;
+      hiddenValue?: {
+        field: string;
+        value: string;
+      };
     }[]>;
   };
 };
@@ -93,7 +96,10 @@ declare module '@tanstack/react-table' {
 type SelectOption = {
   id: string;
   label: string;
-  hiddenValue?: string;
+  hiddenValue?: {
+    field: string;
+    value: string;
+  };
 };
 
 const DeleteDialog = ({ 
@@ -226,60 +232,94 @@ export function DataTable<TData, TValue>({
 
   // Custom cell renderer that handles editable cells
   const renderCell = (cell: any) => {
-    const isEditing = 
-      editingCell?.rowId === cell.row.id && 
-      editingCell?.columnId === cell.column.id;
-
     const column = cell.column.columnDef;
-    const isEditable = column.meta?.editable === true;
+    const isEditable = column.meta?.editable;
+    const hasSelectableOptions = column.meta?.selectableOptions;
+    const isEditing = editingCell?.rowId === cell.row.id && editingCell?.columnId === cell.column.id;
 
-    if (isEditing && isEditable) {
-      return (
-        <Input
-          autoFocus
-          defaultValue={editingCell?.value}
-          onBlur={(e) => {
-            const newValue = e.target.value;
-            if (newValue !== editingCell?.value) {
-              (table.options.meta as any).updateData(
-                cell.row.id,
-                cell.column.id,
-                newValue
-              );
-            } else {
-              setEditingCell(null);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              const newValue = e.currentTarget.value;
-              if (newValue !== editingCell?.value) {
-                (table.options.meta as any).updateData(
-                  cell.row.id,
-                  cell.column.id,
-                  newValue
+    if (isEditing) {
+      if (hasSelectableOptions) {
+        const options = selectableOptions[cell.column.id];
+        const currentValue = cell.getValue();
+        
+        return (
+          <Select
+            value={String(currentValue)}
+            onValueChange={async (value) => {
+              const option = options?.find(opt => opt.id === value);
+              try {
+                if (option?.hiddenValue) {
+                  // Update hidden value first
+                  await (table.options.meta as any).updateData(
+                    cell.row.id, 
+                    option.hiddenValue.field, 
+                    option.hiddenValue.value
+                  );
+                }
+                // Then update visible value
+                await (table.options.meta as any).updateData(
+                  cell.row.id, 
+                  cell.column.id, 
+                  value
                 );
-              } else {
+                
+                // Exit edit mode
                 setEditingCell(null);
+              } catch (error) {
+                console.error('Failed to update:', error);
               }
-            } else if (e.key === "Escape") {
-              setEditingCell(null);
-            }
-          }}
-        />
-      );
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={`Select ${column.header}`} />
+            </SelectTrigger>
+            <SelectContent>
+              {options?.map(option => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      } else {
+        return (
+          <Input
+            value={editingValue}
+            onChange={(e) => setEditingValue(e.target.value)}
+            onBlur={async () => {
+              await (table.options.meta as any).updateData(cell.row.id, cell.column.id, editingValue);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                (table.options.meta as any).updateData(cell.row.id, cell.column.id, editingValue);
+              }
+            }}
+            autoFocus
+          />
+        );
+      }
     }
 
     return (
       <div
         className={isEditable ? "cursor-pointer hover:bg-muted/50 p-2 -m-2 rounded" : ""}
-        onClick={() => {
+        onClick={async () => {
           if (isEditable) {
+            if (hasSelectableOptions && !selectableOptions[cell.column.id]) {
+              // Fetch options if they haven't been loaded yet
+              const options = await column.meta?.selectableOptions.fetchOptions();
+              setSelectableOptions(prev => ({
+                ...prev,
+                [cell.column.id]: options
+              }));
+            }
             setEditingCell({
               rowId: cell.row.id,
               columnId: cell.column.id,
               value: cell.getValue(),
             });
+            setEditingValue(String(cell.getValue() || ""));
           }
         }}
       >

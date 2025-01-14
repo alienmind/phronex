@@ -66,7 +66,10 @@ const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
           return categories.map((cat: any) => ({
             id: cat.category_name,
             label: cat.category_name,
-            hiddenValue: cat.category_id
+            hiddenValue: {
+              field: 'category_id',
+              value: cat.category_id
+            }
           }));
         }
       }
@@ -127,7 +130,9 @@ export default function ProjectExpensesTable({
 
     setCurrentExpenses(prev => 
       prev.map(expense => 
-        expense.expense_id === rowId ? { ...expense, ...result.expense } : expense
+        expense.expense_id === rowId 
+          ? { ...expense, ...result.expense }
+          : expense
       )
     );
   };

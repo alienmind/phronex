@@ -289,15 +289,16 @@ export async function fetchCategories() {
 // Add this function to handle expense updates
 export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   try {
-    const result = await connectionPool.query(`
+    const result = await logQuery(`
       UPDATE project_expense 
       SET 
         expense_name = COALESCE($1, expense_name),
         expense_value = COALESCE($2, expense_value),
-        expense_date = COALESCE($3, expense_date)
-      WHERE expense_id = $4
+        expense_date = COALESCE($3, expense_date),
+        category_id = COALESCE($4, category_id)
+      WHERE expense_id = $5
       RETURNING *;
-    `, [data.expense_name, data.expense_value, data.expense_date, id]);
+    `, [data.expense_name, data.expense_value, data.expense_date, data.category_id, id]);
 
     if (result.rows.length === 0) {
       throw new Error('Expense not found');

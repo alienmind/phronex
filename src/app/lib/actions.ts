@@ -184,6 +184,7 @@ export async function updateExpenseAction(expenseId: string, data: Partial<Proje
 
 export async function createExpenseAction(data: Partial<ProjectExpensesWithCategoryBudget>) {
   try {
+    console.log('Creating expense:', JSON.stringify(data));
     const newExpense = await createExpense(data);
     return { success: true, expense: newExpense };
   } catch (error) {
