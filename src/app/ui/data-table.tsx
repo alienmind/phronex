@@ -207,6 +207,7 @@ export function DataTable<TData, TValue>({
       setEditingCell,
       updateData: async (rowId: string, columnId: string, value: any) => {
         if (!onRowUpdate) return;
+        
         try {
           await onRowUpdate(rowId, { [columnId]: value } as Partial<TData>);
           setEditingCell(null);

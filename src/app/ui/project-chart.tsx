@@ -8,12 +8,14 @@ import { useEffect, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell, Tooltip } from "recharts"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { VProjectBudgetReport } from "../lib/dataschemas"
-import { fetchProjectBudgetAction, updateProjectCategoryBudgetAction } from "../lib/actions"
+import { fetchProjectReportAction, updateBudgetAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
-import { BudgetEditModal } from "./budget-edit-modal"
+import { BudgetEditModal } from "./project-budget-modal"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { ProjectBudgetControls } from "@/app/ui/project-budget-control"
 
 // Create a global event bus for expense changes
-export const expenseChangeEventName = 'expense-amount-changed'
+export const expenseChangeEventName = 'amount-or-budget-changed'
 export const expenseChangeEvent = new Event(expenseChangeEventName)
 
 const chartConfig = {
@@ -73,7 +75,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
 
   useEffect(() => {
     async function loadBudgetData() {
-      const result = await fetchProjectBudgetAction(projectId)
+      const result = await fetchProjectReportAction(projectId)
       if (result.success && result.data) {
         // Find the max value across all entries
         const max = Math.max(...result.data.map(item => 
@@ -96,13 +98,12 @@ export function ProjectChart({ projectId }: { projectId: string }) {
     setSelectedCategory(data)
   }
 
-  const handleBudgetUpdate = async (newAmount: number) => {
+  const handleBudgetUpdate = async (categoryId: string, newAmount: number) => {
     if (!selectedCategory) return
 
-    console.log("NEW amount", newAmount)
-    const result = await updateProjectCategoryBudgetAction(
+    const result = await updateBudgetAction(
       projectId,
-      selectedCategory.category_id,
+      categoryId,
       newAmount
     )
 
@@ -115,56 +116,68 @@ export function ProjectChart({ projectId }: { projectId: string }) {
 
   return (
     <>
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-        <BarChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="category_name"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value}
-          />
-          <YAxis
-            dataKey="budget"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            domain={[0, maxDomain]}
-            tickFormatter={(value) => formatCurrency(value)}
-          />
-          <Tooltip 
-            content={CustomTooltip}
-            cursor={{ fill: 'transparent' }}
-          />
-          <Bar 
-            name="Budget"
-            dataKey="budget" 
-            fill={`hsl(var(--chart-1))`} 
-            radius={4}
-            onClick={(data) => handleBudgetClick(data)}
-            style={{ cursor: 'pointer' }}
-          />
-          <Bar 
-            name="Spent"
-            dataKey="spent" 
-            radius={4}
-            fillOpacity={0.8}
-            stroke="none"
-            onClick={(data) => handleBudgetClick(data)}
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getSpentColor(entry.spent, entry.budget)} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ChartContainer>
+      <div className="space-y-6">
+        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+          <BarChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="category_name"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value}
+            />
+            <YAxis
+              dataKey="budget"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              domain={[0, maxDomain]}
+              tickFormatter={(value) => formatCurrency(value)}
+            />
+            <Tooltip 
+              content={CustomTooltip}
+              cursor={{ fill: 'transparent' }}
+            />
+            <Bar 
+              name="Budget"
+              dataKey="budget" 
+              fill={`hsl(var(--chart-1))`} 
+              radius={4}
+              onClick={(data) => handleBudgetClick(data)}
+              style={{ cursor: 'pointer' }}
+            />
+            <Bar 
+              name="Spent"
+              dataKey="spent" 
+              radius={4}
+              fillOpacity={0.8}
+              stroke="none"
+              onClick={(data) => handleBudgetClick(data)}
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={getSpentColor(entry.spent, entry.budget)} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Budget Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProjectBudgetControls projectId={projectId} />
+          </CardContent>
+        </Card>
+      </div>
 
       <BudgetEditModal
         isOpen={!!selectedCategory}
         onClose={() => setSelectedCategory(null)}
         onSubmit={handleBudgetUpdate}
         categoryName={selectedCategory?.category_name || ''}
+        categoryId={selectedCategory?.category_id || ''}
         currentAmount={selectedCategory?.budget || 0}
       />
     </>

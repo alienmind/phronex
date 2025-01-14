@@ -12,6 +12,8 @@ import { notFound } from 'next/navigation';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
 import ProjectExpensesTable from '@/app/ui/project-expenses-table';
 import { ProjectChart } from '@/app/ui/project-chart'
+import { ProjectBudgetControls } from "@/app/ui/project-budget-control";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type Params = Promise<{ id: string, expenses_start_date: string, expenses_end_date: string }>
 
@@ -54,18 +56,18 @@ export default async function Page( {params}: { params: Params } ) {
       </div>
 
       {/* Bottom section - Tables */}
-      <div className="p-4 sm:p-6">
+      <div className="p-4 sm:p-6 md:col-span-2">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Expenses section */}
-            <div>
+            <div className="md:col-span-1">
               <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Expenses</h2>
               <div className="overflow-x-auto">
                 {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} projectName={project.project_name} /> || <p>No expenses found</p>}
               </div>
             </div>
             {/* Resources section */}
-            <div>
+            <div className="md:col-span-1">
               <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Resources</h2>
               <div className="overflow-x-auto">
                 {resources && <ProjectResourcesTable resources={resources} projectId={searchParams.id} /> || <p>No resources found</p>}
@@ -74,6 +76,6 @@ export default async function Page( {params}: { params: Params } ) {
           </div>
         </div>
       </div>
-    </div>
+   </div>
   );
 } 

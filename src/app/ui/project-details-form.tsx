@@ -179,15 +179,14 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
           name="project_scope"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Project Scope</FormLabel>
+              <FormLabel>Scope</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Project scope" 
-                  className="min-h-[100px]" 
                   {...field} 
+                  className="min-h-[270px] resize-none"
+                  placeholder="Project scope and objectives..."
                 />
               </FormControl>
-              <FormMessage />
             </FormItem>
           )}
         />

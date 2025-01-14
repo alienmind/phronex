@@ -16,17 +16,15 @@ import {
 } from "@/components/ui/select"
 
 export function ProjectListFilter({ 
-  defaultValue = 0,
   onLimitChange
 }: { 
-  defaultValue?: number,
   onLimitChange?: (limit: number | undefined) => void 
 }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const currentValue = searchParams.get('limit') || defaultValue.toString();
+  const currentValue = searchParams.get('limit') || '0';
 
   function handleFilterChange(value: string) {
     const params = new URLSearchParams(searchParams);

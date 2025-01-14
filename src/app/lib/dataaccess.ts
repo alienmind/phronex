@@ -117,7 +117,10 @@ export async function createProject(project: Project) {
  */
 export async function updateProject(data: Project) {
     const query = {
-      text: `UPDATE project SET project_name = $1, project_scope = $2, project_start_date = $3, project_end_date = $4, project_manager_id = $5 WHERE project_id = $6`,
+      text: `
+      UPDATE project SET project_name = $1, project_scope = $2,
+      project_start_date = $3, project_end_date = $4, project_manager_id = $5
+      WHERE project_id = $6`,
       values: [data.project_name, data.project_scope, data.project_start_date, data.project_end_date, data.project_manager_id, data.project_id]
     };
     await connectionPool.query(query);
@@ -312,7 +315,7 @@ export async function deleteExpense(id: string) {
   }
 }
 
-export async function fetchProjectBudgetReport(id: string, start_date: Date, end_date: Date) : Promise<VProjectBudgetReport[]> {
+export async function fetchProjectBudgetReport(id: string, start_date?: Date, end_date?: Date) : Promise<VProjectBudgetReport[]> {
   try {
     const query = {
       text: `
@@ -781,11 +784,11 @@ export async function updateProjectCategoryBudget(
   categoryId: string,
   budget: number
 ): Promise<void> {
-  console.log("UPDATE project_budget", projectId, categoryId, budget)
+  console.log("UPSERT project_budget", projectId, categoryId, budget)
   const sql = `
-    UPDATE project_budget   
-    SET project_category_budget = $3
-    WHERE project_id = $1 AND category_id = $2
+    INSERT INTO project_budget (project_id, category_id, project_category_budget) 
+    VALUES ($1, $2, $3)
+    ON CONFLICT (project_id, category_id) DO UPDATE SET project_category_budget = $3
   `;
   await logQuery(sql, [projectId, categoryId, budget]);
 }

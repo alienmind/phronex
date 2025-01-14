@@ -233,13 +233,18 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Fixed Roles tab since the big refactor
 - [x] .. Fixed Expense Categories (... you know the drill)
 - [x] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
-- [ ] .. Adding a new resource to the project does not work again
+- [ ] .. Adding a new resource to the project does not keep the category (it is set as Unknown)
 - [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
-- [ ] .. Also editing the category in the project details form should update the budget
+- [ ] .. Also editing the category in the project details form should update the budget but it does not
 - [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
-- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
-- [ ] .. Enhance server validation (error toast should iterate over all errors)
+- [ ] .. If editing a budget through the chart, the slider does not get updated
+- [ ] .. Editing the category in the Project Expenses table does not update.
+- [ ] .. Creating a expense does not reflect on the Category (needs an F5)
+- [ ] .. Adding a new resource to a project does not work
+- [ ] .. Adding a new category and then creating a expense to that category creates an exception
+- [ ] .. Free search in the Roles table does not work
+- [ ] .. Reset demo data shows the iframe at a wrong size
 
 The extras:
 - [x] .. Dark theme
@@ -250,24 +255,33 @@ The extras:
 - [ ] .. OAuth 2.0 authentication with Google or Github
 - [ ] .. Create project form client validations (currently only in server)
 - [ ] .. Graph resources assignment to projects
+- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
+- [ ] .. Enhance server validation (error toast should iterate over all errors)
 
-# Test plan (on every major release)
-- [ ] .. Landing page: click on About, click on seed, click on presentation
-- [ ] .. Login
-- [ ] .. See dashboard of project cards
-- [ ] .. Filter out to 3 projects
-- [ ] .. Search for a project by free text
-- [ ] .. Add a new project
-- [ ] .. Adjust project budget per category
-- [ ] .. Click on a project card
-- [ ] .. Check all info is OK (expenses, resources, metadata)
-- [ ] .. Edit metadata of the project
-- [ ] .. Edit a expense amount or description
-- [ ] .. Categorize an expense
-- [ ] .. Add a new expense to the project
-- [ ] .. Reassign a resource to the project
-- [ ] .. Remove a expense
-- [ ] .. Repeat basic checks over generic admin pages (cost categories, roles, persons)
+
+# Test plan (on every major release) - also presentation plan
+- [x] .. Landing page: click on About, click on seed, click on presentation
+- [x] .. Login with demouser@gmail.com / 123456
+- [x] .. Mention the navbar to the left with the generic options. Mention also the feature of changing theme.
+- [x] .. See dashboard of project cards. Discuss the color scheme.
+- [x] .. Filter out to 3 projects or to any number.
+- [x] .. Search for a project by free text (Super Portal)
+- [x] .. Add a new project (TEST PROJECT).
+- [x] .. Delete the TEST PROEJCT
+- [x] .. Click on Super Portal to see the details. Explain the different sections on the page.
+- [x] .. Edit metadata of the project (Scope, Dates, etc)
+- [x] .. Adjust project budget for one category using the sliding bar
+- [x] .. Adjust the budget for one category clicking in the chart (exceed the current spent)
+- [x] .. Edit a expense amount or description. Change for instance the total amount of cloud consumption and see how the chart reacts.
+- [x] .. Filter expenses by date.
+- [x] .. Show the graph
+- [x] .. Sort the expenses table
+- [x] .. Create a new expense and categorize it (F5 to refresh)
+- [x] .. Add a new expense to the project
+- [x] .. Delete the new expense
+- [x] .. Reassign a resource to a different role in the same project
+- [x] .. Repeat basic checks over generic admin pages (Create a expense category, search for it, delete it, create a role, ...)
+- [x] .. Final words
 
 # Appendix and references
 
