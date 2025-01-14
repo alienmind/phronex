@@ -242,8 +242,8 @@ Even more extras with less priority
 - [x] .. Filtering expenses over time range is not working - HTTP 400
 - [x] .. Calendar picker layout has gone crazy
 - [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
+- [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
--
 
 ## Test plan (on every major release)
 - [ ] .. Landing page: click on About, click on seed, click on presentation
