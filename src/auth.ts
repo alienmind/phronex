@@ -29,12 +29,12 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          // Mock login
+          // FIXME - added a workaround mock login, somehow we cannot fetch the user from the database
           //const user = await getUser(email, password);
           const user = {
             id: '1',
-            name: 'Jaime Lopez',
-            email: 'jaime.lopez@gmail.com',
+            name: 'Demo user',
+            email: 'demouser@gmail.com',
             encpassword: '$2a$04$G7t5TzOwenlV2cxjTD9p7eUHIG.GfMlort2LGuzYiFCOdTHtPjzPy',
             emailVerified: new Date(),
           }

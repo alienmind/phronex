@@ -9,8 +9,8 @@ import { User, Category, Person, Project, ProjectBudget, ProjectExpense, Project
 export const users : User[] = [
   {
     id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
-    email: 'jaime.lopez@gmail.com',
+    name: 'Demo User',
+    email: 'demouser@gmail.com',
     encpassword: '123456', // This will in fact not be the encoded password.
                            // It will become something like $2a$04$zLey8yRY5eMhxN89lN5rOOY3lFkBsrcc8cEdVR4OImIK/dk8sQmq
                            // at a later stage.
