@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Cell, Tooltip } from "recharts"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import { VProjectBudgetReport } from "../lib/dataschemas"
-import { fetchProjectBudgetAction, updateProjectCategoryBudgetAction } from "../lib/actions"
+import { fetchProjectReportAction, updateProjectReportAction } from "../lib/actions"
 import { formatCurrency } from "../lib/miscutils"
 import { BudgetEditModal } from "./budget-edit-modal"
 
@@ -73,7 +73,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
 
   useEffect(() => {
     async function loadBudgetData() {
-      const result = await fetchProjectBudgetAction(projectId)
+      const result = await fetchProjectReportAction(projectId)
       if (result.success && result.data) {
         // Find the max value across all entries
         const max = Math.max(...result.data.map(item => 
@@ -100,7 +100,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
     if (!selectedCategory) return
 
     console.log("NEW amount", newAmount)
-    const result = await updateProjectCategoryBudgetAction(
+    const result = await updateProjectReportAction(
       projectId,
       selectedCategory.category_id,
       newAmount
@@ -115,7 +115,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
 
   return (
     <>
-      <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+      <ChartContainer config={chartConfig} className="h-[300px] w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis

@@ -312,7 +312,7 @@ export async function deleteExpense(id: string) {
   }
 }
 
-export async function fetchProjectBudgetReport(id: string, start_date: Date, end_date: Date) : Promise<VProjectBudgetReport[]> {
+export async function fetchProjectBudgetReport(id: string, start_date?: Date, end_date?: Date) : Promise<VProjectBudgetReport[]> {
   try {
     const query = {
       text: `

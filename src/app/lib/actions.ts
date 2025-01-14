@@ -10,8 +10,15 @@ import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory, fetchProjectBudgetReport, updateProjectCategoryBudget, deleteProject, fetchTopProjects } from './dataaccess';
+import { CreateProjectFormSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
+import { createProject, updateProject, updateExpense, createExpense, deleteExpense,
+         updateProjectResource, createProjectResource, deleteProjectResource,
+         updatePerson, createPerson, deletePerson,
+         updateRole, createRole, deleteRole,
+         updateCategory, createCategory, deleteCategory,
+         fetchProjectBudgetReport, updateProjectCategoryBudget,
+         deleteProject, fetchTopProjects, fetchProjectBudget
+} from './dataaccess';
 import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
@@ -309,7 +316,7 @@ export async function deleteCategoryAction(categoryId: string) {
   }
 }
 
-export async function fetchProjectBudgetAction(projectId: string) {
+export async function fetchProjectReportAction(projectId: string) {
   try {
     const budgetReport = await fetchProjectBudgetReport(
       projectId,
@@ -322,7 +329,7 @@ export async function fetchProjectBudgetAction(projectId: string) {
   }
 }
 
-export async function updateProjectCategoryBudgetAction(
+export async function updateProjectReportAction(
   projectId: string,
   categoryId: string,
   budget: number
@@ -352,5 +359,14 @@ export async function fetchProjectsAction(limit: number, search?: string) {
     return { success: true, data: projects };
   } catch (error) {
     return { success: false, error: 'Failed to fetch projects' };
+  }
+}
+
+export async function fetchProjectBudgetAction(projectId: string) {
+  try {
+    const budgets = await fetchProjectBudgetReport(projectId);
+    return { success: true, data: budgets };
+  } catch (error) {
+    return { success: false, error: 'Failed to fetch project budget sliders' };
   }
 } 
