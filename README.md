@@ -206,28 +206,16 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Edit a expense detail in the project
 - [x] .. Delete an expense from the project
 - [x] .. Reassign / remove resources or costs to each project in the project detail screen
-- [ ] .. Graph to show expenditures per category against budget
-- [ ] .. Graph resources assignment to projects
-
-Extra todos with priority:
-- [ ] .. Administration: manage budget per category
 - [x] .. Administration: manage roles
 - [x] .. Administration: manage persons
 - [x] .. Administration: manage categories
+- [ ] .. Administration: manage budget per category per project
+- [ ] .. Graph to show expenditures per category against budget
+- [ ] .. Graph resources assignment to projects
 - [ ] .. Search functionality in the main page
 - [ ] .. Project dashboard: expenses vs budget grouped by category
 - [ ] .. Colors when expenditures are above the estimate
 - [ ] .. Colors when projects are overexpending in the project dashboard
-
-Even more extras with less priority
-- [ ] .. Implement registration screen
-- [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for scope summarization (would be neat)
-- [ ] .. Also use OpenAI for structured budgeting scaffolding based on the scope text - try to generate cost items based in the model output in JSON (would be even more neat)
-- [ ] .. OAuth 2.0 authentication with Google or Github
-- [ ] .. Create project form client validations (currently only in server)
-- [ ] .. Enhance server validation (error toast should iterate over all errors)
-- [x] .. Dark theme
-- [x] .. Add easter egg
 
 ## Identified issues during the development - some of them are not fixed yet
 - [x] .. Some of the server / client components had crossed interdependencies which resulted in depending on pg (postgres) for the client component. Fixed.
@@ -240,16 +228,26 @@ Even more extras with less priority
 - [x] .. Filtering expenses over time range is not working - HTTP 400
 - [x] .. Calendar picker layout has gone crazy
 - [x] .. Fixed People tab since the big refactor of data-table.tsx
-- [ ] .. Fixed Roles tab since the big refactor
-- [ ] .. Fixed Expense Categories (... you know the drill)
+- [x] .. Fixed Roles tab since the big refactor
+- [x] .. Fixed Expense Categories (... you know the drill)
 - [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
 - [ ] .. Also editing the category should update the budget
 - [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
+- [ ] .. Enhance server validation (error toast should iterate over all errors)
 
-## Test plan (on every major release)
+The extras:
+- [ ] .. Implement registration screen
+- [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for scope summarization (would be neat)
+- [ ] .. Also use OpenAI for structured budgeting scaffolding based on the scope text - try to generate cost items based in the model output in JSON (would be even more neat)
+- [ ] .. OAuth 2.0 authentication with Google or Github
+- [ ] .. Create project form client validations (currently only in server)
+- [x] .. Dark theme
+- [x] .. Add easter egg
+
+# Test plan (on every major release)
 - [ ] .. Landing page: click on About, click on seed, click on presentation
 - [ ] .. Login
 - [ ] .. See dashboard of project cards
@@ -313,7 +311,6 @@ module.exports = {
 ```
 
 This will build the project as a standalone app that can be run inside the Docker image.
-
 
 # Appendix II : How to properly set up the EC2 instance
 ## Install on AWS EC2
