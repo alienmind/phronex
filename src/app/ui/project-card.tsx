@@ -59,7 +59,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         hover:bg-muted/60 hover:shadow-md
       `}
     >
-      <Link href={`/dashboard/projects/${project.project_id}`}>
+      <Link href={`/main/projects/${project.project_id}`}>
         <CardHeader>
           <CardTitle>{project.project_name}</CardTitle>
           <CardDescription>{project.project_scope}</CardDescription>

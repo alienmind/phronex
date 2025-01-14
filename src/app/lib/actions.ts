@@ -130,10 +130,9 @@ export async function createProjectAction(prevState: CreateProjectState | undefi
     throw error;
   }
 
-  console.log('Revalidating dashboard path and redirecting');
   // Revalidate the cache for the invoices page and redirect the user.
-  revalidatePath('/dashboard');
-  redirect('/dashboard');
+  revalidatePath('/main');
+  redirect('/main');
 }
 
 /*
@@ -164,12 +163,12 @@ export async function updateProjectAction(
       return { error: 'Invalid form data' };
     }
     await updateProject(data as Project);
-    revalidatePath(`/dashboard/projects/${data.project_id}`);
+    revalidatePath(`/main/projects/${data.project_id}`);
   } catch (error) {
     console.log(JSON.stringify({ error: 'Failed to update project ' + JSON.stringify(error) }));
     return { error: 'Failed to update project ' + JSON.stringify(error) };
   }
-  redirect('/dashboard');
+  redirect('/main');
   //return { success: true }; - cannot really return as we are redirecting
 }
 
@@ -340,7 +339,7 @@ export async function updateProjectCategoryBudgetAction(
 export async function deleteProjectAction(id: string) {
   try {
     await deleteProject(id);
-    revalidatePath('/dashboard/projects');
+    revalidatePath('/main');
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to delete project' };

@@ -1,20 +1,12 @@
 /*
- * This is the navbar (client) component used in all pages under /dashboard
+ * This is the navbar (client) component used in all pages under /app
  * It is based on the shadcn/ui library
  */ 
 "use client"
 import Link from 'next/link';
-import { useSession } from 'next-auth/react'
-import { Home, Search, Settings } from 'lucide-react'
+import { Home, Users, Group, Banknote } from 'lucide-react'
 import { unauthenticate } from '@/app/lib/actions'
 import { usePathname } from 'next/navigation';
-import {
-  HomeIcon,
-  FolderIcon,
-  UsersIcon,
-  UserGroupIcon,
-  BanknotesIcon,
-} from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import {
@@ -40,30 +32,30 @@ export function AppNavbar() {
   const items = [
     {
       title: "Home",
-      url: "/dashboard",
-      icon: HomeIcon,
+      url: "/main",
+      icon: Home,
     },
     {
       title: "People",
-      url: "/dashboard/people",
-      icon: UsersIcon,
+      url: "/main/people",
+      icon: Users,
     },
     {
       title: "Roles",
-      url: "/dashboard/roles",
-      icon: UserGroupIcon,
+      url: "/main/roles",
+      icon: Group,
     },
     {
       title: "Expense Categories",
-      url: "/dashboard/categories",
-      icon: BanknotesIcon,
+      url: "/main/categories",
+      icon: Banknote,
     },
   ];
 
   return (
     <Sidebar className="align-center">
       <SidebarHeader>
-        <Link href="/dashboard" className="flex items-center gap-2 px-2">
+        <Link href="/main" className="flex items-center gap-2 px-2">
           <img src="/logo.png" alt="logo" className="h-10 w-10 rounded-xl" />
           <span className="text-xl font-bold">Phronex</span>
         </Link>
