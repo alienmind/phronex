@@ -9,7 +9,7 @@ fi
 for i in docker/env.localhost docker/env.prebuild docker/env.build docker/env.docker docker/env.prod; do
   if [ -f $i ]; then
    ( . .secrets ; echo $PUBLIC_IP
-     envsubst '$POSTGRES_USER,$POSTGRES_PASSWORD,$POSTGRES_DATABASE,$AUTH_SECRET,$PUBLIC_IP' < $i > docker/.`basename $i`
+     envsubst '$POSTGRES_USER,$POSTGRES_PASSWORD,$POSTGRES_DATABASE,$AUTH_SECRET,$PUBLIC_IP,$OPENAI_API_KEY' < $i > docker/.`basename $i`
    )
   fi
 done
