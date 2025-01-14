@@ -8,9 +8,9 @@
  * In order to get access to these functions, you need wrap them in a server action or in a API
  */
 import type { User, Project, ProjectExpense, Person,
-              ProjectBudget, ProjectPersonRole,
               VProjectResources, VProjectWithProjectManager,
               VProjectExpensesWithCategoryBudget,
+              VProjectBudgetReport,
               VPerson,
               Category,
               Role,
@@ -209,12 +209,7 @@ export async function fetchProjectExpensesAndBudget(id: string, expenses_start_d
       values: [id, (expenses_start_date ? expenses_start_date : '1900-01-01'), (expenses_end_date ? expenses_end_date : '2100-01-01')]
     };
     
-    console.log('Executing query:', query.text);
-    console.log('With values:', query.values);
-    
-    const result = await connectionPool.query(query);
-    console.log('Query result:', result.rows);
-    
+    const result = await logQuery(query);
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
@@ -222,7 +217,7 @@ export async function fetchProjectExpensesAndBudget(id: string, expenses_start_d
   }
 }
 
-// Add this function to handle expense updates
+// Update an expense
 export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   try {
     const result = await logQuery(`
@@ -298,6 +293,29 @@ export async function deleteExpense(id: string) {
   }
 }
 
+export async function fetchProjectBudgetReport(id: string, start_date: Date, end_date: Date) : Promise<VProjectBudgetReport[]> {
+  try {
+    const query = {
+      text: `
+        SELECT c.category_id, c.category_name, b.project_category_budget as budget, sum(a.expense_value) as spent
+        FROM project_expense a
+        LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
+        LEFT OUTER JOIN category c ON b.category_id = c.category_id
+        WHERE a.project_id = $1
+        AND a.expense_date > $2
+        AND a.expense_date < $3
+        GROUP BY c.category_id, c.category_name, b.project_category_budget
+        ORDER BY budget desc, category_name
+      `,
+      values: [id, (start_date ? start_date : '1900-01-01'), (end_date ? end_date : '2100-01-01')]
+    };
+    const result = await connectionPool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project expenses.');
+  }
+}
 
 
 /********************************* PROJECT RESOURCES *********************************/

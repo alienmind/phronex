@@ -5,10 +5,15 @@
  * but they are useful for formatting, etc
  */
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('en-UK', {
-    style: 'currency',
-    currency: 'EUR',
-  });
+  if (amount < 1000) {
+    return amount.toLocaleString('en-UK', {
+      style: 'currency',
+      currency: 'EUR',
+    });
+  }
+  else {
+    return (amount/1000) + "K"
+  }
 };
 
 export const formatDateToLocal = (
@@ -28,4 +33,14 @@ export const formatDateToLocal = (
 export function addMonths(date: Date, months: number) {
   date.setMonth(date.getMonth() + months);
   return date;
+}
+
+/*
+ * This function identifies the first letter of each word in a string
+ * and returns them in uppercase
+ * 
+ * It is used to simplify the project chart labels
+ */
+export function getInitials(str: string) {
+  return str.split(' ').map(word => word[0].toUpperCase()).join('');
 }

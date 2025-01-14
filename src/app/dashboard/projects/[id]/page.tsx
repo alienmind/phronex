@@ -11,6 +11,7 @@ import { ProjectDetailsForm } from '@/app/ui/project-details-form';
 import { notFound } from 'next/navigation';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
 import ProjectExpensesTable from '@/app/ui/project-expenses-table';
+import { ProjectChart } from '@/app/ui/project-chart'
 
 type Params = Promise<{ id: string, expenses_start_date: string, expenses_end_date: string }>
 
@@ -32,29 +33,39 @@ export default async function Page( {params}: { params: Params } ) {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen">
-      {/* Top section - Project Details Form */}
-      <div className="w-full min-h-[400px] p-4 sm:p-6 bg-gray-50 dark:bg-gray-900 border-b overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Project Details</h1>
-          <ProjectDetailsForm project={project} />
+    <div className="flex flex-col space-y-6">
+      {/* Top section - Project Details and Chart */}
+      <div className="p-4 sm:p-6">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Project Details Form - Takes 1/3 of space */}
+            <div className="lg:col-span-1">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Details</h2>
+              <ProjectDetailsForm project={project} />
+            </div>
+            
+            {/* Chart Section - Takes 2/3 of space */}
+            <div className="lg:col-span-2">
+              <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Budget Overview</h2>
+              <ProjectChart projectId={searchParams.id} />
+            </div>
+          </div>
         </div>
       </div>
-      
+
       {/* Bottom section - Tables */}
-      <div className="flex-1 p-4 sm:p-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Change to stack on mobile, side by side on larger screens */}
-          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6">
+      <div className="p-4 sm:p-6">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Expenses section */}
-            <div className="w-full">
+            <div>
               <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Expenses</h2>
               <div className="overflow-x-auto">
                 {expenses && <ProjectExpensesTable expenses={expenses} projectId={searchParams.id} /> || <p>No expenses found</p>}
               </div>
             </div>
             {/* Resources section */}
-            <div className="w-full">
+            <div>
               <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Project Resources</h2>
               <div className="overflow-x-auto">
                 {resources && <ProjectResourcesTable resources={resources} projectId={searchParams.id} /> || <p>No resources found</p>}

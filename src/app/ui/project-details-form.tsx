@@ -140,10 +140,10 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
           <FormField
             name="project_start_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Start Date</FormLabel>
                 <FormControl>
-                  <DatePicker {...field} />
+                  <DatePicker {...field} className="w-full" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -153,10 +153,10 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
           <FormField
             name="project_end_date"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>End Date</FormLabel>
                 <FormControl>
-                  <DatePicker {...field} />
+                  <DatePicker {...field} className="w-full" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
