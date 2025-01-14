@@ -69,7 +69,7 @@ export type Project = {
 // Roles are generic and reusable between projects
 export type Role = {
   role_id: string;
-  role_name: string;
+  role_description: string;
 };
 
 // Derived schemas
@@ -120,6 +120,11 @@ export type VProjectResources = {
 
 // A person with all_columns to enable filtering
 export type VPerson = Person & {
+  all_columns: string;
+};
+
+// A role with all_columns to enable filtering
+export type VRole = Role & {
   all_columns: string;
 };
 

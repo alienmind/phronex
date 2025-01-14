@@ -11,8 +11,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson } from './dataaccess';
-import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person } from './dataschemas';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole } from './dataaccess';
+import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role } from './dataschemas';
 
 /*
  * User authentication
@@ -253,5 +253,32 @@ export async function deletePersonAction(personId: string) {
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to delete person' };
+  }
+}
+
+export async function updateRoleAction(roleId: string, data: Partial<VRole>) {
+  try {
+    const updatedRole = await updateRole(roleId, data);
+    return { success: true, role: updatedRole };
+  } catch (error) {
+    return { success: false, error: 'Failed to update role' };
+  }
+}
+
+export async function createRoleAction(data: Partial<VRole>) {
+  try {
+    const newRole = await createRole(data);
+    return { success: true, role: newRole };
+  } catch (error) {
+    return { success: false, error: 'Failed to create role' };
+  }
+}
+
+export async function deleteRoleAction(roleId: string) {
+  try {
+    await deleteRole(roleId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete role' };
   }
 } 

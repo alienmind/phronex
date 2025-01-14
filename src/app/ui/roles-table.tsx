@@ -2,29 +2,13 @@
 
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
+import { VRole } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { updateRoleAction, createRoleAction, deleteRoleAction } from '@/app/lib/actions';
 
-type Role = {
-  role_id: string;
-  role_description: string;
-}
-
-async function deleteRole(roleId: string) {
-  // TODO: Implement delete functionality
-  console.log('Deleting role:', roleId);
-}
-
-const columns: ColumnDef<Role>[] = [
+const columns: ColumnDef<VRole>[] = [
   {
     accessorKey: "role_description",
     header: ({ column }) => {
@@ -38,51 +22,72 @@ const columns: ColumnDef<Role>[] = [
         </Button>
       )
     },
+    meta: {
+      editable: true,
+    }
   },
   {
     accessorKey: "all_columns",
     header: "",
     cell: ({ row }) => {
-      // This table is super simple so the "all_columns" is just the role_description
-      return <input type="hidden" value={row.original.role_description} />
-    },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const role = row.original
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => deleteRole(role.role_id)}
-            >
-              Delete role
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit role</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      return <input type="hidden" value={row.original.all_columns} />
     },
   }
 ];
 
-export default function RolesTable({ 
-  roles 
-}: { 
-  roles: Role[]
-}) {
+export default function RolesTable({ roles }: { roles: VRole[] }) {
+  const [currentRoles, setCurrentRoles] = useState(roles);
+
+  const handleRoleUpdate = async (rowId: string, data: Partial<VRole>) => {
+    const result = await updateRoleAction(rowId, data);
+    
+    if (!result.success) {
+      throw new Error('Failed to update role');
+    }
+
+    console.log("ROLES=", JSON.stringify(roles));
+
+    setCurrentRoles(prev => 
+      prev.map(role => 
+        role.role_id === rowId
+          ? { ...role, ...result.role }
+          : role
+      )
+    );
+  };
+
+  const handleRoleCreate = async (data: Partial<VRole>) => {
+    const result = await createRoleAction(data);
+
+    if (!result.success) {
+      throw new Error('Failed to create role');
+    }
+
+    setCurrentRoles(prev => [...prev, result.role]);
+  };
+
+  const handleRoleDelete = async (rowId: string) => {
+    const result = await deleteRoleAction(rowId);
+    
+    if (!result.success) {
+      throw new Error('Failed to delete role');
+    }
+
+    setCurrentRoles(prev => 
+      prev.filter(role => role.role_id !== rowId)
+    );
+  };
+
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={roles} />
+      <DataTable 
+        columns={columns} 
+        data={currentRoles}
+        onRowUpdate={handleRoleUpdate}
+        onRowCreate={handleRoleCreate}
+        onRowDelete={handleRoleDelete}
+        idField="role_id"
+      />
     </div>
-  )
+  );
 } 

@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Plus } from "lucide-react"
-import { Person } from "@/app/lib/dataschemas"
+import { VPerson } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
 import { updatePersonAction, createPersonAction, deletePersonAction } from '@/app/lib/actions';
 
-const columns: ColumnDef<Person>[] = [
+const columns: ColumnDef<VPerson>[] = [
   {
     accessorKey: "person_name",
     header: ({ column }) => {
@@ -59,10 +59,10 @@ const columns: ColumnDef<Person>[] = [
   }
 ];
 
-export default function PersonsTable({ persons }: { persons: Person[] }) {
+export default function PersonsTable({ persons }: { persons: VPerson[] }) {
   const [currentPersons, setCurrentPersons] = useState(persons);
 
-  const handlePersonUpdate = async (rowId: string, data: Partial<Person>) => {
+  const handlePersonUpdate = async (rowId: string, data: Partial<VPerson>) => {
     const result = await updatePersonAction(rowId, data);
     
     if (!result.success) {
@@ -78,7 +78,7 @@ export default function PersonsTable({ persons }: { persons: Person[] }) {
     );
   };
 
-  const handlePersonCreate = async (data: Partial<Person>) => {
+  const handlePersonCreate = async (data: Partial<VPerson>) => {
     const result = await createPersonAction(data);
 
     if (!result.success) {

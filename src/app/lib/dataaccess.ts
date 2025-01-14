@@ -13,7 +13,8 @@ import type { User, Project, ProjectExpense, Person,
               VProjectExpensesWithCategoryBudget,
               VPerson,
               Category,
-              Role
+              Role,
+              VRole
 } from '@/app/lib/dataschemas';
 
 const connectionPool = require('@/app/lib/db');
@@ -568,6 +569,80 @@ export async function fetchRoles() : Promise<Role[]> {
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch roles.');
+  }
+}
+
+export async function updateRole(roleId: string, data: Partial<VRole>) {
+  try {
+    const result = await logQuery(`
+      UPDATE role 
+      SET role_description = COALESCE($1, role_description)
+      WHERE role_id = $2
+      RETURNING *;
+    `, [data.role_description, roleId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Role not found');
+    }
+
+    // Fetch the updated role with all fields
+    const updatedRole = await logQuery(`
+      SELECT 
+        role_id,
+        role_description,
+        role_description as all_columns
+      FROM role
+      WHERE role_id = $1
+    `, [roleId]);
+
+    return updatedRole.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update role');
+  }
+}
+
+export async function createRole(data: Partial<VRole>) {
+  try {
+    const result = await logQuery(`
+      INSERT INTO role (role_description)
+      VALUES ($1)
+      RETURNING *;
+    `, [data.role_description]);
+
+    // Fetch the complete role data
+    const newRole = await logQuery(`
+      SELECT 
+        role_id,
+        role_description,
+        role_description as all_columns
+      FROM role
+      WHERE role_id = $1
+    `, [result.rows[0].role_id]);
+
+    return newRole.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create role');
+  }
+}
+
+export async function deleteRole(roleId: string) {
+  try {
+    const result = await logQuery(`
+      DELETE FROM role
+      WHERE role_id = $1
+      RETURNING *;
+    `, [roleId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Role not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete role');
   }
 }
 
