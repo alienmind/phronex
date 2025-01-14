@@ -29,3 +29,13 @@ export function addMonths(date: Date, months: number) {
   date.setMonth(date.getMonth() + months);
   return date;
 }
+
+/*
+ * This function identifies the first letter of each word in a string
+ * and returns them in uppercase
+ * 
+ * It is used to simplify the project chart labels
+ */
+export function getInitials(str: string) {
+  return str.split(' ').map(word => word[0].toUpperCase()).join('');
+}

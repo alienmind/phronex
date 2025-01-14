@@ -133,4 +133,12 @@ export type VCategory = Category & {
   all_columns: string;
 };
 
+// Budget report view showing spent vs budget per category
+export type VProjectBudgetReport = {
+  category_id: string;
+  category_name: string;
+  budget: number;
+  spent: number;
+};
+
 
