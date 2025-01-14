@@ -161,10 +161,10 @@ docker compose up -d
 2. Make sure that the image has been uploaded to docker hub or some other container registry.
    For reference, this one is under https://hub.docker.com/repository/docker/alienmind/phronex-web/general
 3. Upload docker-dist.tgz to EC2 via scp (follow along the instructions in the appendix II to properly set up the EC2 instance)
-4. Deploy the app - images will be fetched from my docker hub repository but you can change it to your own.
+4. Set up .secrets file in the EC2 instance
 ```bash
 tar -xzvf docker-dist.tar.gz
-docker compose -f docker-compose.yml up -d
+./run.sh
 ```
 5. Optionally, set up the DNS entry name to point to the public IP of the EC2 instance or the Elastic IP assigned.
 
@@ -199,15 +199,21 @@ docker compose -f docker-compose.yml up -d
 - [x] .. Implement update project details
 - [x] .. Dockerize the web app
 - [x] .. Search expenses over time range
-- [ ] .. Add expenses to projects
-- [ ] .. Edit a expense
+- [x] .. Generic feature to edit values in a data table
+- [x] .. Generic feature to add a new row to a data table
+- [x] .. Editing expenses values or descriptions live from the project detail screen
+- [x] .. Add expenses to projects
+- [x] .. Edit a expense detail in the project
 - [ ] .. Reassign / remove resources or costs to each project in the project detail screen
+- [ ] .. Graph to show expensditures per category against budget
+- [ ] .. Graph resources assignment to projects
 
 Extra todos with priority:
 - [ ] .. Administration: manage budget per category
 - [x] .. Administration: manage roles
 - [x] .. Administration: manage persons
 - [x] .. Administration: manage categories
+
 - [ ] .. Colors when expenditures are above the estimate
 - [ ] .. Colors when projects are delayed
 - [ ] .. Add / Delete both people (hire) and categories for expenditures
@@ -231,6 +237,8 @@ Even more extras with less priority
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [ ] .. Not all the management tables have working the free text search feature (something afoot with the fake all_columns column)
 - [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be unified.
+- [ ] .. Filtering expenses over time range is not working - HTTP 400
+- [ ] .. Calendar picker layout has gone crazy
 
 # Appendix and references
 
@@ -345,3 +353,5 @@ It would have been impossible to do this project without the following reference
 - Shadcn + Tanstack table - Filtering customization https://tanstack.com/table/v8/docs/guide/filters
 - React Day Picker - how to fix upgrade to latest version - https://daypicker.dev/upgrading#7-update-your-custom-components 
 - RevealJS slides https://revealjs.com/installation/
+- Shadcn + Tanstack table - Adding / editing rows https://github.com/shadcn-ui/ui/discussions/2639
+- Shadcn Dashboard example https://ui.shadcn.com/examples/dashboard 

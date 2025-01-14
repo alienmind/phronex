@@ -1,4 +1,4 @@
-import { fetchProjectExpensesAndBudget } from '@/app/lib/dataaccess';
+import { fetchProjectExpensesAndBudget, createExpense } from '@/app/lib/dataaccess';
 import { NextRequest, NextResponse } from 'next/server';
 
 /*
@@ -27,5 +27,17 @@ export async function GET(
     return NextResponse.json(expenses);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch expenses' }, { status: 500 });
+  }
+}
+
+export async function POST(
+  request: Request
+) {
+  try {
+    const data = await request.json();
+    const newExpense = await createExpense(data);
+    return NextResponse.json({ expense: newExpense });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to create expense' }, { status: 500 });
   }
 } 

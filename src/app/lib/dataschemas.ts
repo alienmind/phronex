@@ -99,18 +99,20 @@ export type ProjectWithProjectManager = {
 
 // Detailed view of the project expenses combined with the budget for each category
 // We also add an all_columns to enable filtering
-export type ProjectExpensesCategoryBudgetTableView = {
+export type ProjectExpensesWithCategoryBudget = {
   expense_id: string;
   expense_name: string;
   expense_date: Date;
   expense_value: number;
+  category_id: string;
   category_name: string;
   project_category_budget: number;
+  project_id: string;
   all_columns: string;
 };
 
 // Resources assigned to a project with all_columns to enable filtering
-export type ProjectResourceTableView = {
+export type ProjectResources = {
   project_id: string;
   person_id: string;
   person_name: string;

@@ -11,8 +11,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { addProject, fetchProjectExpensesAndBudget, updateProject } from './dataaccess';
-import { Project } from './dataschemas';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense } from './dataaccess';
+import { Project, ProjectExpense, ProjectExpensesWithCategoryBudget } from './dataschemas';
 
 /*
  * User authentication
@@ -123,7 +123,7 @@ export async function createProjectAction(prevState: CreateProjectState | undefi
   console.log('Attempting to add project to database:', project);
 
   try {
-    await addProject(project);
+    await createProject(project);
     console.log('Project successfully added to database');
   } catch (error) {
     console.error('Failed to add project:', error);
@@ -171,4 +171,22 @@ export async function updateProjectAction(
   }
   redirect('/dashboard');
   //return { success: true }; - cannot really return as we are redirecting
+}
+
+export async function updateExpenseAction(expenseId: string, data: Partial<ProjectExpense>) {
+  try {
+    const updatedExpense = await updateExpense(expenseId, data);
+    return { success: true, expense: updatedExpense };
+  } catch (error) {
+    return { success: false, error: 'Failed to update expense' };
+  }
+}
+
+export async function createExpenseAction(data: Partial<ProjectExpensesWithCategoryBudget>) {
+  try {
+    const newExpense = await createExpense(data);
+    return { success: true, expense: newExpense };
+  } catch (error) {
+    return { success: false, error: 'Failed to create expense' };
+  }
 } 
