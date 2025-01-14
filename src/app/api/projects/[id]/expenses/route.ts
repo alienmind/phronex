@@ -7,14 +7,16 @@ import { NextRequest, NextResponse } from 'next/server';
  * Could be replaced by a server action in the future
  */
 export async function GET(
-  request: NextRequest
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const id = (await params).id;
   const searchParams = request.nextUrl.searchParams;
-  const id = searchParams.get('id');
   const startDate = searchParams.get('start_date') || '1900-01-01';
   const endDate = searchParams.get('end_date') || '2100-01-01';
 
   if (!id) {
+    console.error('Project ID is required');
     return NextResponse.json({ error: 'Project ID is required' }, { status: 400 });
   }
 
