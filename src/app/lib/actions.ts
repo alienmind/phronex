@@ -11,7 +11,7 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory, fetchProjectBudgetReport, updateProjectCategoryBudget } from './dataaccess';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory, fetchProjectBudgetReport, updateProjectCategoryBudget, deleteProject, fetchTopProjects } from './dataaccess';
 import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
@@ -130,10 +130,9 @@ export async function createProjectAction(prevState: CreateProjectState | undefi
     throw error;
   }
 
-  console.log('Revalidating dashboard path and redirecting');
   // Revalidate the cache for the invoices page and redirect the user.
-  revalidatePath('/dashboard');
-  redirect('/dashboard');
+  revalidatePath('/main');
+  redirect('/main');
 }
 
 /*
@@ -164,12 +163,12 @@ export async function updateProjectAction(
       return { error: 'Invalid form data' };
     }
     await updateProject(data as Project);
-    revalidatePath(`/dashboard/projects/${data.project_id}`);
+    revalidatePath(`/main/projects/${data.project_id}`);
   } catch (error) {
     console.log(JSON.stringify({ error: 'Failed to update project ' + JSON.stringify(error) }));
     return { error: 'Failed to update project ' + JSON.stringify(error) };
   }
-  redirect('/dashboard');
+  redirect('/main');
   //return { success: true }; - cannot really return as we are redirecting
 }
 
@@ -334,5 +333,24 @@ export async function updateProjectCategoryBudgetAction(
     return { success: true };
   } catch (error) {
     return { success: false, error: 'Failed to update category budget' };
+  }
+}
+
+export async function deleteProjectAction(id: string) {
+  try {
+    await deleteProject(id);
+    revalidatePath('/main');
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete project' };
+  }
+}
+
+export async function fetchProjectsAction(limit: number, search?: string) {
+  try {
+    const projects = await fetchTopProjects(limit, search);
+    return { success: true, data: projects };
+  } catch (error) {
+    return { success: false, error: 'Failed to fetch projects' };
   }
 } 

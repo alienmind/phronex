@@ -1,4 +1,4 @@
-import { fetchMostRecentProjects } from '@/app/lib/dataaccess';
+import { fetchTopProjects } from '@/app/lib/dataaccess';
 import { NextRequest } from 'next/server';
 
 /*
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   
   const limit = limitParam ? parseInt(limitParam) : 0;
   
-  const projects = await fetchMostRecentProjects(limit);
+  const projects = await fetchTopProjects(limit);
   
   return Response.json(projects);
 } 

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select"
 
 export function ProjectListFilter({ 
-  defaultValue = 6,
+  defaultValue = 0,
   onLimitChange
 }: { 
   defaultValue?: number,
@@ -50,7 +50,7 @@ export function ProjectListFilter({
       <Select
         value={currentValue.toString()}
         onValueChange={handleFilterChange}
-        defaultValue="6"
+        defaultValue="0"
       >
         <SelectTrigger className="w-[120px]">
           <SelectValue placeholder="Select limit" />

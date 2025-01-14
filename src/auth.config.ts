@@ -11,7 +11,7 @@ import type { NextAuthConfig } from 'next-auth';
  
 /* The logic is:
  * /login is not protected
- * Everything else (starting with /dashboard) is a protected route
+ * Everything else (starting with /main) is a protected route
  * and requires authentication
  */
 export const authConfig = {
@@ -23,7 +23,7 @@ export const authConfig = {
       let ret = false;
       let redirect = false;
 
-      console.log("AUTH: " + JSON.stringify(auth) + " " + JSON.stringify(nextUrl));
+      //console.log("AUTH: " + JSON.stringify(auth) + " " + JSON.stringify(nextUrl));
       const isLoggedIn = !!auth?.user;
 
       // All routes except login are protected
@@ -38,8 +38,8 @@ export const authConfig = {
       }
       ret = true;
 
-      console.log("AUTH: ret=" + ret + " redirect=" + redirect + " auth=" + JSON.stringify(auth) + " nextUrl=" + JSON.stringify(nextUrl));
-      if (redirect) return Response.redirect(new URL('/dashboard', nextUrl));
+      //console.log("AUTH: ret=" + ret + " redirect=" + redirect + " auth=" + JSON.stringify(auth) + " nextUrl=" + JSON.stringify(nextUrl));
+      if (redirect) return Response.redirect(new URL('/main', nextUrl));
       return ret;
     },
   },

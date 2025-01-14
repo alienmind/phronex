@@ -1,6 +1,6 @@
 import { ProjectCardListSkeleton } from '@/app/ui/skeletons';
 import { ProjectCardList } from '@/app/ui/project-card-list';
-import { fetchMostRecentProjects } from '@/app/lib/dataaccess';
+import { fetchTopProjects } from '@/app/lib/dataaccess';
 import { Suspense } from 'react';
 import { Metadata } from 'next';
 
@@ -14,7 +14,7 @@ export default async function Page( {params}: { params: Params } ) {
 
   const searchParams = await params;
   const limit : number | undefined = ( searchParams.limit === 'all' ? undefined : parseInt(searchParams.limit) );
-  const initialProjects = await fetchMostRecentProjects(limit);
+  const initialProjects = await fetchTopProjects(limit);
 
   return (
     <main>

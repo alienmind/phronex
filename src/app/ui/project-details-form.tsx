@@ -24,8 +24,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/app/ui/date-picker";
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/hooks/use-toast"
-import { updateProjectAction } from '@/app/lib/actions';
+import { updateProjectAction, deleteProjectAction } from '@/app/lib/actions';
 import Link from 'next/link';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { useRouter } from "next/navigation"
 
 /*
  * This is the project details form (client) component
@@ -45,6 +47,8 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
       project_manager_id: project.project_manager_id,
     }
   });
+
+  const router = useRouter()
 
   useEffect(() => {
     async function fetchPersons() {
@@ -75,6 +79,13 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
       ),
     })
   }, [errorMessage]);
+
+  const handleDelete = async () => {
+    const result = await deleteProjectAction(project.project_id)
+    if (result.success) {
+      router.push('/main')
+    }
+  }
 
   return (
     <Form {...form}>
@@ -181,14 +192,32 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
           )}
         />
 
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-4">
-          <Button variant="outline" type="button" className="w-full sm:w-auto">
-            <Link href="/dashboard">Cancel</Link>
-          </Button>
+        <div className="mt-6 flex items-center justify-end gap-4">
           <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
             {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>
-        </div>
+          <Button type="button" variant="outline" onClick={() => router.push('/main')}>
+            Cancel
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button type="button" variant="destructive">Delete Project</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the project
+                  and all associated data.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+       </div>
       </form>
     </Form>
   );

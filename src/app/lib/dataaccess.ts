@@ -125,33 +125,52 @@ export async function updateProject(data: Project) {
 }
 
 /*
- * This is the function to fetch the most recent projects from the database
+ * This is the function to fetch the most expensive projects in terms of expenses
  * It will return the projects in the projects table
  * It will also join the person table to get the project manager's name
+ * 
+ * It allows for a limit and a search term
  */
-export async function fetchMostRecentProjects(limit?: number) : Promise<VProjectWithProjectManager[]> {
+export async function fetchTopProjects(limit?: number, search?: string) {
   try {
-    if (limit && limit <= 0) {
-      limit = undefined;
-    }
-    const query = `
-    SELECT a.project_id, project_creation_date, project_name, project_start_date, project_end_date,
-       project_scope, person_name, person_surname
-    FROM project a
-    LEFT OUTER JOIN person b on a.project_manager_id = b.person_id
-    ORDER BY a.project_start_date DESC
-    ${limit ? `LIMIT ${limit}` : ''}
-    `;
+    limit = limit || 100
+    const query = {
+      text: `
+        SELECT 
+          p.project_id,
+          p.project_name,
+          p.project_scope,
+          p.project_start_date,
+          p.project_end_date,
+          COALESCE(SUM(e.expense_value), 0) as total_spent,
+          COALESCE(SUM(pb.project_category_budget), 0) as total_budget
+        FROM project p
+        LEFT JOIN project_expense e ON p.project_id = e.project_id
+        LEFT JOIN project_budget pb ON p.project_id = pb.project_id
+        WHERE 
+          CASE 
+            WHEN $2::text IS NOT NULL THEN 
+              LOWER(p.project_name) LIKE LOWER($2) OR 
+              LOWER(COALESCE(project_name, '')) LIKE LOWER($2)
+            ELSE true
+          END
+        GROUP BY 
+          p.project_id, 
+          p.project_name,
+          p.project_scope,
+          p.project_start_date,
+          p.project_end_date
+        ORDER BY total_spent DESC
+        LIMIT $1
+      `,
+      values: [limit, search ? `%${search}%` : null],
+    };
 
-    const data = await connectionPool.query(query);
-
-    const mostRecentProjects = data.rows.map((project: VProjectWithProjectManager) => ({
-      ...project,
-    }));
-    return mostRecentProjects;
+    const { rows } = await logQuery(query);
+    return rows;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch most recent projects.');
+    throw new Error('Failed to fetch projects');
   }
 }
 
@@ -769,4 +788,52 @@ export async function updateProjectCategoryBudget(
     WHERE project_id = $1 AND category_id = $2
   `;
   await logQuery(sql, [projectId, categoryId, budget]);
+}
+
+export async function deleteProject(id: string) {
+  try {
+    const result = await logQuery({
+      text: 'DELETE FROM project WHERE project_id = $1 RETURNING *',
+      values: [id],
+    });
+
+    if (result.rows.length === 0) {
+      throw new Error('Project not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete project');
+  }
+}
+
+export async function fetchProjects(limit: number = 0) {
+  try {
+    const query = {
+      text: `
+        SELECT 
+          p.project_id,
+          p.project_name,
+          p.project_scope,
+          p.project_start_date,
+          p.project_end_date,
+          COALESCE(SUM(pb.project_category_budget), 0) as total_budget,
+          COALESCE(SUM(e.expense_value), 0) as total_spent
+        FROM project p
+        LEFT JOIN project_budget pb ON p.project_id = pb.project_id
+        LEFT JOIN project_expense e ON p.project_id = e.project_id
+        GROUP BY p.project_id, p.project_name, p.project_scope, p.project_start_date, p.project_end_date
+        ORDER BY p.project_id DESC
+        ${limit ? 'LIMIT $1' : ''}
+      `,
+      values: limit ? [limit] : [],
+    };
+
+    const result = await logQuery(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch projects');
+  }
 }
