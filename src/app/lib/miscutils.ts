@@ -4,7 +4,8 @@
  * They are not related to the business logic of the project
  * but they are useful for formatting, etc
  */
-export const formatCurrency = (amount: number) => {
+export const formatCurrency = (amount?: number) => {
+  if (!amount) amount = 0;
   if (amount < 1000) {
     return amount.toLocaleString('en-UK', {
       style: 'currency',
