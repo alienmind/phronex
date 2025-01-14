@@ -1,30 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { VCategory } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
+import { updateCategoryAction, createCategoryAction, deleteCategoryAction } from '@/app/lib/actions';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-type Category = {
-  category_id: string;
-  category_name: string;
-  category_description: string;
-}
-
-async function deleteCategory(categoryId: string) {
-  // TODO: Implement delete functionality
-  console.log('Deleting category:', categoryId);
-}
-
-const columns: ColumnDef<Category>[] = [
+const columns: ColumnDef<VCategory>[] = [
   {
     accessorKey: "category_name",
     header: ({ column }) => {
@@ -38,19 +29,21 @@ const columns: ColumnDef<Category>[] = [
         </Button>
       )
     },
+    meta: {
+      editable: true,
+    }
   },
   {
     accessorKey: "all_columns",
     header: "",
     cell: ({ row }) => {
-      // This table is super simple so the "all_columns" is just the category_name
-      return <input type="hidden" value={row.original.category_name} />
+      return <input type="hidden" value={row.original.all_columns} />
     },
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const category = row.original
+    cell: ({ row, table }) => {
+      const category = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -62,12 +55,10 @@ const columns: ColumnDef<Category>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => deleteCategory(category.category_id)}
+              onClick={() => (table.options.meta as any).deleteRow(row.id)}
             >
               Delete category
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit category</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -75,14 +66,57 @@ const columns: ColumnDef<Category>[] = [
   }
 ];
 
-export default function CategoriesTable({ 
-  categories 
-}: { 
-  categories: Category[]
-}) {
+export default function CategoriesTable({ categories }: { categories: VCategory[] }) {
+  const [currentCategories, setCurrentCategories] = useState(categories);
+
+  const handleCategoryUpdate = async (rowId: string, data: Partial<VCategory>) => {
+    const result = await updateCategoryAction(rowId, data);
+    
+    if (!result.success) {
+      throw new Error('Failed to update category');
+    }
+
+    setCurrentCategories(prev => 
+      prev.map(category => 
+        category.category_id === rowId
+          ? { ...category, ...result.category }
+          : category
+      )
+    );
+  };
+
+  const handleCategoryCreate = async (data: Partial<VCategory>) => {
+    const result = await createCategoryAction(data);
+
+    if (!result.success) {
+      throw new Error('Failed to create category');
+    }
+
+    setCurrentCategories(prev => [...prev, result.category]);
+  };
+
+  const handleCategoryDelete = async (rowId: string) => {
+    const result = await deleteCategoryAction(rowId);
+    
+    if (!result.success) {
+      throw new Error('Failed to delete category');
+    }
+
+    setCurrentCategories(prev => 
+      prev.filter(category => category.category_id !== rowId)
+    );
+  };
+
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={categories} />
+      <DataTable 
+        columns={columns} 
+        data={currentCategories}
+        onRowUpdate={handleCategoryUpdate}
+        onRowCreate={handleCategoryCreate}
+        onRowDelete={handleCategoryDelete}
+        idField="category_id"
+      />
     </div>
-  )
+  );
 } 

@@ -7,10 +7,23 @@
  * 
  * In order to get access to these functions, you need wrap them in a server action or in a API
  */
-import type { User, Project, ProjectExpense, ProjectBudget, ProjectPersonRole, ProjectResource, ProjectWithProjectManager, ProjectExpensesWithCategoryBudget, ProjectResources } from '@/app/lib/dataschemas';
+import type { User, Project, ProjectExpense, Person,
+              ProjectBudget, ProjectPersonRole,
+              VProjectResources, VProjectWithProjectManager,
+              VProjectExpensesWithCategoryBudget,
+              VPerson,
+              Category,
+              Role,
+              VRole,
+              VCategory
+} from '@/app/lib/dataschemas';
 
 const connectionPool = require('@/app/lib/db');
 
+/*
+ * This generic function runs a query and logs it to the console
+ * It will also return the result of the query
+ */
 const logQuery = async (query: string | { text: string, values: any[] }, values?: any[]) => {
   const queryText = typeof query === 'string' ? query : query.text;
   const queryValues = typeof query === 'string' ? values : query.values;
@@ -57,6 +70,8 @@ export async function getUser(email: string, password: string): Promise<User | u
     throw new Error('Failed to fetch user.');
   }
 }
+
+/********************************* PROJECT MANAGEMENT *********************************/
 
 /*
  * This is the function to add a project to the database
@@ -114,7 +129,7 @@ export async function updateProject(data: Project) {
  * It will return the projects in the projects table
  * It will also join the person table to get the project manager's name
  */
-export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectWithProjectManager[]> {
+export async function fetchMostRecentProjects(limit?: number) : Promise<VProjectWithProjectManager[]> {
   try {
     if (limit && limit <= 0) {
       limit = undefined;
@@ -130,7 +145,7 @@ export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectW
 
     const data = await connectionPool.query(query);
 
-    const mostRecentProjects = data.rows.map((project: ProjectWithProjectManager) => ({
+    const mostRecentProjects = data.rows.map((project: VProjectWithProjectManager) => ({
       ...project,
     }));
     return mostRecentProjects;
@@ -145,7 +160,7 @@ export async function fetchMostRecentProjects(limit?: number) : Promise<ProjectW
  * It will return the project in the projects table combined with the project manager's name
  * It will also join the person table to get the project manager's name
  */
-export async function fetchProjectById(id: string) : Promise<ProjectWithProjectManager> {
+export async function fetchProjectById(id: string) : Promise<VProjectWithProjectManager> {
   try {
     const result = await logQuery({
       text: `
@@ -158,12 +173,15 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
       `,
       values: [id]
     });
-    return result.rows[0] as ProjectWithProjectManager;
+    return result.rows[0] as VProjectWithProjectManager;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch project.');
   }
 }
+
+
+/********************************* PROJECT EXPENSES *********************************/
 
 /*
  * This will fetch the project expenses (for one concrete project) combined for the budget for each category
@@ -173,7 +191,7 @@ export async function fetchProjectById(id: string) : Promise<ProjectWithProjectM
  * 
  * It does add a fake "all_columns" with all the columns concatenated to enable the filtering by any text
  */
-export async function fetchProjectExpensesAndBudget(id: string, expenses_start_date: Date, expenses_end_date: Date) : Promise<ProjectExpensesWithCategoryBudget[]> {
+export async function fetchProjectExpensesAndBudget(id: string, expenses_start_date: Date, expenses_end_date: Date) : Promise<VProjectExpensesWithCategoryBudget[]> {
   try {
     const query = {
       text: `
@@ -204,100 +222,19 @@ export async function fetchProjectExpensesAndBudget(id: string, expenses_start_d
   }
 }
 
-/*
- * This is the function to fetch the resources assigned to a project
- * @param id - the id of the project
- */
-export async function fetchResourcesForProjectId(id: string, role?: string): Promise<ProjectResources[]> {
-  try {
-    const query = {
-      text: `
-        SELECT person_name || ' ' || person_surname as person_name, role_description, b.person_id,
-               person_name || ' ' || person_surname || role_description as all_columns
-        FROM project a
-        JOIN project_person_role b on a.project_id = b.project_id
-        JOIN role c on b.role_id = c.role_id
-        JOIN person d on b.person_id = d.person_id
-        WHERE a.project_id = $1
-        ${role ? 'AND c.role_description = $2' : ''}
-      `,
-      values: role ? [id, role] : [id]
-    };
-    
-    const result = await connectionPool.query(query);
-    return result.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch project resources.');
-  }
-}
-
-/*
- * This is the function to fetch the persons from the database
- * It will return the persons in the person table
- * It is mostly used from the persons API to fill out dynamically any resource assignment select box
- */
-export async function fetchPersons() {
-  try {
-    const query = `
-      SELECT person_id, person_name, person_surname, person_email,
-             person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
-      FROM person 
-      ORDER BY person_surname, person_name
-    `;
-    
-    const data = await connectionPool.query(query);
-    return data.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch persons.');
-  }
-}
-
-export async function fetchRoles() {
-  try {
-    const query = `
-      SELECT role_id, role_description
-      FROM role
-      ORDER BY role_description
-    `;
-    
-    const result = await connectionPool.query(query);
-    return result.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch roles.');
-  }
-}
-
-export async function fetchCategories() {
-  try {
-    const query = `
-      SELECT category_id, category_name
-      FROM category
-      ORDER BY category_name
-    `;
-    
-    const result = await connectionPool.query(query);
-    return result.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch categories.');
-  }
-}
-
 // Add this function to handle expense updates
 export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   try {
-    const result = await connectionPool.query(`
+    const result = await logQuery(`
       UPDATE project_expense 
       SET 
         expense_name = COALESCE($1, expense_name),
         expense_value = COALESCE($2, expense_value),
-        expense_date = COALESCE($3, expense_date)
-      WHERE expense_id = $4
+        expense_date = COALESCE($3, expense_date),
+        category_id = COALESCE($4, category_id)
+      WHERE expense_id = $5
       RETURNING *;
-    `, [data.expense_name, data.expense_value, data.expense_date, id]);
+    `, [data.expense_name, data.expense_value, data.expense_date, data.category_id, id]);
 
     if (result.rows.length === 0) {
       throw new Error('Expense not found');
@@ -310,7 +247,7 @@ export async function updateExpense(id: string, data: Partial<ProjectExpense>) {
   }
 } 
 
-export async function createExpense(data: Partial<ProjectExpensesWithCategoryBudget>) {
+export async function createExpense(data: Partial<ProjectExpense>) {
   try {
     const result = await logQuery({
       text: `
@@ -339,3 +276,465 @@ export async function createExpense(data: Partial<ProjectExpensesWithCategoryBud
   }
 } 
 
+export async function deleteExpense(id: string) {
+  try {
+    const result = await logQuery({
+      text: `
+        DELETE FROM project_expense 
+        WHERE expense_id = $1
+        RETURNING *;
+      `,
+      values: [id]
+    });
+
+    if (result.rows.length === 0) {
+      throw new Error('Expense not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete expense');
+  }
+}
+
+
+
+/********************************* PROJECT RESOURCES *********************************/
+
+/*
+ * This is the function to fetch the resources assigned to a project
+ * @param id - the id of the project
+ */
+export async function fetchResourcesForProjectId(id: string, role?: string): Promise<VProjectResources[]> {
+  try {
+    const query = {
+      text: `
+        SELECT a.project_id, b.person_id, person_name, person_surname, person_name || ' ' || person_surname as person_name_surname,
+               c.role_id, c.role_description,
+               person_name || ' ' || person_surname || role_description as all_columns,
+               a.project_id || '_' || b.person_id as composite_id
+        FROM project a
+        JOIN project_person_role b on a.project_id = b.project_id
+        JOIN role c on b.role_id = c.role_id
+        JOIN person d on b.person_id = d.person_id
+        WHERE a.project_id = $1
+        ${role ? 'AND c.role_description = $2' : ''}
+      `,
+      values: role ? [id, role] : [id]
+    };
+    
+    const result = await connectionPool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch project resources.');
+  }
+}
+
+/*
+ * This is the function to update a project resource
+ * It will update the role assignment and return the updated resource
+ * The action can come either for having changed the role or the person
+ */
+export async function updateProjectResource(projectId: string, personId: string, data: Partial<VProjectResources>) {
+  try {
+    let result;
+
+    if (data.role_id) {
+      // Handle direct role_id update
+      result = await logQuery(`
+        UPDATE project_person_role 
+        SET role_id = $1
+        WHERE project_id = $2 AND person_id = $3
+        RETURNING *;
+      `, [data.role_id, projectId, personId]);
+   } else if (data.person_id) {
+      // Handle person reassignment
+      result = await logQuery(`
+        UPDATE project_person_role 
+        SET person_id = $1
+        WHERE project_id = $2 AND person_id = $3
+        RETURNING *;
+      `, [data.person_id, projectId, personId]);
+
+      // If the person has been reassigned that's the value we need to use
+      personId = data.person_id;
+    }
+
+    if (!result || result.rows.length === 0) {
+      throw new Error('Project resource not found');
+    }
+
+    // Fetch the updated resource with all fields
+    const updatedResource = await logQuery(`
+      SELECT 
+        ppr.project_id,
+        p.person_id,
+        p.person_name,
+        p.person_surname,
+        p.person_name || ' ' || p.person_surname as person_name_surname,
+        r.role_id,
+        r.role_description,
+        ppr.project_id || '_' || ppr.person_id as composite_id,
+        CONCAT(p.person_name, ' ', p.person_surname, ' ', r.role_description) as all_columns
+      FROM project_person_role ppr
+      JOIN person p ON p.person_id = ppr.person_id
+      JOIN role r ON r.role_id = ppr.role_id
+      WHERE ppr.project_id = $1 AND ppr.person_id = $2
+    `, [projectId, personId]);
+
+    return updatedResource.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update project resource');
+  }
+}
+
+export async function createProjectResource(data: Partial<VProjectResources>) {
+  try {
+    // First insert the role assignment
+    const result = await logQuery(`
+      INSERT INTO project_person_role (project_id, person_id, role_id)
+      VALUES (
+        $1,
+        $2,
+        (SELECT role_id FROM role WHERE role_description = $3)
+      )
+      RETURNING *;
+    `, [data.project_id, data.person_id, data.role_description]);
+
+    // Then fetch the complete resource data
+    const newResource = await logQuery(`
+      SELECT 
+        ppr.project_id,
+        p.person_id,
+        p.person_name,
+        p.person_surname,
+        r.role_id,
+        r.role_description,
+        CONCAT(p.person_name, ' ', p.person_surname, ' ', r.role_description) as all_columns,
+        ppr.project_id || '_' || ppr.person_id as composite_id
+      FROM project_person_role ppr
+      JOIN person p ON p.person_id = ppr.person_id
+      JOIN role r ON r.role_id = ppr.role_id
+      WHERE ppr.project_id = $1 AND ppr.person_id = $2
+    `, [data.project_id, data.person_id]);
+
+    return newResource.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create project resource');
+  }
+}
+
+export async function deleteProjectResource(projectId: string, personId: string) {
+  try {
+    const result = await logQuery(`
+      DELETE FROM project_person_role
+      WHERE project_id = $1 AND person_id = $2
+      RETURNING *;
+    `, [projectId, personId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('DELETE Project resource not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete project resource');
+  }
+}
+
+
+
+/********************************* PERSONS *********************************/
+
+/*
+ * This is the function to fetch the persons from the database
+ * It will return the persons in the person table
+ * It is mostly used from the persons API to fill out dynamically any resource assignment select box
+ */
+export async function fetchPersons() : Promise<VPerson[]> {
+  try {
+    const query = `
+      SELECT person_id, person_name, person_surname, person_email, person_name || ' ' || person_surname as person_name_surname,
+             person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+      FROM person 
+      ORDER BY person_surname, person_name
+    `;
+    
+    const data = await connectionPool.query(query);
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch persons.');
+  }
+}
+
+export async function updatePerson(personId: string, data: Partial<VPerson>) {
+  try {
+    const result = await logQuery(`
+      UPDATE person 
+      SET 
+        person_name = COALESCE($1, person_name),
+        person_surname = COALESCE($2, person_surname),
+        person_email = COALESCE($3, person_email)
+      WHERE person_id = $4
+      RETURNING *;
+    `, [data.person_name, data.person_surname, data.person_email, personId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Person not found');
+    }
+
+    // Fetch the updated person with all fields
+    const updatedPerson = await logQuery(`
+      SELECT 
+        person_id,
+        person_name,
+        person_surname,
+        person_email,
+        person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+      FROM person
+      WHERE person_id = $1
+    `, [personId]);
+
+    return updatedPerson.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update person');
+  }
+}
+
+export async function createPerson(data: Partial<VPerson>) {
+  try {
+    const result = await logQuery(`
+      INSERT INTO person (person_name, person_surname, person_email)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `, [data.person_name, data.person_surname, data.person_email]);
+
+    // Fetch the complete person data
+    const newPerson = await logQuery(`
+      SELECT 
+        person_id,
+        person_name,
+        person_surname,
+        person_email,
+        person_id || ' ' || person_name || ' ' || person_surname || ' ' || COALESCE(person_email, '') as all_columns
+      FROM person
+      WHERE person_id = $1
+    `, [result.rows[0].person_id]);
+
+    return newPerson.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create person');
+  }
+}
+
+export async function deletePerson(personId: string) : Promise<VPerson> {
+  try {
+    const result = await logQuery(`
+      DELETE FROM person
+      WHERE person_id = $1
+      RETURNING *;
+    `, [personId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Person not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete person');
+  }
+}
+
+
+/********************************* ROLES *********************************/
+
+export async function fetchRoles() : Promise<Role[]> {
+  try {
+    const query = `
+      SELECT role_id, role_description
+      FROM role
+      ORDER BY role_description
+    `;
+    
+    const result = await connectionPool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch roles.');
+  }
+}
+
+export async function updateRole(roleId: string, data: Partial<VRole>) {
+  try {
+    const result = await logQuery(`
+      UPDATE role 
+      SET role_description = COALESCE($1, role_description)
+      WHERE role_id = $2
+      RETURNING *;
+    `, [data.role_description, roleId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Role not found');
+    }
+
+    // Fetch the updated role with all fields
+    const updatedRole = await logQuery(`
+      SELECT 
+        role_id,
+        role_description,
+        role_description as all_columns
+      FROM role
+      WHERE role_id = $1
+    `, [roleId]);
+
+    return updatedRole.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update role');
+  }
+}
+
+export async function createRole(data: Partial<VRole>) {
+  try {
+    const result = await logQuery(`
+      INSERT INTO role (role_description)
+      VALUES ($1)
+      RETURNING *;
+    `, [data.role_description]);
+
+    // Fetch the complete role data
+    const newRole = await logQuery(`
+      SELECT 
+        role_id,
+        role_description,
+        role_description as all_columns
+      FROM role
+      WHERE role_id = $1
+    `, [result.rows[0].role_id]);
+
+    return newRole.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create role');
+  }
+}
+
+export async function deleteRole(roleId: string) {
+  try {
+    const result = await logQuery(`
+      DELETE FROM role
+      WHERE role_id = $1
+      RETURNING *;
+    `, [roleId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Role not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete role');
+  }
+}
+
+/********************************* CATEGORIES *********************************/
+
+export async function fetchCategories() : Promise<Category[]> {
+  try {
+    const query = `
+      SELECT category_id, category_name
+      FROM category
+      ORDER BY category_name
+    `;
+    
+    const result = await connectionPool.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch categories.');
+  }
+}
+
+export async function updateCategory(categoryId: string, data: Partial<VCategory>) {
+  try {
+    const result = await logQuery(`
+      UPDATE category 
+      SET category_name = COALESCE($1, category_name)
+      WHERE category_id = $2
+      RETURNING *;
+    `, [data.category_name, categoryId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Category not found');
+    }
+
+    // Fetch the updated category with all fields
+    const updatedCategory = await logQuery(`
+      SELECT 
+        category_id,
+        category_name,
+        category_name as all_columns
+      FROM category
+      WHERE category_id = $1
+    `, [categoryId]);
+
+    return updatedCategory.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to update category');
+  }
+}
+
+export async function createCategory(data: Partial<VCategory>) {
+  try {
+    const result = await logQuery(`
+      INSERT INTO category (category_name)
+      VALUES ($1)
+      RETURNING *;
+    `, [data.category_name]);
+
+    // Fetch the complete category data
+    const newCategory = await logQuery(`
+      SELECT 
+        category_id,
+        category_name,
+        category_name as all_columns
+      FROM category
+      WHERE category_id = $1
+    `, [result.rows[0].category_id]);
+
+    return newCategory.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create category');
+  }
+}
+
+export async function deleteCategory(categoryId: string) {
+  try {
+    const result = await logQuery(`
+      DELETE FROM category
+      WHERE category_id = $1
+      RETURNING *;
+    `, [categoryId]);
+
+    if (result.rows.length === 0) {
+      throw new Error('Category not found');
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete category');
+  }
+}

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { ProjectExpensesWithCategoryBudget } from "../lib/dataschemas";
+import { ProjectExpense, VProjectExpensesWithCategoryBudget } from "../lib/dataschemas";
 import { formatDateToLocal } from "@/app/lib/miscutils"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
@@ -16,14 +16,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { updateExpenseAction, createExpenseAction } from '@/app/lib/actions';
+import { updateExpenseAction, createExpenseAction, deleteExpenseAction } from '@/app/lib/actions';
 
-async function deleteExpense(expenseId: string) {
-  // TODO: Implement delete functionality
-  console.log('Deleting expense:', expenseId);
-}
-
-const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
+const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
   {
     accessorKey: "expense_date",
     header: ({ column }) => {
@@ -71,7 +66,10 @@ const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
           return categories.map((cat: any) => ({
             id: cat.category_name,
             label: cat.category_name,
-            hiddenValue: cat.category_id
+            hiddenValue: {
+              field: 'category_id',
+              value: cat.category_id
+            }
           }));
         }
       }
@@ -90,8 +88,8 @@ const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const expense = row.original
+    cell: ({ row, table }) => {
+      const expense = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -103,12 +101,10 @@ const columns: ColumnDef<ProjectExpensesWithCategoryBudget>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => deleteExpense(expense.expense_id)}
+              onClick={() => (table.options.meta as any).deleteRow(row.id)}
             >
               Delete expense
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View expense details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -120,12 +116,12 @@ export default function ProjectExpensesTable({
   expenses,
   projectId 
 }: { 
-  expenses: ProjectExpensesWithCategoryBudget[],
+  expenses: VProjectExpensesWithCategoryBudget[],
   projectId: string 
 }) {
   const [currentExpenses, setCurrentExpenses] = useState(expenses);
 
-  const handleExpenseUpdate = async (rowId: string, data: Partial<ProjectExpensesWithCategoryBudget>) => {
+  const handleExpenseUpdate = async (rowId: string, data: Partial<VProjectExpensesWithCategoryBudget>) => {
     const result = await updateExpenseAction(rowId, data);
     
     if (!result.success) {
@@ -134,12 +130,14 @@ export default function ProjectExpensesTable({
 
     setCurrentExpenses(prev => 
       prev.map(expense => 
-        expense.expense_id === rowId ? { ...expense, ...result.expense } : expense
+        expense.expense_id === rowId 
+          ? { ...expense, ...result.expense }
+          : expense
       )
     );
   };
 
-  const handleExpenseCreate = async (data: Partial<ProjectExpensesWithCategoryBudget>) => {
+  const handleExpenseCreate = async (data: Partial<ProjectExpense>) => {
     const result = await createExpenseAction({
       ...data,
       project_id: projectId
@@ -150,6 +148,16 @@ export default function ProjectExpensesTable({
     }
 
     setCurrentExpenses(prev => [...prev, result.expense]);
+  };
+
+  const handleExpenseDelete = async (rowId: string) => {
+    const result = await deleteExpenseAction(rowId);
+    
+    if (!result.success) {
+      throw new Error('Failed to delete expense');
+    }
+
+    setCurrentExpenses(prev => prev.filter(expense => expense.expense_id !== rowId));
   };
 
   return (
@@ -167,6 +175,7 @@ export default function ProjectExpensesTable({
         data={currentExpenses} 
         onRowUpdate={handleExpenseUpdate}
         onRowCreate={handleExpenseCreate}
+        onRowDelete={handleExpenseDelete}
         idField="expense_id"
       />
     </div>

@@ -176,12 +176,11 @@ tar -xzvf docker-dist.tar.gz
 - [x] Containerized run at least of the dependencies (postgresql)
 - [x] V1 : local dev, login screen, basic prototype with static content
 - [x] Automate build process
-- [ ] V2 : feature complete running in docker
-- [ ] V3 : deployed in AWS Fargate, exposed via public ip, DNS name
+- [x] V2 : Basic application running in docker and in AWS
+- [ ] V3 : Feature complete running in AWS
 - [ ] V4 : do as many as the "best effort" extras as possible
 - [ ] Finalize and adjust final solution architecture documentation
-- [ ] Project plan to production
-- [ ] Prepare presentation slides as code with revealJS
+- [ ] Finish up presentation slides as code with revealJS
 
 # Detailed TODO
 - [x] .. Scaffold with nextJS (used my own follow up of the official NextJS tutorial + dockerized local postgresql, see references)
@@ -201,11 +200,13 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Search expenses over time range
 - [x] .. Generic feature to edit values in a data table
 - [x] .. Generic feature to add a new row to a data table
+- [x] .. Generic feature to delete a row from a data table
 - [x] .. Editing expenses values or descriptions live from the project detail screen
 - [x] .. Add expenses to projects
 - [x] .. Edit a expense detail in the project
-- [ ] .. Reassign / remove resources or costs to each project in the project detail screen
-- [ ] .. Graph to show expensditures per category against budget
+- [x] .. Delete an expense from the project
+- [x] .. Reassign / remove resources or costs to each project in the project detail screen
+- [ ] .. Graph to show expenditures per category against budget
 - [ ] .. Graph resources assignment to projects
 
 Extra todos with priority:
@@ -213,10 +214,10 @@ Extra todos with priority:
 - [x] .. Administration: manage roles
 - [x] .. Administration: manage persons
 - [x] .. Administration: manage categories
-
+- [ ] .. Search functionality in the main page
+- [ ] .. Project dashboard: expenses vs budget grouped by category
 - [ ] .. Colors when expenditures are above the estimate
-- [ ] .. Colors when projects are delayed
-- [ ] .. Add / Delete both people (hire) and categories for expenditures
+- [ ] .. Colors when projects are overexpending in the project dashboard
 
 Even more extras with less priority
 - [ ] .. Implement registration screen
@@ -233,12 +234,36 @@ Even more extras with less priority
 - [x] .. Create project form have been intermitently broken due to some refactors. Fixed.
 - [x] .. Back button not working in About because of security constraints. Fixed.
 - [x] .. User auth is broken again - login somehow is a client side component needs to become a proper api or server action. It's been worked around but requires more work.
+- [x] .. Filtering by date range is not fully working
+- [x] .. Adding a new expense does not apply the right category ("Unknown")
+- [x] .. Not all the management tables have working the free text search feature (something afoot with the fake all_columns column)
+- [x] .. Filtering expenses over time range is not working - HTTP 400
+- [x] .. Calendar picker layout has gone crazy
+- [x] .. Fixed People tab since the big refactor of data-table.tsx
+- [ ] .. Fixed Roles tab since the big refactor
+- [ ] .. Fixed Expense Categories (... you know the drill)
+- [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
+- [ ] .. Also editing the category should update the budget
+- [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [ ] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
-- [ ] .. Not all the management tables have working the free text search feature (something afoot with the fake all_columns column)
-- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be unified.
-- [ ] .. Filtering expenses over time range is not working - HTTP 400
-- [ ] .. Calendar picker layout has gone crazy
+- [ ] .. Make more consistent the usage of server actions. Currently there's a mix between direct calls and calls from the API. It should be simplified and leave the APIs for whatever is really needed.
+
+## Test plan (on every major release)
+- [ ] .. Landing page: click on About, click on seed, click on presentation
+- [ ] .. Login
+- [ ] .. See dashboard of project cards
+- [ ] .. Filter out to 3 projects
+- [ ] .. Search for a project by free text
+- [ ] .. Add a new project
+- [ ] .. Click on a project card
+- [ ] .. Check all info is OK (expenses, resources, metadata)
+- [ ] .. Edit metadata of the project
+- [ ] .. Edit a expense amount or description
+- [ ] .. Add a new expense to the project
+- [ ] .. Reassign a resource to the project
+- [ ] .. Remove a expense
+- [ ] .. Repeat basic checks over generic admin pages (cost categories, roles, persons)
 
 # Appendix and references
 

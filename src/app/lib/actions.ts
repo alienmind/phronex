@@ -11,8 +11,8 @@ import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { CreateProjectFormSchema, UpdateExpenseListFilterSchema, UpdateProjectSchema } from '@/app/lib/zodschemas';
-import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense } from './dataaccess';
-import { Project, ProjectExpense, ProjectExpensesWithCategoryBudget } from './dataschemas';
+import { createProject, fetchProjectExpensesAndBudget, updateProject, updateExpense, createExpense, deleteExpense, updateProjectResource, createProjectResource, deleteProjectResource, updatePerson, createPerson, deletePerson, updateRole, createRole, deleteRole, updateCategory, createCategory, deleteCategory } from './dataaccess';
+import { Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, VPerson, Person, VRole, Role, VCategory, Category } from './dataschemas';
 
 /*
  * User authentication
@@ -182,11 +182,130 @@ export async function updateExpenseAction(expenseId: string, data: Partial<Proje
   }
 }
 
-export async function createExpenseAction(data: Partial<ProjectExpensesWithCategoryBudget>) {
+export async function createExpenseAction(data: Partial<VProjectExpensesWithCategoryBudget>) {
   try {
+    console.log('Creating expense:', JSON.stringify(data));
     const newExpense = await createExpense(data);
     return { success: true, expense: newExpense };
   } catch (error) {
     return { success: false, error: 'Failed to create expense' };
+  }
+}
+
+export async function deleteExpenseAction(expenseId: string) {
+  try {
+    await deleteExpense(expenseId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete expense' };
+  }
+}
+
+export async function updateProjectResourceAction(projectId: string, personId: string, data: Partial<VProjectResources>) {
+  try {
+    console.log('******** Updating project resource:', projectId, personId, JSON.stringify(data));
+    const updatedResource = await updateProjectResource(projectId, personId, data);
+    return { success: true, resource: updatedResource };
+  } catch (error) {
+    return { success: false, error: 'Failed to update project resource' };
+  }
+}
+
+export async function createProjectResourceAction(data: Partial<VProjectResources>) {
+  try {
+    const newResource = await createProjectResource(data);
+    return { success: true, resource: newResource };
+  } catch (error) {
+    return { success: false, error: 'Failed to create project resource' };
+  }
+}
+
+export async function deleteProjectResourceAction(projectId: string, personId: string) {
+  try {
+    await deleteProjectResource(projectId, personId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete project resource' };
+  }
+}
+
+export async function updatePersonAction(personId: string, data: Partial<VPerson>) {
+  try {
+    const updatedPerson = await updatePerson(personId, data);
+    return { success: true, person: updatedPerson };
+  } catch (error) {
+    return { success: false, error: 'Failed to update person' };
+  }
+}
+
+export async function createPersonAction(data: Partial<VPerson>) {
+  try {
+    const newPerson = await createPerson(data);
+    return { success: true, person: newPerson };
+  } catch (error) {
+    return { success: false, error: 'Failed to create person' };
+  }
+}
+
+export async function deletePersonAction(personId: string) {
+  try {
+    await deletePerson(personId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete person' };
+  }
+}
+
+export async function updateRoleAction(roleId: string, data: Partial<VRole>) {
+  try {
+    const updatedRole = await updateRole(roleId, data);
+    return { success: true, role: updatedRole };
+  } catch (error) {
+    return { success: false, error: 'Failed to update role' };
+  }
+}
+
+export async function createRoleAction(data: Partial<VRole>) {
+  try {
+    const newRole = await createRole(data);
+    return { success: true, role: newRole };
+  } catch (error) {
+    return { success: false, error: 'Failed to create role' };
+  }
+}
+
+export async function deleteRoleAction(roleId: string) {
+  try {
+    await deleteRole(roleId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete role' };
+  }
+}
+
+export async function updateCategoryAction(categoryId: string, data: Partial<VCategory>) {
+  try {
+    const updatedCategory = await updateCategory(categoryId, data);
+    return { success: true, category: updatedCategory };
+  } catch (error) {
+    return { success: false, error: 'Failed to update category' };
+  }
+}
+
+export async function createCategoryAction(data: Partial<VCategory>) {
+  try {
+    const newCategory = await createCategory(data);
+    return { success: true, category: newCategory };
+  } catch (error) {
+    return { success: false, error: 'Failed to create category' };
+  }
+}
+
+export async function deleteCategoryAction(categoryId: string) {
+  try {
+    await deleteCategory(categoryId);
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: 'Failed to delete category' };
   }
 } 

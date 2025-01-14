@@ -171,19 +171,19 @@ export const persons : Person[] = [
 export const roles : Role[] = [
   {
     role_id: '1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d',
-    role_name: 'Project Manager'
+    role_description: 'Project Manager'
   },
   {
     role_id: '2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e',
-    role_name: 'Developer'
+    role_description: 'Developer'
   },
   {
     role_id: '3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f',
-    role_name: 'Designer'
+    role_description: 'Designer'
   },
   {
     role_id: '4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a',
-    role_name: 'Business Analyst'
+    role_description: 'Business Analyst'
   }
 ];
 

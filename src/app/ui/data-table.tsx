@@ -55,12 +55,23 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { SelectProps } from "@radix-ui/react-select";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onRowUpdate?: (rowId: string, data: Partial<TData>) => Promise<void>
   onRowCreate?: (data: Partial<TData>) => Promise<void>
+  onRowDelete?: (rowId: string) => Promise<void>
   idField?: string
 }
 
@@ -70,7 +81,10 @@ type CustomColumnMeta = {
     fetchOptions: () => Promise<{
       id: string;
       label: string;
-      hiddenValue?: string;
+      hiddenValue?: {
+        field: string;
+        value: string;
+      };
     }[]>;
   };
 };
@@ -82,7 +96,37 @@ declare module '@tanstack/react-table' {
 type SelectOption = {
   id: string;
   label: string;
-  hiddenValue?: string;
+  hiddenValue?: {
+    field: string;
+    value: string;
+  };
+};
+
+const DeleteDialog = ({ 
+  open, 
+  onOpenChange, 
+  onConfirm 
+}: { 
+  open: boolean; 
+  onOpenChange: (open: boolean) => void; 
+  onConfirm: () => void;
+}) => {
+  return (
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
 };
 
 export function DataTable<TData, TValue>({
@@ -90,6 +134,7 @@ export function DataTable<TData, TValue>({
   data,
   onRowUpdate,
   onRowCreate,
+  onRowDelete,
   idField = 'id',
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -105,6 +150,8 @@ export function DataTable<TData, TValue>({
   const [newRowData, setNewRowData] = React.useState<Partial<TData>>({})
   const { toast } = useToast()
   const [selectableOptions, setSelectableOptions] = React.useState<Record<string, SelectOption[]>>({});
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [rowToDelete, setRowToDelete] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (showCreateDialog) {
@@ -120,6 +167,27 @@ export function DataTable<TData, TValue>({
       });
     }
   }, [showCreateDialog]);
+
+  const handleDelete = async () => {
+    if (!rowToDelete || !onRowDelete) return;
+    
+    try {
+      await onRowDelete(rowToDelete);
+      toast({
+        title: "Success",
+        description: "Record deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to delete record",
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setRowToDelete(null);
+    }
+  };
 
   const table = useReactTable({
     data,
@@ -154,66 +222,115 @@ export function DataTable<TData, TValue>({
           });
         }
       },
+      deleteRow: (rowId: string) => {
+        setRowToDelete(rowId);
+        setDeleteDialogOpen(true);
+      },
     },
-    getRowId: (row: any) => String(row[idField]),
+    getRowId: (row: any) => {
+      console.log("Getting row id for: ", JSON.stringify(row));
+      let ret: string;
+      if ('composite_id' in row) {
+        ret= String(row.composite_id);
+      }
+      else {
+        ret= String((row as any)[idField]);
+      }
+      console.log("Returning row id: ", ret);
+      return ret;
+    },
   });
 
   // Custom cell renderer that handles editable cells
   const renderCell = (cell: any) => {
-    const isEditing = 
-      editingCell?.rowId === cell.row.id && 
-      editingCell?.columnId === cell.column.id;
-
     const column = cell.column.columnDef;
-    const isEditable = column.meta?.editable === true;
+    const isEditable = column.meta?.editable;
+    const hasSelectableOptions = column.meta?.selectableOptions;
+    const isEditing = editingCell?.rowId === cell.row.id && editingCell?.columnId === cell.column.id;
 
-    if (isEditing && isEditable) {
-      return (
-        <Input
-          autoFocus
-          defaultValue={editingCell?.value}
-          onBlur={(e) => {
-            const newValue = e.target.value;
-            if (newValue !== editingCell?.value) {
-              (table.options.meta as any).updateData(
-                cell.row.id,
-                cell.column.id,
-                newValue
-              );
-            } else {
-              setEditingCell(null);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              const newValue = e.currentTarget.value;
-              if (newValue !== editingCell?.value) {
-                (table.options.meta as any).updateData(
-                  cell.row.id,
-                  cell.column.id,
-                  newValue
+    if (isEditing) {
+      if (hasSelectableOptions) {
+        const options = selectableOptions[cell.column.id];
+        const currentValue = cell.getValue();
+        
+        return (
+          <Select
+            value={String(currentValue)}
+            onValueChange={async (value) => {
+              const option = options?.find(opt => opt.id === value);
+              try {
+                if (option?.hiddenValue) {
+                  // Update hidden value first
+                  await (table.options.meta as any).updateData(
+                    cell.row.id, 
+                    option.hiddenValue.field, 
+                    option.hiddenValue.value
+                  );
+                }
+                // Then update visible value
+                await (table.options.meta as any).updateData(
+                  cell.row.id, 
+                  cell.column.id, 
+                  value
                 );
-              } else {
+                
+                // Exit edit mode
                 setEditingCell(null);
+              } catch (error) {
+                console.error('Failed to update:', error);
               }
-            } else if (e.key === "Escape") {
-              setEditingCell(null);
-            }
-          }}
-        />
-      );
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder={`Select ${column.header}`} />
+            </SelectTrigger>
+            <SelectContent>
+              {options?.map(option => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      } else {
+        return (
+          <Input
+            value={editingValue}
+            onChange={(e) => setEditingValue(e.target.value)}
+            onBlur={async () => {
+              await (table.options.meta as any).updateData(cell.row.id, cell.column.id, editingValue);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                (table.options.meta as any).updateData(cell.row.id, cell.column.id, editingValue);
+              }
+            }}
+            autoFocus
+          />
+        );
+      }
     }
 
     return (
       <div
         className={isEditable ? "cursor-pointer hover:bg-muted/50 p-2 -m-2 rounded" : ""}
-        onClick={() => {
+        onClick={async () => {
           if (isEditable) {
+            if (hasSelectableOptions && !selectableOptions[cell.column.id]) {
+              // Fetch options if they haven't been loaded yet
+              const options = await column.meta?.selectableOptions.fetchOptions();
+              setSelectableOptions(prev => ({
+                ...prev,
+                [cell.column.id]: options
+              }));
+            }
             setEditingCell({
               rowId: cell.row.id,
               columnId: cell.column.id,
               value: cell.getValue(),
             });
+            setEditingValue(String(cell.getValue() || ""));
           }
         }}
       >
@@ -249,6 +366,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
+      <DeleteDialog 
+        open={deleteDialogOpen} 
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleDelete}
+      />
       <div className="flex justify-between items-center py-4">
         <Input
           placeholder="Filter..."
@@ -272,7 +394,6 @@ export function DataTable<TData, TValue>({
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 {columns.map((column) => {
-                  console.log("COLUMN=>",JSON.stringify(column));
                   if (column.id === "actions" || 
                       ("accessorKey" in column && column.accessorKey === "all_columns") ||
                       !column.meta || !column.meta.editable) {

@@ -69,22 +69,16 @@ export type Project = {
 // Roles are generic and reusable between projects
 export type Role = {
   role_id: string;
-  role_name: string;
+  role_description: string;
 };
 
 // Derived schemas
 // We explicit these joins between certain tables as per the front-end needs
-
-// Resources assigned to a project
-export type ProjectResource = {
-  project_id: string;
-  person_name: string;
-  person_surname: string;
-  role_description: string;
-};
+// They include additional fields (when relevant) to make easier the update (composite_id) or the search (all_columns)
+// Notation: they have V prefix to indicate they are sort of UI views not actual database tables
 
 // Project combined with project manager
-export type ProjectWithProjectManager = {
+export type VProjectWithProjectManager = {
   project_id: string;
   project_creation_date: Date;
   project_name: string;
@@ -99,7 +93,7 @@ export type ProjectWithProjectManager = {
 
 // Detailed view of the project expenses combined with the budget for each category
 // We also add an all_columns to enable filtering
-export type ProjectExpensesWithCategoryBudget = {
+export type VProjectExpensesWithCategoryBudget = {
   expense_id: string;
   expense_name: string;
   expense_date: Date;
@@ -111,13 +105,31 @@ export type ProjectExpensesWithCategoryBudget = {
   all_columns: string;
 };
 
-// Resources assigned to a project with all_columns to enable filtering
-export type ProjectResources = {
+// Resources assigned to a project with all_columns and composite_id to enable filtering and updating
+export type VProjectResources = {
   project_id: string;
   person_id: string;
   person_name: string;
   person_surname: string;
+  person_name_surname: string; // Artificial field to enable filtering and editing
+  role_id: string;
   role_description: string;
+  composite_id: string; // Concatenation of project_id and person_id to make easier the update
+  all_columns: string;
+};
+
+// A person with all_columns to enable filtering
+export type VPerson = Person & {
+  all_columns: string;
+};
+
+// A role with all_columns to enable filtering
+export type VRole = Role & {
+  all_columns: string;
+};
+
+// A category with all_columns to enable filtering
+export type VCategory = Category & {
   all_columns: string;
 };
 

@@ -6,6 +6,9 @@ export async function GET() {
     const roles = await fetchRoles();
     return NextResponse.json(roles);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch roles' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to fetch roles' },
+      { status: 500 }
+    );
   }
 } 

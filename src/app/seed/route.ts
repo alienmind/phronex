@@ -107,7 +107,7 @@ async function seedRoles() {
     roles.map(async (role : Role) => {
       const insertQuery = `
         INSERT INTO role (role_id, role_description)
-        VALUES ('${role.role_id}', '${role.role_name}')
+        VALUES ('${role.role_id}', '${role.role_description}')
         ON CONFLICT (role_id) DO NOTHING;
       `;
       console.log('Executing query:', insertQuery);
