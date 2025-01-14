@@ -43,8 +43,22 @@ export function ProjectCard({ project }: ProjectCardProps) {
   const percentSpent = project.total_budget ? (project.total_spent / project.total_budget) * 100 : 0;
   const spentColor = percentSpent > 100 ? 'text-destructive' : 'text-muted-foreground';
 
+  // Get background color based on spent ratio (matching project chart colors)
+  const getBackgroundColor = (spent: number, budget: number) => {
+    const ratio = ((budget?budget>0:false) ? spent / budget : 0);
+    if (ratio <= 0.3) return 'bg-[hsl(142_76%_36%/0.15)]';  // Vibrant green
+    if (ratio <= 0.7) return 'bg-[hsl(35_92%_65%/0.15)]';   // Vibrant orange
+    return 'bg-[hsl(0_85%_60%/0.15)]';                      // Vibrant red
+  };
+
   return (
-    <Card className="hover:bg-muted/50">
+    <Card 
+      className={`
+        ${getBackgroundColor(project.total_spent, project.total_budget)} 
+        transition-colors 
+        hover:bg-muted/60 hover:shadow-md
+      `}
+    >
       <Link href={`/dashboard/projects/${project.project_id}`}>
         <CardHeader>
           <CardTitle>{project.project_name}</CardTitle>

@@ -83,7 +83,7 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
   const handleDelete = async () => {
     const result = await deleteProjectAction(project.project_id)
     if (result.success) {
-      router.push('/dashboard/projects')
+      router.push('/dashboard')
     }
   }
 
@@ -193,7 +193,10 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
         />
 
         <div className="mt-6 flex items-center justify-end gap-4">
-          <Button type="button" variant="outline" onClick={() => router.push('/dashboard/projects')}>
+          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+            {isLoading ? 'Saving...' : 'Save Changes'}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.push('/dashboard')}>
             Cancel
           </Button>
           <AlertDialog>
@@ -214,10 +217,7 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
-            {isLoading ? 'Saving...' : 'Save Changes'}
-          </Button>
-        </div>
+       </div>
       </form>
     </Form>
   );
