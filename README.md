@@ -244,15 +244,12 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Creating a expense and assign it to the new category creates an exception
 - [x] .. Deleting an expense does not work
 - [x] .. Deleting a new category does not work
-- [ ] .. Adding a new resource to the project does not keep the category (it is set as Unknown) - F5 to workaround
-- [ ] .. Editing the category over the expense list does not work
-- [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
+- [x] .. Free search in the Roles table does not work
+- [x] .. (WORKED AROUND) Adding a new resource to the project does not work (worked around disabling this optional feature)
+- [x] .. (WORKED AROUND) When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
+- [x] .. (WORKED AROUND) If editing a budget through the chart, the slider does not get updated (F5 solves it)
+- [ ] .. Changing the category over the expense list does not work
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
-- [ ] .. If editing a budget through the chart, the slider does not get updated
-- [ ] .. Editing the category in the Project Expenses table does not update.
-
-
-- [ ] .. Free search in the Roles table does not work
 - [ ] .. Reset demo data shows the iframe at a wrong size
 
 The extras:
