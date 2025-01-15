@@ -5,7 +5,7 @@
 # The Docker image builder can access database through internal network (.internal:5432) to run SSR pre-rendering
 services:
   webapp:
-    image: alienmind/phronex-web
+    image: alienmind/phronex-web:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile
