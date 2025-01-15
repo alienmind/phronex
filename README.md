@@ -56,9 +56,14 @@ Will do at best effort:
   <img src="doc/highlevel.png" alt="High level ideation">
 </p>
 
-# Design
+# Data model
 <p align="center">
   <img src="doc/datamodel.png" alt="Data model">
+</p>
+
+# Design
+<p align="center">
+  <img src="doc/design.png" alt="Design">
 </p>
 
 # Architecture Decision Record (ADR)
@@ -177,10 +182,10 @@ tar -xzvf docker-dist.tar.gz
 - [x] V1 : local dev, login screen, basic prototype with static content
 - [x] Automate build process
 - [x] V2 : Basic application running in docker and in AWS
-- [ ] V3 : Feature complete running in AWS
-- [ ] V4 : do as many as the "best effort" extras as possible
-- [ ] Finalize and adjust final solution architecture documentation
-- [ ] Finish up presentation slides as code with revealJS
+- [x] V3 : Feature complete running in AWS
+- [x] V4 : do as many as the "best effort" extras as possible
+- [x] Finalize and adjust final solution architecture documentation
+- [x] Finish up presentation slides as code with revealJS
 
 # Detailed TODO
 - [x] .. Scaffold with nextJS (used my own follow up of the official NextJS tutorial + dockerized local postgresql, see references)
@@ -202,7 +207,7 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Generic feature to add a new row to a data table
 - [x] .. Generic feature to delete a row from a data table
 - [x] .. Editing expenses values or descriptions live from the project detail screen
-- [ ] .. Set up budget for the project
+- [x] .. Set up budget for the project
 - [x] .. Add expenses to projects
 - [x] .. Edit a expense detail in the project
 - [x] .. Delete an expense from the project
@@ -249,9 +254,8 @@ tar -xzvf docker-dist.tar.gz
 The extras:
 - [x] .. Dark theme
 - [x] .. Add easter egg
+- [x] .. AI features - integration with OpenAI for budget estimation
 - [ ] .. Implement registration screen
-- [ ] .. Separate service (Python + FastAPI) that integrates with OpenAI for scope summarization (would be neat)
-- [ ] .. Also use OpenAI for structured budgeting scaffolding based on the scope text - try to generate cost items based in the model output in JSON (would be even more neat)
 - [ ] .. OAuth 2.0 authentication with Google or Github
 - [ ] .. Create project form client validations (currently only in server)
 - [ ] .. Graph resources assignment to projects
@@ -288,17 +292,17 @@ The extras:
 This project from my Next JS demo project https://github.com/new?template_name=nextjs-postgresql-tutorial&template_owner=alienmind
 that I implemented from scratch following the tutorial in https://nextjs.org/learn
 
-Plus some previous work also on a personal project here: https://github.com/alienmind/auditorium-web
+Plus some previous work where I started to work on reusable components, look here: https://github.com/alienmind/auditorium-web
 
-It's been scaffolded with:
+This project has been scaffolded with:
 npx create-next-app@latest phronex --example "https://github.com/vercel/next-learn/tree/main/dashboard/starter-example" --use-pnpm
 
-
-## Shadcn for premade UI components
+## Notes on Shadcn for premade UI components
 I've been adding shadcn (https://ui.shadcn.com/) premade components to the project, together with tailwindcss (https://tailwindcss.com/) theming.
-These components are part of the code base althouth they have not been developed by me. It can be considered framework code, although what makes shadcn special is that the source code becomes part of the source code, which allows you to customize it (other than adjusting paths, it's vanilla code from the shadcn project)
+These components are part of the code base althouth they have not been developed by me. It can be considered framework code, although what makes shadcn special is that the source code becomes part of the source code, which allows you to customize it (other than adjusting paths, it's vanilla code from the shadcn project).
+Please note that this is exactly how shadcn intends to be used.
 
-Instal:
+Install:
   npx shadcn@latest init
 
 Successive UI components have been added under components/ui via:
@@ -330,8 +334,6 @@ module.exports = {
 };
 ```
 
-This will build the project as a standalone app that can be run inside the Docker image.
-
 # Appendix II : How to properly set up the EC2 instance
 ## Install on AWS EC2
 1. Set up an ubuntu free tier EC2 instance
@@ -349,22 +351,16 @@ mkdir -p $DOCKER_CONFIG/cli-plugins
 curl -SL https://github.com/docker/compose/releases/download/v2.32.2/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
 chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
 ```
-
-
 4. Set up .env
 5. Start posgresql with docker
 
 ```bash
 docker compose up -d
 ```
-Additional steps (potentially):
-2. Set up an ALB with a target group pointing to the EC2 instance, port 3000
-10. Set up a security group for the ALB with HTTP/HTTPS access
-11. Set up a security group for the EC2 instance with SSH access
-12. Set up a DNS name for the ALB in Route 53
-13. Set up a certificate in ACM for the domain name
-...
-
+Additional steps:
+1. Set up Elastic IP to the EC2 instance
+2. Set up Route 53 DNS entry
+3. Set up security group for the EC2 instance (port 80)
 
 # References used
 
