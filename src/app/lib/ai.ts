@@ -17,7 +17,7 @@ const openai = new OpenAI({
  * 
  * @param {Category[]} categories - Array of available cost categories
  * @param {string} scope - Project scope description
- * @param {string} duration - Project duration in days (e.g. "30 days")
+ * @param {string} duration - Project duration in days
  * @returns {Promise<Array<{category_name: string, budget: number}>>} Array of budget suggestions
  */
 export async function suggestBudgets(categories: Category[], scope: string, duration: string) {
@@ -55,11 +55,25 @@ Duration: ${duration}
     if (!response) return [];
 
     let suggestions = JSON.parse(response);
-    // Handle case where AI returns object with budget array instead of direct array
-    if (suggestions.budget) {
-      suggestions = suggestions.budget;
+    
+    // Handle different response structures to ensure we get an array
+    // as OpenAI is no respecting the requested format
+    if (Array.isArray(suggestions)) {
+      // Response is already an array
+      return suggestions;
+    } else {
+      // Look for an array property in the response object
+      const arrayProperty = Object.values(suggestions).find(value => Array.isArray(value));
+      if (arrayProperty) {
+        return arrayProperty;
+      }
+      // If no array found, wrap the object in an array if it has the expected shape
+      if (suggestions.category_name && typeof suggestions.budget === 'number') {
+        return [suggestions];
+      }
     }
-    console.log("AI suggested budgets:", suggestions);
+
+    console.log("Normalized AI suggested budgets:", suggestions);
     return suggestions.map((suggestion: any) => ({
       category_name: suggestion.category_name,
       budget: suggestion.budget
