@@ -24,7 +24,7 @@ const columns: ColumnDef<VProjectResource>[] = [
       )
     },
     meta: {
-      editable: true,
+      editable: false,
       selectableOptions: {
         fetchOptions: async () => {
           const persons = await fetch('/api/persons').then(res => res.json());
@@ -45,7 +45,7 @@ const columns: ColumnDef<VProjectResource>[] = [
     accessorKey: "role_description",
     header: "Role",
     meta: {
-      editable: true,
+      editable: false,
       selectableOptions: {
         fetchOptions: async () => {
           const roles = await fetch('/api/roles').then(res => res.json());
