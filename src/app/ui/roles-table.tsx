@@ -75,8 +75,6 @@ export default function RolesTable({ roles }: { roles: VRole[] }) {
       throw new Error('Failed to update role');
     }
 
-    console.log("ROLES=", JSON.stringify(roles));
-
     setCurrentRoles(prev => 
       prev.map(role => 
         role.role_id === rowId
