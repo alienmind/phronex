@@ -1,5 +1,5 @@
 # App
-Phronex is a project management and budgeting tool for small and medium sized companies.
+Phronex is a project management and budgeting tool for small and medium sized companies with some AI features.
 It's been development as part of an assignment for a job interview. Also, it's been developed as a personal project out of interest to learn latest Next JS 15 and React 19.
 The development time for this assignment is 7 days.
 
@@ -72,16 +72,16 @@ Will do at best effort:
   The data model can be expressed naturally as a relational model compared to a NoSQL model.
   There's no realtime updates requirement nor something that could incline the solution to be based in DynamoDB or other key-value stores. Implementing it as a RDBMS makes room also for future data analytics over project expenditures with normal BI tools. The business problem can be easily expressed in SQL. Also there's no strong requirement of using an enterprise RBMS such as Oracle or DB2, therefore the natural choice is using PostgreSQL.
 
-2. Implementation as a SPA or PWA with server components.
+2. Implementation as a SPA or MPA with server components.
   It could be optionally be done mostly as a SPA (client side) but interacting with APIs in the backend.
-  However there's no strong requirement to have an API for automation and this adds additional complexity to the solution.
-  There's clearly a need for BoF (Backend for Frontend) though, because of the filtering and searching functionalities.
+  However there's no strong requirement to have such APIs and this adds additional complexity to the solution.
+  There's clearly a need for BfF (Backend for Frontend) though, because of the filtering and searching functionalities.
   Therefore, we take a hybrid approach and decide to use:
-  - Server actions via direct call from the client component (which will get the info and later hydraated)
-  - Restful APIs for all of the operations (to test both integration methods)
+  - Server actions via direct call from the client component avoiding the need of APIs. This also benefits SSR where the page could be rendered fully server side before delivering.
+  - Some restful APIs for some dynamic operations (which also allows to test both integration methods)
 
 3. Technology stack.
-  As a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application development with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which increases maintainability.
+  As a consequence of point 2, we opt-in for latest React features (v19) and NextJS v15 which streamlines the application development with this novel approach. NextJS also provides very clear guardrails and opinionated folder structure which increases maintainability and favors SSR.
   It also keeps the (theoretical) application team simpler than, let's say, picking Python for a backend and React for the frontend. A single team of Javascript experts could be implementing both.
 
 4. Cloud of choice.
@@ -139,9 +139,9 @@ All steps are automated in build.sh, just run:
 ./build.sh
 ```
 
-Any subsequent run will just require the default docker-compose.yml file.
+Any subsequent run will just require the default docker-compose.yml file which can be run with:
 ```bash
-docker compose up -d
+./run.sh
 ```
 
 # Instructions to run locally
@@ -165,10 +165,10 @@ docker compose up -d
 ```
 2. Make sure that the image has been uploaded to docker hub or some other container registry.
    For reference, this one is under https://hub.docker.com/repository/docker/alienmind/phronex-web/general
-3. Upload docker-dist.tgz to EC2 via scp (follow along the instructions in the appendix II to properly set up the EC2 instance)
+3. Upload prod-dist.tgz to EC2 via scp (follow along the instructions in the appendix II to properly set up the EC2 instance)
 4. Set up .secrets file in the EC2 instance
 ```bash
-tar -xzvf docker-dist.tar.gz
+tar -xzvf prod-dist.tar.gz
 ./run.sh
 ```
 5. Optionally, set up the DNS entry name to point to the public IP of the EC2 instance or the Elastic IP assigned.
@@ -248,6 +248,7 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. (WORKED AROUND) Adding a new resource to the project does not work (worked around disabling this optional feature)
 - [x] .. (WORKED AROUND) When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [x] .. (WORKED AROUND) If editing a budget through the chart, the slider does not get updated (F5 solves it)
+- [x] .. Adding a new category budget through the sliders does not work
 - [ ] .. Changing the category over the expense list does not work
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [ ] .. Reset demo data shows the iframe at a wrong size
@@ -300,7 +301,7 @@ npx create-next-app@latest phronex --example "https://github.com/vercel/next-lea
 
 ## Notes on Shadcn for premade UI components
 I've been adding shadcn (https://ui.shadcn.com/) premade components to the project, together with tailwindcss (https://tailwindcss.com/) theming.
-These components are part of the code base althouth they have not been developed by me. It can be considered framework code, although what makes shadcn special is that the source code becomes part of the source code, which allows you to customize it (other than adjusting paths, it's vanilla code from the shadcn project).
+These components are part of the code base althouth they have not been developed by me. It can be considered framework code, although what makes shadcn special is that the source code becomes part of the project, which allows you to customize it (other than adjusting paths, it's vanilla code from the shadcn project).
 Please note that this is exactly how shadcn intends to be used.
 
 Install:
@@ -365,7 +366,7 @@ Additional steps:
 
 # References used
 
-It would have been impossible to do this project without the following references, which are great for someone not fully expert in the latest frameworks.
+It would have been impossible to do this project without the following references, which are great for someone not fully expert in the latest frameworks or with a general interest in full stack javascript development.
 
 - Theo T3GG Channel and livecoding sessions - https://www.youtube.com/@t3dotgg 
 - React Router 7 Tutorial - https://www.youtube.com/watch?v=pw8FAg07kdo
