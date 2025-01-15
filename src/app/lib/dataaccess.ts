@@ -384,19 +384,29 @@ export async function deleteExpense(id: string) : Promise<ProjectExpense> {
 export async function fetchProjectBudgetReport(id: string, start_date?: Date, end_date?: Date) :
   Promise<VProjectBudgetReport[]> {
   try {
+    start_date = start_date || new Date('1900-01-01');
+    end_date = end_date || new Date('2100-01-01');
     const query = {
       text: `
-        SELECT b.category_id, b.category_name, COALESCE(c.project_category_budget, 0) as budget, sum(a.expense_value) as spent
-        FROM project_expense a
-        LEFT OUTER JOIN category b ON a.category_id = b.category_id
-        LEFT OUTER JOIN project_budget c ON (a.project_id = c.project_id and a.category_id = c.category_id)
-        WHERE a.project_id = $1
-        AND a.expense_date > $2
-        AND a.expense_date < $3
-        GROUP BY b.category_id, b.category_name, COALESCE(c.project_category_budget, 0)
+        SELECT P1.category_id,P1.category_name,coalesce(budget,0) as budget,coalesce(spent,0) as spent FROM (
+          SELECT a.category_id, a.category_name, COALESCE(c.project_category_budget, 0) as budget
+          FROM category a
+          LEFT OUTER JOIN project_budget c ON a.category_id = c.category_id
+          WHERE c.project_id = $1
+        ) P1
+        LEFT OUTER JOIN
+        ( SELECT a.category_id, a.category_name, sum(b.expense_value) as spent
+          FROM category a
+          LEFT OUTER JOIN project_expense b ON a.category_id = b.category_id
+          WHERE b.project_id = $1
+          AND b.expense_date > $2
+          AND b.expense_date < $3
+          GROUP BY a.category_id, a.category_name
+        ) P2
+        ON P1.category_id = P2.category_id
         ORDER BY budget desc, category_name
       `,
-      values: [id, (start_date ? start_date : '1900-01-01'), (end_date ? end_date : '2100-01-01')]
+      values: [id, start_date, end_date]
     };
     const result = await connectionPool.query(query);
     return result.rows;
