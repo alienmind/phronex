@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { VProjectResources } from "@/app/lib/dataschemas"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { VProjectResource } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
 import { updateProjectResourceAction, createProjectResourceAction, deleteProjectResourceAction } from '@/app/lib/actions';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
-const columns: ColumnDef<VProjectResources>[] = [
+const columns: ColumnDef<VProjectResource>[] = [
   {
     accessorKey: "person_name_surname",
     header: ({ column }) => {
@@ -34,11 +35,6 @@ const columns: ColumnDef<VProjectResources>[] = [
             hiddenValue: {
               field: 'person_id',
               value: person.person_id,
-              additionalFields: {
-                person_name: person.person_name,
-                person_surname: person.person_surname,
-                person_name_surname: person.person_name_surname,
-              }
             }
           }));
         }
@@ -56,10 +52,7 @@ const columns: ColumnDef<VProjectResources>[] = [
           return roles.map((role: any) => ({
             id: role.role_description,
             label: role.role_description,
-            hiddenValue: {
-              field: 'role_id',
-              value: role.role_id
-            }
+            hiddenValue: role.role_id
           }));
         }
       }
@@ -78,29 +71,53 @@ const columns: ColumnDef<VProjectResources>[] = [
     cell: ({ row }) => {
       return <input type="hidden" value={row.original.composite_id} />;
     },
+  },
+  {
+    id: "actions",
+    cell: ({ row, table }) => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => (table.options.meta as any).deleteRow(row.id)}
+            >
+              Unassign resource
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+
   }
 ];
 
-export default function ProjectResourcesTable({ 
+export default function ProjectResourcesTable({
   resources,
-  projectId 
-}: { 
-  resources: VProjectResources[],
+  projectId
+}: {
+  resources: VProjectResource[],
   projectId: string
 }) {
   const [currentResources, setCurrentResources] = useState(resources);
 
-  const handleResourceUpdate = async (rowId: string, data: Partial<VProjectResources>) => {
+  const handleResourceUpdate = async (rowId: string, data: Partial<VProjectResource>) => {
     const [projectId, personId] = rowId.split('_');
     console.log("**** Im going to update resources for: ", projectId, personId, JSON.stringify(data));
     const result = await updateProjectResourceAction(projectId, personId, data);
-    
+
     if (!result.success) {
       throw new Error('Failed to update resource');
     }
 
-    setCurrentResources(prev => 
-      prev.map(resource => 
+    setCurrentResources(prev =>
+      prev.map(resource =>
         resource.person_id === personId && resource.project_id === projectId
           ? { ...resource, ...result.resource }
           : resource
@@ -108,29 +125,32 @@ export default function ProjectResourcesTable({
     );
   };
 
-  const handleResourceCreate = async (data: Partial<VProjectResources>) => {
+  const handleResourceCreate = async (data: Partial<VProjectResource>) => {
+    console.log("**** Im going to create resource for: ", projectId, JSON.stringify(data));
     const result = await createProjectResourceAction({
       ...data,
       project_id: projectId
     });
 
     if (!result.success) {
+      console.error("Failed to create resource", JSON.stringify(result));
       throw new Error('Failed to create resource');
     }
 
-    setCurrentResources(prev => [...prev, result.resource as VProjectResources]);
+    setCurrentResources(prev => [...prev, result.resource as VProjectResource]);
   };
 
   const handleResourceDelete = async (rowId: string) => {
     const [projectId, personId] = rowId.split('_');
     const result = await deleteProjectResourceAction(projectId, personId);
-    
+
     if (!result.success) {
-      throw new Error('Failed to delete resource');
+      console.error("Failed to unassign resource", JSON.stringify(result));
+      throw new Error('Failed to unassign resource');
     }
 
-    setCurrentResources(prev => 
-      prev.filter(resource => 
+    setCurrentResources(prev =>
+      prev.filter(resource =>
         !(resource.person_id === personId && resource.project_id === projectId)
       )
     );
@@ -138,13 +158,14 @@ export default function ProjectResourcesTable({
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable 
-        columns={columns} 
+      <DataTable
+        columns={columns}
         data={currentResources}
         onRowUpdate={handleResourceUpdate}
         onRowCreate={handleResourceCreate}
         onRowDelete={handleResourceDelete}
         idField="composite_id"
+        showNewButton={false}
       />
     </div>
   );

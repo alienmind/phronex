@@ -155,7 +155,8 @@ export default function ProjectExpensesTable({
       throw new Error('Failed to delete expense');
     }
 
-    setCurrentExpenses(prev => prev.filter(expense => expense.expense_id !== rowId));
+    setCurrentExpenses(prev =>
+      prev.filter(expense => expense.expense_id !== rowId));
   };
 
   return (

@@ -113,7 +113,7 @@ export type VProjectExpensesWithCategoryBudget = {
 };
 
 // Resources assigned to a project with all_columns and composite_id to enable filtering and updating
-export type VProjectResources = {
+export type VProjectResource = {
   project_id: string;
   person_id: string;
   person_name: string;

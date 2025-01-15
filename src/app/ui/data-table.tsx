@@ -73,6 +73,7 @@ interface DataTableProps<TData, TValue> {
   onRowCreate?: (data: Partial<TData>) => Promise<void>
   onRowDelete?: (rowId: string) => Promise<void>
   idField?: string
+  showNewButton?: boolean
 }
 
 type CustomColumnMeta = {
@@ -136,6 +137,7 @@ export function DataTable<TData, TValue>({
   onRowCreate,
   onRowDelete,
   idField = 'id',
+  showNewButton = true,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -384,7 +386,7 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        {onRowCreate && (
+        {onRowCreate && showNewButton && (
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
               <Button onClick={handleNewRow} className="ml-4">

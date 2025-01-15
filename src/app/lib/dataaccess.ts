@@ -10,7 +10,7 @@
  * @module dataaccess
  */
 import type { User, Project, ProjectExpense,
-              VProjectResources, VProjectWithProjectManager,
+              VProjectResource, VProjectWithProjectManager,
               VProjectExpensesWithCategoryBudget,
               VProjectBudgetReport,
               VPerson,
@@ -413,9 +413,9 @@ export async function fetchProjectBudgetReport(id: string, start_date?: Date, en
  * This is the function to fetch the resources assigned to a project
  * @param id - the id of the project
  * @param {string} [role] - the role to filter by
- * @returns {Promise<VProjectResources[]>} - The resources
+ * @returns {Promise<VProjectResource[]>} - The resources
  */
-export async function fetchResourcesForProjectId(id: string, role?: string): Promise<VProjectResources[]> {
+export async function fetchResourcesForProjectId(id: string, role?: string): Promise<VProjectResource[]> {
   try {
     const query = {
       text: `
@@ -449,12 +449,12 @@ export async function fetchResourcesForProjectId(id: string, role?: string): Pro
  * 
  * @param {string} projectId - The id of the project
  * @param {string} personId - The id of the person
- * @param {Partial<VProjectResources>} data - The data to update
- * @returns {Promise<VProjectResources>} - The updated resource
+ * @param {Partial<VProjectResource>} data - The data to update
+ * @returns {Promise<VProjectResource>} - The updated resource
  */
 export async function updateProjectResource(
-  projectId: string, personId: string, data: Partial<VProjectResources>
-) : Promise<VProjectResources> {
+  projectId: string, personId: string, data: Partial<VProjectResource>
+) : Promise<VProjectResource> {
   try {
     let result;
 
@@ -511,10 +511,10 @@ export async function updateProjectResource(
 /**
  * This is the function to create a project resource
  * 
- * @param {Partial<VProjectResources>} data - The data to create
- * @returns {Promise<VProjectResources>} - The created resource
+ * @param {Partial<VProjectResource>} data - The data to create
+ * @returns {Promise<VProjectResource>} - The created resource
  */
-export async function createProjectResource(data: Partial<VProjectResources>) : Promise<VProjectResources> {
+export async function createProjectResource(data: Partial<VProjectResource>) : Promise<VProjectResource> {
   try {
     // First insert the role assignment
     await logQuery(`
@@ -556,9 +556,9 @@ export async function createProjectResource(data: Partial<VProjectResources>) : 
  * 
  * @param {string} projectId - The id of the project
  * @param {string} personId - The id of the person
- * @returns {Promise<VProjectResources>} - The deleted resource
+ * @returns {Promise<VProjectResource>} - The deleted resource
  */
-export async function deleteProjectResource(projectId: string, personId: string) : Promise<VProjectResources> {
+export async function deleteProjectResource(projectId: string, personId: string) : Promise<VProjectResource> {
   try {
     const result = await logQuery(`
       DELETE FROM project_person_role
