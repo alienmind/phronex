@@ -238,16 +238,20 @@ tar -xzvf docker-dist.tar.gz
 - [x] .. Fixed Roles tab since the big refactor
 - [x] .. Fixed Expense Categories (... you know the drill)
 - [x] .. Select box does not preselect to 6 projects (visually) and it loses its focus.
-- [ ] .. Adding a new resource to the project does not keep the category (it is set as Unknown)
-- [ ] .. Editing the category over the list works but UI is not refreshed, needs a F5 as a workaround
-- [ ] .. Also editing the category in the project details form should update the budget but it does not
+- [x] .. Adding a new expense does not work
+- [x] .. Adding a new resource to a project does not work
+- [x] .. Adding a new category does not work
+- [x] .. Creating a expense and assign it to the new category creates an exception
+- [x] .. Deleting an expense does not work
+- [x] .. Deleting a new category does not work
+- [ ] .. Adding a new resource to the project does not keep the category (it is set as Unknown) - F5 to workaround
+- [ ] .. Editing the category over the expense list does not work
 - [ ] .. When reassigning a resource to a project (changing the person), it works but there's a secondary toast with an unexpected error message. Needs to be investigated.
 - [ ] .. Destroy buttons have lost their red style. There's some CSS mix-up
 - [ ] .. If editing a budget through the chart, the slider does not get updated
 - [ ] .. Editing the category in the Project Expenses table does not update.
-- [ ] .. Creating a expense does not reflect on the Category (needs an F5)
-- [ ] .. Adding a new resource to a project does not work
-- [ ] .. Adding a new category and then creating a expense to that category creates an exception
+
+
 - [ ] .. Free search in the Roles table does not work
 - [ ] .. Reset demo data shows the iframe at a wrong size
 

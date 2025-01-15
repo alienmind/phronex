@@ -252,13 +252,13 @@ export async function fetchProjectExpensesAndBudget(
     const query = {
       text: `
         SELECT a.expense_id, a.expense_name, a.expense_date, a.expense_value,
-               c.category_id, c.category_name, b.project_category_budget, b.project_id,
+               b.category_id, b.category_name, COALESCE(c.project_category_budget, 0) as budget, a.project_id,
                a.expense_id || ' ' || a.expense_name || ' ' || a.expense_date || ' ' ||
-              a.expense_value || ' ' || c.category_name || ' ' || b.project_category_budget
+               a.expense_value || ' ' || b.category_name || ' ' || COALESCE(c.project_category_budget, 0)
                as all_columns
         FROM project_expense a
-        LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
-        LEFT OUTER JOIN category c ON b.category_id = c.category_id
+        LEFT OUTER JOIN category b ON a.category_id = b.category_id
+        LEFT OUTER JOIN project_budget c ON (a.project_id = c.project_id and a.category_id = c.category_id)
         WHERE a.project_id = $1
         AND a.expense_date > $2
         AND a.expense_date < $3
@@ -386,14 +386,14 @@ export async function fetchProjectBudgetReport(id: string, start_date?: Date, en
   try {
     const query = {
       text: `
-        SELECT c.category_id, c.category_name, b.project_category_budget as budget, sum(a.expense_value) as spent
+        SELECT b.category_id, b.category_name, COALESCE(c.project_category_budget, 0) as budget, sum(a.expense_value) as spent
         FROM project_expense a
-        LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
-        LEFT OUTER JOIN category c ON b.category_id = c.category_id
+        LEFT OUTER JOIN category b ON a.category_id = b.category_id
+        LEFT OUTER JOIN project_budget c ON (a.project_id = c.project_id and a.category_id = c.category_id)
         WHERE a.project_id = $1
         AND a.expense_date > $2
         AND a.expense_date < $3
-        GROUP BY c.category_id, c.category_name, b.project_category_budget
+        GROUP BY b.category_id, b.category_name, COALESCE(c.project_category_budget, 0)
         ORDER BY budget desc, category_name
       `,
       values: [id, (start_date ? start_date : '1900-01-01'), (end_date ? end_date : '2100-01-01')]

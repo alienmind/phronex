@@ -190,6 +190,7 @@ export async function updateProjectAction(
  */
 export async function updateExpenseAction(expenseId: string, data: Partial<ProjectExpense>) {
   try {
+    console.log("UPDATE EXPENSE", expenseId, JSON.stringify(data))
     const updatedExpense = await updateExpense(expenseId, data);
     return { success: true, expense: updatedExpense };
   } catch (error) {
