@@ -30,7 +30,7 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
 
-  const [errorMessage, formAction, isPending] = useActionState(
+  const [errorMessage, formAction, _isPending] = useActionState(
     authenticate,
     undefined,
   );

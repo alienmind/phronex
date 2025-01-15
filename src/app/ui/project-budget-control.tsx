@@ -9,7 +9,6 @@ import {
   fetchProjectBudgetAction, 
   updateBudgetAction,
   fetchCategoriesAction,
-  fetchProjectReportAction,
   fetchProjectByIdAction,
 } from "@/app/lib/actions";
 import { 
@@ -18,7 +17,6 @@ import {
 import { formatCurrency } from "@/app/lib/miscutils";
 import { BudgetEditModal } from "./project-budget-modal";
 import { useToast } from "@/hooks/use-toast";
-import { VProjectBudgetReport } from "../lib/dataschemas";
 
 interface CategoryBudget {
   category_id: string;
@@ -57,7 +55,7 @@ export function ProjectBudgetControls({ projectId }: { projectId: string }) {
     return () => {
       Object.values(debouncedUpdates).forEach(timeout => clearTimeout(timeout));
     };
-  }, [projectId]);
+  }, [projectId, debouncedUpdates]);
 
   const updateBudget = async (categoryId: string, newValue: number) => {
     const result = await updateBudgetAction(

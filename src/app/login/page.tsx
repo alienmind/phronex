@@ -6,7 +6,6 @@
  */
 import { LoginForm } from '@/app/ui/login-form';
 import { Metadata } from 'next';
-import Image from 'next/image';
 
 /*
  * Page metadata - will be included as the metadata in the HTML

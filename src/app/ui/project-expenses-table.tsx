@@ -13,7 +13,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { updateExpenseAction, createExpenseAction, deleteExpenseAction } from '@/app/lib/actions';
@@ -83,7 +82,6 @@ const columns: ColumnDef<VProjectExpensesWithCategoryBudget>[] = [
   {
     id: "actions",
     cell: ({ row, table }) => {
-      const expense = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

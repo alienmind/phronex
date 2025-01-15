@@ -43,7 +43,6 @@ const columns: ColumnDef<VCategory>[] = [
   {
     id: "actions",
     cell: ({ row, table }) => {
-      const category = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -92,7 +91,9 @@ export default function CategoriesTable({ categories }: { categories: VCategory[
       throw new Error('Failed to create category');
     }
 
-    setCurrentCategories(prev => [...prev, result.category]);
+    setCurrentCategories(prev => 
+      result.category ? [...prev, result.category] : prev
+    );
   };
 
   const handleCategoryDelete = async (rowId: string) => {

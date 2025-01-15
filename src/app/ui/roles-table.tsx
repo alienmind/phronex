@@ -43,7 +43,6 @@ const columns: ColumnDef<VRole>[] = [
   {
     id: "actions",
     cell: ({ row, table }) => {
-      const role = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -94,7 +93,7 @@ export default function RolesTable({ roles }: { roles: VRole[] }) {
       throw new Error('Failed to create role');
     }
 
-    setCurrentRoles(prev => [...prev, result.role]);
+    setCurrentRoles(prev => [...prev, result.role!]);
   };
 
   const handleRoleDelete = async (rowId: string) => {

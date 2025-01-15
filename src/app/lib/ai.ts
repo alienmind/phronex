@@ -1,5 +1,10 @@
 "use server"
 
+/**
+ * AI module for budget suggestions using OpenAI's API
+ * @module ai
+ */
+
 import { Category } from "./dataschemas";
 import OpenAI from 'openai';
 
@@ -7,9 +12,18 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+/**
+ * Suggests budgets for project categories using AI
+ * 
+ * @param {Category[]} categories - Array of available cost categories
+ * @param {string} scope - Project scope description
+ * @param {string} duration - Project duration in days (e.g. "30 days")
+ * @returns {Promise<Array<{category_name: string, budget: number}>>} Array of budget suggestions
+ */
 export async function suggestBudgets(categories: Category[], scope: string, duration: string) {
   const PROMPT: string = `
-I will give you an IT project scope, a duration and a set of cost categories. You will try to infere a budget for such categories in euros.
+I will give you an IT project scope, a duration and a set of cost categories. You will try to infere a budget 
+for such categories in euros.
 Provide a structured response with the following information expressed in JSON:
 [
 {
@@ -18,8 +32,10 @@ Provide a structured response with the following information expressed in JSON:
 }
 ]
 
-I expect to get a list of categories with their budget. Use only categories from the given subset, if you find there's anything missing group the rest of the costs under the category Other.
-Provide only the structured output in as a JSON array with the exact format as the example. Do not add any contextual information.
+I expect to get a list of categories with their budget. Use only categories from the given subset, 
+if you find there's anything missing group the rest of the costs under the category Other.
+Provide only the structured output in as a JSON array with the exact format as the example. 
+Do not add any contextual information.
 
 Categories: ${categories.map(cat => cat.category_name).join(", ")}
 Scope: ${scope}
@@ -39,8 +55,10 @@ Duration: ${duration}
     if (!response) return [];
 
     let suggestions = JSON.parse(response);
-    if (suggestions.budget) // Sometimes ignores the instruction
-        suggestions = suggestions.budget;
+    // Handle case where AI returns object with budget array instead of direct array
+    if (suggestions.budget) {
+      suggestions = suggestions.budget;
+    }
     console.log("AI suggested budgets:", suggestions);
     return suggestions.map((suggestion: any) => ({
       category_name: suggestion.category_name,

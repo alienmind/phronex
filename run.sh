@@ -4,7 +4,8 @@ if [ ! -f .secrets ]; then
   exit 1
 fi
 
-export PUBLIC_IP=`curl http://checkip.amazonaws.com`
+#export PUBLIC_IP=`curl http://checkip.amazonaws.com`
+export PUBLIC_IP=phronex.alienmind.eu
 
 echo "Detected public ip: $PUBLIC_IP"
 

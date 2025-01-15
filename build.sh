@@ -17,24 +17,8 @@ docker compose -f docker/docker-compose-prebuild.yml up -d
 # Set up .env for temporarily get access to the database
 ln -sf docker/.env.build .env
 docker compose -f docker/docker-compose-build.yml build
-
-# tag latest
-docker image tag phronex-web alienmind/phronex-web:latest
-
-# Publish in ECR?
-#aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/phronex-web
-#docker tag phronex-web 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/phronex-web:latest
-#docker push 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/phronex-web:latest
-#
-#aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/postgres
-#docker tag postgres:14-alpine 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/postgres:latest
-#docker push 211125352476.dkr.ecr.eu-central-1.amazonaws.com/alienmind/postgres:latest
-
-# Publish in Dockerhub
-docker image tag postgres:14-alpine alienmind/postgres:latest
-docker image tag phronex-web alienmind/phronex-web:latest
 docker login
-docker push alienmind/phronex-web:latest
+docker compose -f docker/docker-compose-build.yml push
 
 # Create the tarball for EC2
 tar -czvf prod-dist.tgz run.sh .secrets docker/docker-compose.yml docker/env.prod docker/fixenv.sh

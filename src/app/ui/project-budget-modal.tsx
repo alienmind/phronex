@@ -1,6 +1,9 @@
-/*
- * This client component is used to edit the budget for a category when clicking the project chart
+/**
+ * Client component for editing project category budgets
+ * Displays a modal dialog for adding new budget categories or editing existing ones
+ * @module project-budget-modal
  */
+
 "use client"
 
 import { useState, useEffect } from "react"
@@ -16,14 +19,22 @@ import {
 } from "@/components/ui/select"
 
 interface BudgetEditModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSubmit: (categoryId: string, amount: number) => void
-  categoryName: string
-  currentAmount: number
-  categoryId?: string
-  availableCategories?: Array<{id: string, name: string}>
-  showCategorySelect?: boolean
+  /** Controls modal visibility */
+  isOpen: boolean;
+  /** Callback when modal is closed */
+  onClose: () => void;
+  /** Callback when form is submitted with new values */
+  onSubmit: (categoryId: string, amount: number) => void;
+  /** Name of category being edited */
+  categoryName: string;
+  /** Current budget amount */
+  currentAmount: number;
+  /** ID of category being edited */
+  categoryId?: string;
+  /** List of available categories for selection */
+  availableCategories?: Array<{id: string, name: string}>;
+  /** Whether to show category selection dropdown */
+  showCategorySelect?: boolean;
 }
 
 export function BudgetEditModal({

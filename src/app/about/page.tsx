@@ -78,6 +78,7 @@ function AboutPage() {
           </p>
           <div className="flex gap-4">
             <Button><Link href="https://github.com/alienmind/phronex">Visit github</Link></Button>
+            <Button><Link href="/slides/slides.pdf">Slides (PDF)</Link></Button>
             {showSlides ? <SlidesIframe src="/slides/slides.html"/> : <Button onClick={() => setShowSlides(!showSlides)}>Slides</Button>}
           </div>
           <p className="text-lg text-center md:text-left max-w-2xl">
