@@ -95,7 +95,7 @@ function AboutPage() {
                 </DialogHeader>
                 <iframe 
                   src="/seed" 
-                  width={800} 
+                  width={600} 
                   height={600} 
                   className="font-mono p-4 overflow-auto rounded-md"
                 />

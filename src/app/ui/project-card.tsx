@@ -33,6 +33,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
   // Get background color based on spent ratio (matching project chart colors)
   const getBackgroundColor = (spent: number, budget: number) => {
     const ratio = ((budget?budget>0:false) ? spent / budget : 0);
+    if (budget === 0) return 'bg-[hsl(0_0%_0%/0.15)]'; // Neutral/default color for zero budget with zero spent
     if (ratio <= 0.3) return 'bg-[hsl(142_76%_36%/0.15)]';  // Vibrant green
     if (ratio <= 0.7) return 'bg-[hsl(35_92%_65%/0.15)]';   // Vibrant orange
     return 'bg-[hsl(0_85%_60%/0.15)]';                      // Vibrant red

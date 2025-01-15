@@ -10,7 +10,7 @@
  * @module dataaccess
  */
 import type { User, Project, ProjectExpense,
-              VProjectResources, VProjectWithProjectManager,
+              VProjectResource, VProjectWithProjectManager,
               VProjectExpensesWithCategoryBudget,
               VProjectBudgetReport,
               VPerson,
@@ -252,13 +252,13 @@ export async function fetchProjectExpensesAndBudget(
     const query = {
       text: `
         SELECT a.expense_id, a.expense_name, a.expense_date, a.expense_value,
-               c.category_id, c.category_name, b.project_category_budget, b.project_id,
+               b.category_id, b.category_name, COALESCE(c.project_category_budget, 0) as budget, a.project_id,
                a.expense_id || ' ' || a.expense_name || ' ' || a.expense_date || ' ' ||
-              a.expense_value || ' ' || c.category_name || ' ' || b.project_category_budget
+               a.expense_value || ' ' || b.category_name || ' ' || COALESCE(c.project_category_budget, 0)
                as all_columns
         FROM project_expense a
-        LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
-        LEFT OUTER JOIN category c ON b.category_id = c.category_id
+        LEFT OUTER JOIN category b ON a.category_id = b.category_id
+        LEFT OUTER JOIN project_budget c ON (a.project_id = c.project_id and a.category_id = c.category_id)
         WHERE a.project_id = $1
         AND a.expense_date > $2
         AND a.expense_date < $3
@@ -384,19 +384,29 @@ export async function deleteExpense(id: string) : Promise<ProjectExpense> {
 export async function fetchProjectBudgetReport(id: string, start_date?: Date, end_date?: Date) :
   Promise<VProjectBudgetReport[]> {
   try {
+    start_date = start_date || new Date('1900-01-01');
+    end_date = end_date || new Date('2100-01-01');
     const query = {
       text: `
-        SELECT c.category_id, c.category_name, b.project_category_budget as budget, sum(a.expense_value) as spent
-        FROM project_expense a
-        LEFT OUTER JOIN project_budget b ON (a.project_id = b.project_id and a.category_id = b.category_id)
-        LEFT OUTER JOIN category c ON b.category_id = c.category_id
-        WHERE a.project_id = $1
-        AND a.expense_date > $2
-        AND a.expense_date < $3
-        GROUP BY c.category_id, c.category_name, b.project_category_budget
+        SELECT P1.category_id,P1.category_name,coalesce(budget,0) as budget,coalesce(spent,0) as spent FROM (
+          SELECT a.category_id, a.category_name, COALESCE(c.project_category_budget, 0) as budget
+          FROM category a
+          LEFT OUTER JOIN project_budget c ON a.category_id = c.category_id
+          WHERE c.project_id = $1
+        ) P1
+        LEFT OUTER JOIN
+        ( SELECT a.category_id, a.category_name, sum(b.expense_value) as spent
+          FROM category a
+          LEFT OUTER JOIN project_expense b ON a.category_id = b.category_id
+          WHERE b.project_id = $1
+          AND b.expense_date > $2
+          AND b.expense_date < $3
+          GROUP BY a.category_id, a.category_name
+        ) P2
+        ON P1.category_id = P2.category_id
         ORDER BY budget desc, category_name
       `,
-      values: [id, (start_date ? start_date : '1900-01-01'), (end_date ? end_date : '2100-01-01')]
+      values: [id, start_date, end_date]
     };
     const result = await connectionPool.query(query);
     return result.rows;
@@ -413,9 +423,9 @@ export async function fetchProjectBudgetReport(id: string, start_date?: Date, en
  * This is the function to fetch the resources assigned to a project
  * @param id - the id of the project
  * @param {string} [role] - the role to filter by
- * @returns {Promise<VProjectResources[]>} - The resources
+ * @returns {Promise<VProjectResource[]>} - The resources
  */
-export async function fetchResourcesForProjectId(id: string, role?: string): Promise<VProjectResources[]> {
+export async function fetchResourcesForProjectId(id: string, role?: string): Promise<VProjectResource[]> {
   try {
     const query = {
       text: `
@@ -449,12 +459,12 @@ export async function fetchResourcesForProjectId(id: string, role?: string): Pro
  * 
  * @param {string} projectId - The id of the project
  * @param {string} personId - The id of the person
- * @param {Partial<VProjectResources>} data - The data to update
- * @returns {Promise<VProjectResources>} - The updated resource
+ * @param {Partial<VProjectResource>} data - The data to update
+ * @returns {Promise<VProjectResource>} - The updated resource
  */
 export async function updateProjectResource(
-  projectId: string, personId: string, data: Partial<VProjectResources>
-) : Promise<VProjectResources> {
+  projectId: string, personId: string, data: Partial<VProjectResource>
+) : Promise<VProjectResource> {
   try {
     let result;
 
@@ -511,10 +521,10 @@ export async function updateProjectResource(
 /**
  * This is the function to create a project resource
  * 
- * @param {Partial<VProjectResources>} data - The data to create
- * @returns {Promise<VProjectResources>} - The created resource
+ * @param {Partial<VProjectResource>} data - The data to create
+ * @returns {Promise<VProjectResource>} - The created resource
  */
-export async function createProjectResource(data: Partial<VProjectResources>) : Promise<VProjectResources> {
+export async function createProjectResource(data: Partial<VProjectResource>) : Promise<VProjectResource> {
   try {
     // First insert the role assignment
     await logQuery(`
@@ -556,9 +566,9 @@ export async function createProjectResource(data: Partial<VProjectResources>) : 
  * 
  * @param {string} projectId - The id of the project
  * @param {string} personId - The id of the person
- * @returns {Promise<VProjectResources>} - The deleted resource
+ * @returns {Promise<VProjectResource>} - The deleted resource
  */
-export async function deleteProjectResource(projectId: string, personId: string) : Promise<VProjectResources> {
+export async function deleteProjectResource(projectId: string, personId: string) : Promise<VProjectResource> {
   try {
     const result = await logQuery(`
       DELETE FROM project_person_role
@@ -718,7 +728,7 @@ export async function deletePerson(personId: string) : Promise<VPerson> {
 export async function fetchRoles() : Promise<VRole[]> {
   try {
     const query = `
-      SELECT role_id, role_description
+      SELECT role_id, role_description, role_description as all_columns
       FROM role
       ORDER BY role_description
     `;

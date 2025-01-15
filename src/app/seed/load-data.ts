@@ -190,85 +190,122 @@ export const roles : Role[] = [
 export const categories : Category[] = [
   {
     category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    category_name: 'Enabling services'
+    category_name: 'Software Licenses'
   },
   {
     category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    category_name: 'Indirect costs'
+    category_name: 'Hardware'
   },
   {
     category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    category_name: 'Human resources'
-  },
-];
-
-export const projectExpenses : ProjectExpense[] = [
-  {
-    expense_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    expense_name: 'Cloud consumption',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    expense_value: 5000.00,
-    expense_date: new Date("2024-10-05 10:00:00")
+    category_name: 'Cloud Services'
   },
   {
-    expense_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    expense_name: 'Software Licenses',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    expense_value: 10000.00,
-    expense_date: new Date("2024-10-01 10:00:00")
-  },
-  {
-    expense_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    expense_name: 'HR Internal IT',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    expense_value: 15000.00,
-    expense_date: new Date("2024-09-01 10:00:00")
-  },
-  {
-    expense_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    expense_name: 'HR External IT',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    expense_value: 7500.00,
-    expense_date: new Date("2024-12-01 10:00:00")
+    category_id: '8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e',
+    category_name: 'Training'
   }
 ];
 
 export const projectBudget : ProjectBudget[] = [
+  // Phoenix - Legacy Modernization (120% utilization)
   {
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 50000.00,
+    project_id: projects[0].project_id,
+    category_id: categories[0].category_id,
+    project_category_budget: 80000.00,
   },
   {
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 50000.00,
+    project_id: projects[0].project_id,
+    category_id: categories[2].category_id,
+    project_category_budget: 120000.00,
+  },
+  
+  // Stellar Gateway - API Implementation (85% utilization)
+  {
+    project_id: projects[1].project_id,
+    category_id: categories[1].category_id,
+    project_category_budget: 70000.00,
   },
   {
-    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
+    project_id: projects[1].project_id,
+    category_id: categories[2].category_id,
+    project_category_budget: 90000.00,
+  },
+
+  // Super Lab PRO (60% utilization)
+  {
+    project_id: projects[2].project_id,
+    category_id: categories[0].category_id,
+    project_category_budget: 60000.00,
+  },
+  {
+    project_id: projects[2].project_id,
+    category_id: categories[3].category_id,
+    project_category_budget: 40000.00,
+  },
+
+  // Data Factory (25% utilization)
+  {
+    project_id: projects[3].project_id,
+    category_id: categories[1].category_id,
     project_category_budget: 100000.00,
   },
   {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    category_id: '6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c',
-    project_category_budget: 150000.00,
+    project_id: projects[3].project_id,
+    category_id: categories[2].category_id,
+    project_category_budget: 80000.00,
   },
-  {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    category_id: '7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d',
-    project_category_budget: 75000.00,
-  },
-  {
-    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
-    category_id: '5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b',
-    project_category_budget: 75000.00,
-  }
 
+  // Super Portal (75% utilization)
+  {
+    project_id: projects[4].project_id,
+    category_id: categories[0].category_id,
+    project_category_budget: 50000.00,
+  },
+  {
+    project_id: projects[4].project_id,
+    category_id: categories[2].category_id,
+    project_category_budget: 70000.00,
+  },
+  {
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[0].category_id,
+    project_category_budget: 50000.00,
+  },
+  {
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[2].category_id,
+    project_category_budget: 75000.00,
+  },
+  {
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[2].category_id,
+    project_category_budget: 40000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: categories[1].category_id,
+    project_category_budget: 60000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: categories[2].category_id,
+    project_category_budget: 40000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: categories[0].category_id,
+    project_category_budget: 45000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: categories[1].category_id,
+    project_category_budget: 80000.00,
+  },
+  {
+    project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    category_id: categories[2].category_id,
+    project_category_budget: 65000.00,
+  }
 ];
 
 
@@ -324,4 +361,210 @@ export const projectPersonRoles : ProjectPersonRole[] = [
     person_id: persons[9].person_id,
     role_id: roles[1].role_id
   }
+];
+
+
+export const projectExpenses: ProjectExpense[] = [
+  // Phoenix - Legacy Modernization (120% over budget)
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[0].project_id,
+    category_id: categories[0].category_id,
+    expense_name: 'Enterprise Software Licenses',
+    expense_value: 55000.00,
+    expense_date: new Date("2024-02-15")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[0].project_id,
+    category_id: categories[0].category_id,
+    expense_name: 'Legacy System Migration Tools',
+    expense_value: 42000.00,
+    expense_date: new Date("2024-03-01")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[0].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'Cloud Infrastructure Setup',
+    expense_value: 80000.00,
+    expense_date: new Date("2024-02-01")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[0].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'Hybrid Cloud Services',
+    expense_value: 65000.00,
+    expense_date: new Date("2024-03-15")
+  },
+
+  // Stellar Gateway - API Implementation (85% of budget)
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[1].project_id,
+    category_id: categories[1].category_id,
+    expense_name: 'API Gateway Hardware',
+    expense_value: 45000.00,
+    expense_date: new Date("2024-04-15")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[1].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'Load Balancer Infrastructure',
+    expense_value: 38000.00,
+    expense_date: new Date("2024-04-01")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[1].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'API Management Platform',
+    expense_value: 42000.00,
+    expense_date: new Date("2024-05-01")
+  },
+
+  // Super Lab PRO (60% of budget)
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[2].project_id,
+    category_id: categories[0].category_id,
+    expense_name: 'Lab Management Software',
+    expense_value: 27000.00,
+    expense_date: new Date("2024-07-15")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[2].project_id,
+    category_id: categories[3].category_id,
+    expense_name: 'Staff Training Program',
+    expense_value: 18000.00,
+    expense_date: new Date("2024-08-01")
+  },
+
+  // Data Factory (25% of budget)
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[3].project_id,
+    category_id: categories[1].category_id,
+    expense_name: 'Data Processing Servers',
+    expense_value: 20000.00,
+    expense_date: new Date("2024-10-15")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[3].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'Data Pipeline Services',
+    expense_value: 16250.00,
+    expense_date: new Date("2024-11-01")
+  },
+
+  // Super Portal (75% of budget)
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[4].project_id,
+    category_id: categories[0].category_id,
+    expense_name: 'Portal Software License',
+    expense_value: 32000.00,
+    expense_date: new Date("2024-01-15")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[4].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'CDN Services',
+    expense_value: 28000.00,
+    expense_date: new Date("2024-02-01")
+  },
+  {
+    expense_id: crypto.randomUUID(),
+    project_id: projects[4].project_id,
+    category_id: categories[2].category_id,
+    expense_name: 'Authentication Services',
+    expense_value: 25000.00,
+    expense_date: new Date("2024-03-01")
+  },
+  {
+    expense_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[0].category_id,
+    expense_name: 'Visual Studio Enterprise Licenses',
+    expense_value: 35000.00,
+    expense_date: new Date("2024-02-15")
+  },
+  {
+    expense_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[0].category_id,
+    expense_name: 'JetBrains Suite Annual Subscription',
+    expense_value: 25000.00,
+    expense_date: new Date("2024-03-01")
+  },
+  {
+    expense_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[2].category_id,
+    expense_name: 'AWS Reserved Instances',
+    expense_value: 50000.00,
+    expense_date: new Date("2024-02-01")
+  },
+  {
+    expense_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
+    project_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    category_id: categories[2].category_id,
+    expense_name: 'Azure Cloud Services',
+    expense_value: 40000.00,
+    expense_date: new Date("2024-03-15")
+  },
+  {
+    expense_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    category_id: categories[1].category_id,
+    expense_name: 'Development Workstations',
+    expense_value: 45000.00,
+    expense_date: new Date("2024-04-15")
+  },
+  {
+    expense_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    project_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
+    category_id: categories[2].category_id,
+    expense_name: 'MongoDB Atlas Enterprise',
+    expense_value: 38000.00,
+    expense_date: new Date("2024-04-01")
+  },
+  {
+    expense_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    category_id: categories[0].category_id,
+    expense_name: 'Laboratory Management Software License',
+    expense_value: 27000.00,
+    expense_date: new Date("2024-07-15")
+  },
+  {
+    expense_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
+    project_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
+    category_id: categories[3].category_id,
+    expense_name: 'Lab Safety Training Program',
+    expense_value: 18000.00,
+    expense_date: new Date("2024-08-01")
+  },
+  {
+    expense_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
+    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
+    category_id: categories[1].category_id,
+    expense_name: 'Data Processing Servers',
+    expense_value: 20000.00,
+    expense_date: new Date("2024-10-15")
+  },
+  {
+    expense_id: '8f9a0b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c',
+    project_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
+    category_id: categories[2].category_id,
+    expense_name: 'Data Pipeline Infrastructure',
+    expense_value: 16250.00,
+    expense_date: new Date("2024-11-01")
+  }
+
 ];

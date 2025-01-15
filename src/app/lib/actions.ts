@@ -22,7 +22,7 @@ import {
   fetchCategories, fetchProjectById 
 } from './dataaccess';
 import { 
-  Project, ProjectExpense, VProjectResources, 
+  Project, ProjectExpense, VProjectResource, 
   VPerson, VRole, VCategory
 } from './dataschemas';
 
@@ -190,6 +190,7 @@ export async function updateProjectAction(
  */
 export async function updateExpenseAction(expenseId: string, data: Partial<ProjectExpense>) {
   try {
+    console.log("UPDATE EXPENSE", expenseId, JSON.stringify(data))
     const updatedExpense = await updateExpense(expenseId, data);
     return { success: true, expense: updatedExpense };
   } catch (error) {
@@ -232,13 +233,13 @@ export async function deleteExpenseAction(expenseId: string) {
  * Updates a project resource assignment
  * @param {string} projectId - Project identifier
  * @param {string} personId - Person identifier
- * @param {Partial<VProjectResources>} data - Updated resource data
- * @returns {Promise<{success: boolean, resource?: VProjectResources, error?: string}>}
+ * @param {Partial<VProjectResource>} data - Updated resource data
+ * @returns {Promise<{success: boolean, resource?: VProjectResource, error?: string}>}
  */
 export async function updateProjectResourceAction(
   projectId: string, 
   personId: string, 
-  data: Partial<VProjectResources>
+  data: Partial<VProjectResource>
 ) {
   try {
     const updatedResource = await updateProjectResource(projectId, personId, data);
@@ -251,10 +252,10 @@ export async function updateProjectResourceAction(
 
 /**
  * Creates a new project resource assignment
- * @param {Partial<VProjectResources>} data - Resource assignment data
- * @returns {Promise<{success: boolean, resource?: VProjectResources, error?: string}>}
+ * @param {Partial<VProjectResource>} data - Resource assignment data
+ * @returns {Promise<{success: boolean, resource?: VProjectResource, error?: string}>}
  */
-export async function createProjectResourceAction(data: Partial<VProjectResources>) {
+export async function createProjectResourceAction(data: Partial<VProjectResource>) {
   try {
     const newResource = await createProjectResource(data);
     return { success: true, resource: newResource };
