@@ -718,7 +718,7 @@ export async function deletePerson(personId: string) : Promise<VPerson> {
 export async function fetchRoles() : Promise<VRole[]> {
   try {
     const query = `
-      SELECT role_id, role_description
+      SELECT role_id, role_description, role_description as all_columns
       FROM role
       ORDER BY role_description
     `;
