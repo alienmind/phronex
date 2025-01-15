@@ -9,7 +9,6 @@ import { AppNavbar } from '@/app/ui/navbar';
 import { ThemeProvider } from "@/app/ui/theme-provider"
 import { Separator } from "@/components/ui/separator"
 import { Metadata } from 'next';
-import { CreateProjectModal } from "../ui/create-project-modal";
 
 // Page metadata - will be included as the metadata in the HTML
 // Can also be used for rendering titles in subsequent pages

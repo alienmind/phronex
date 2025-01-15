@@ -1,6 +1,10 @@
+/*
+ * This is the toast hook
+ * It allows to display a toast message
+ * Coming from shadcn/ui
+ */
 "use client"
 
-// Inspired by react-hot-toast library
 import * as React from "react"
 
 import type {
@@ -18,7 +22,7 @@ type ToasterToast = ToastProps & {
   action?: ToastActionElement
 }
 
-const actionTypes = {
+const actionTypes = { // eslint-disable-line @typescript-eslint/no-unused-vars
   ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
   DISMISS_TOAST: "DISMISS_TOAST",

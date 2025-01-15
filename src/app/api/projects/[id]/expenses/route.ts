@@ -2,9 +2,11 @@ import { fetchProjectExpensesAndBudget, createExpense } from '@/app/lib/dataacce
 import { NextRequest, NextResponse } from 'next/server';
 
 /*
- * This is the API route for the expenses
+ * This is the API route for the expenses of a project
  * It is required purely for dynamically refreshing the expenses list in the project details page
  * Could be replaced by a server action in the future
+ * 
+ * @returns {Promise<VExpense[]>} - The expenses
  */
 export async function GET(
   request: NextRequest,
@@ -28,10 +30,16 @@ export async function GET(
     );
     return NextResponse.json(expenses);
   } catch (error) {
+    console.error('API Error:', error);
     return NextResponse.json({ error: 'Failed to fetch expenses' }, { status: 500 });
   }
 }
 
+/**
+ * This is the API route for creating an expense for a project
+ * 
+ * @returns {Promise<VExpense>} - The created expense
+ */
 export async function POST(
   request: Request
 ) {
@@ -40,6 +48,7 @@ export async function POST(
     const newExpense = await createExpense(data);
     return NextResponse.json({ expense: newExpense });
   } catch (error) {
+    console.error('API Error:', error);
     return NextResponse.json({ error: 'Failed to create expense' }, { status: 500 });
   }
 } 

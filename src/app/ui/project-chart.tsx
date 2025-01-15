@@ -87,7 +87,7 @@ export function ProjectChart({ projectId }: { projectId: string }) {
         setMaxDomain(roundedMax)
         
         // Remove max_value before setting chart data
-        setChartData(result.data.map(({ max_value, ...item }) => item))
+        setChartData(result.data.map(({ max_value, ...item }) => item)) // eslint-disable-line @typescript-eslint/no-unused-vars
       }
     }
 

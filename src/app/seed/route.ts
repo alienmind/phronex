@@ -23,30 +23,9 @@ import {
   Category,
   ProjectExpense,
   Person,
-  Project,
   ProjectBudget,
   ProjectPersonRole,
 } from '@/app/lib/dataschemas';
-
-// Drop all tables to start fresh
-async function dropTables() {
-  const dropQueries = [
-    'DROP TABLE IF EXISTS users CASCADE',
-    'DROP TABLE IF EXISTS role CASCADE',
-    'DROP TABLE IF EXISTS category CASCADE',
-    'DROP TABLE IF EXISTS project_expense CASCADE',
-    'DROP TABLE IF EXISTS person CASCADE',
-    'DROP TABLE IF EXISTS project CASCADE',
-    'DROP TABLE IF EXISTS project_budget CASCADE',
-    'DROP TABLE IF EXISTS project_person_role CASCADE',
-    'DROP TABLE IF EXISTS role CASCADE',
-  ];
-
-  for (const query of dropQueries) {
-    console.log('Executing query:', query);
-    await connectionPool.query(query);
-  }
-}
 
 // Seed the users table
 // For this we will need to encrypt the password in the database, so we deploy
@@ -400,7 +379,8 @@ async function seedProjects() {
   output.createTable = createTableQuery;
   await connectionPool.query(createTableQuery);
 
-  const insertedProjects = await Promise.all(
+  // Seed the projects
+  await Promise.all(
     projects.map(async (project) => {
       const insertQuery = {
         text: `INSERT INTO project (project_id, project_creation_date, project_name, project_start_date, project_end_date, project_scope, project_manager_id)

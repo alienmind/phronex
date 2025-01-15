@@ -7,7 +7,6 @@
  */
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { DateRangePicker } from './date-range-picker';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';

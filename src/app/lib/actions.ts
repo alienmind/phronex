@@ -22,8 +22,8 @@ import {
   fetchCategories, fetchProjectById 
 } from './dataaccess';
 import { 
-  Project, ProjectExpense, VProjectExpensesWithCategoryBudget, VProjectResources, 
-  VPerson, Person, VRole, Role, VCategory, Category 
+  Project, ProjectExpense, VProjectResources, 
+  VPerson, VRole, VCategory
 } from './dataschemas';
 
 /**
@@ -146,15 +146,14 @@ export async function createProjectAction(prevState: CreateProjectState | undefi
 
 /**
  * Updates an existing project
- * @param {any} prevState - Previous form state
+ * @param {unknown} prevState - Previous form state
  * @param {FormData} formData - Updated project data
  * @returns {Promise<{error?: string}>} Error message if update fails
  */
 export async function updateProjectAction(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ) {
-
   const data = {
     project_id: formData.get('project_id'),
     project_name: formData.get('project_name'),
@@ -194,6 +193,7 @@ export async function updateExpenseAction(expenseId: string, data: Partial<Proje
     const updatedExpense = await updateExpense(expenseId, data);
     return { success: true, expense: updatedExpense };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to update expense' };
   }
 }
@@ -208,6 +208,7 @@ export async function createExpenseAction(data: Partial<ProjectExpense>) {
     const newExpense = await createExpense(data);
     return { success: true, expense: newExpense };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to create expense' };
   }
 }
@@ -222,6 +223,7 @@ export async function deleteExpenseAction(expenseId: string) {
     await deleteExpense(expenseId);
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to delete expense' };
   }
 }
@@ -242,6 +244,7 @@ export async function updateProjectResourceAction(
     const updatedResource = await updateProjectResource(projectId, personId, data);
     return { success: true, resource: updatedResource };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to update project resource' };
   }
 }
@@ -256,6 +259,7 @@ export async function createProjectResourceAction(data: Partial<VProjectResource
     const newResource = await createProjectResource(data);
     return { success: true, resource: newResource };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to create project resource' };
   }
 }
@@ -271,6 +275,7 @@ export async function deleteProjectResourceAction(projectId: string, personId: s
     await deleteProjectResource(projectId, personId);
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to delete project resource' };
   }
 }
@@ -286,6 +291,7 @@ export async function updatePersonAction(personId: string, data: Partial<VPerson
     const updatedPerson = await updatePerson(personId, data);
     return { success: true, person: updatedPerson };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to update person' };
   }
 }
@@ -300,6 +306,7 @@ export async function createPersonAction(data: Partial<VPerson>) {
     const newPerson = await createPerson(data);
     return { success: true, person: newPerson };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to create person' };
   }
 }
@@ -314,6 +321,7 @@ export async function deletePersonAction(personId: string) {
     await deletePerson(personId);
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to delete person' };
   }
 }
@@ -329,6 +337,7 @@ export async function updateRoleAction(roleId: string, data: Partial<VRole>) {
     const updatedRole = await updateRole(roleId, data);
     return { success: true, role: updatedRole };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to update role' };
   }
 }
@@ -343,6 +352,7 @@ export async function createRoleAction(data: Partial<VRole>) {
     const newRole = await createRole(data);
     return { success: true, role: newRole };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to create role' };
   }
 }
@@ -357,6 +367,7 @@ export async function deleteRoleAction(roleId: string) {
     await deleteRole(roleId);
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to delete role' };
   }
 }
@@ -372,6 +383,7 @@ export async function updateCategoryAction(categoryId: string, data: Partial<VCa
     const updatedCategory = await updateCategory(categoryId, data);
     return { success: true, category: updatedCategory };
   } catch (error) {
+    console.log('Action error:', error);
     return { success: false, error: 'Failed to update category' };
   }
 }
@@ -386,6 +398,7 @@ export async function createCategoryAction(data: Partial<VCategory>) {
     const newCategory = await createCategory(data);
     return { success: true, category: newCategory };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to create category' };
   }
 }
@@ -400,6 +413,7 @@ export async function deleteCategoryAction(categoryId: string) {
     await deleteCategory(categoryId);
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to delete category' };
   }
 }
@@ -418,6 +432,7 @@ export async function fetchProjectReportAction(projectId: string) {
     );
     return { success: true, data: budgetReport };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to fetch project budget' };
   }
 }
@@ -439,6 +454,7 @@ export async function updateBudgetAction(
     await updateProjectCategoryBudget(projectId, categoryId, budget);
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to update category budget' };
   }
 }
@@ -454,6 +470,7 @@ export async function deleteProjectAction(id: string) {
     revalidatePath('/main');
     return { success: true };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to delete project' };
   }
 }
@@ -469,6 +486,7 @@ export async function fetchProjectsAction(limit: number, search?: string) {
     const projects = await fetchTopProjects(limit, search);
     return { success: true, data: projects };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to fetch projects' };
   }
 }
@@ -483,6 +501,7 @@ export async function fetchProjectBudgetAction(projectId: string) {
     const budgets = await fetchProjectBudgetReport(projectId);
     return { success: true, data: budgets };
   } catch (error) {
+    console.error('Action error:', error);
     return { success: false, error: 'Failed to fetch project budget sliders' };
   }
 }

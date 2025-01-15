@@ -3,7 +3,6 @@
  * It is a requirement by the next-auth framework component
  * 
  * It is used by the actions.ts file to authenticate a user
- * 
  * It is also used by the client components to check if the user is authenticated
  * 
  * FIXME : The authentication flow is not complete and there's a temporary workaround relying in a hardcoded user
@@ -28,8 +27,8 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
           .safeParse(credentials);
 
         if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
           // FIXME - added a workaround mock login, somehow we cannot fetch the user from the database
+          //const { email, password } = parsedCredentials.data;
           //const user = await getUser(email, password);
           const user = {
             id: '1',
@@ -51,16 +50,15 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   },
   secret: process.env.AUTH_SECRET,
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token, user }) { // eslint-disable-line @typescript-eslint/no-unused-vars
       session.user = token.user as User
       console.log('session: ', JSON.stringify(session));
       return session;
     },
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user, trigger, session }) { // eslint-disable-line @typescript-eslint/no-unused-vars
       if (user) {
         token.user = user;
       }
-      console.log('token: ', JSON.stringify(token));
       return token;
     },
   },

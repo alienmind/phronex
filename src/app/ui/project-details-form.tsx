@@ -25,7 +25,6 @@ import { DatePicker } from "@/app/ui/date-picker";
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/hooks/use-toast"
 import { updateProjectAction, deleteProjectAction } from '@/app/lib/actions';
-import Link from 'next/link';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { useRouter } from "next/navigation"
 
@@ -35,7 +34,7 @@ import { useRouter } from "next/navigation"
  */
 export function ProjectDetailsForm({ project }: { project: Project }) {
   const [persons, setPersons] = useState<Person[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   const { toast } = useToast()
   const form = useForm({
     defaultValues: {
@@ -59,7 +58,7 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
     fetchPersons();
   }, []);
 
-  const [errorMessage, formAction, isPending] = useActionState(
+  const [errorMessage, formAction, _isPending] = useActionState(
     updateProjectAction,
     undefined,
   );
@@ -78,7 +77,7 @@ export function ProjectDetailsForm({ project }: { project: Project }) {
         <ToastAction altText="Back">Back</ToastAction>
       ),
     })
-  }, [errorMessage]);
+  }, [errorMessage, toast]);
 
   const handleDelete = async () => {
     const result = await deleteProjectAction(project.project_id)

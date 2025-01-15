@@ -12,8 +12,6 @@ import { notFound } from 'next/navigation';
 import ProjectResourcesTable from '@/app/ui/project-resources-table';
 import ProjectExpensesTable from '@/app/ui/project-expenses-table';
 import { ProjectChart } from '@/app/ui/project-chart'
-import { ProjectBudgetControls } from "@/app/ui/project-budget-control";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type Params = Promise<{ id: string, expenses_start_date: string, expenses_end_date: string }>
 

@@ -1,4 +1,4 @@
-/*
+/**
  * This is a generic data table (client) component
  * It is used to display generically table of data
  * It is based on the tanstack/react-table library
@@ -8,6 +8,8 @@
  * - Filtering
  * - Pagination
  * - Editable cells with backend submission
+ * - Create new row
+ * - Delete row
  */
 "use client"
 
@@ -22,7 +24,6 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  RowData,
 } from "@tanstack/react-table"
 
 import {
@@ -54,7 +55,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { SelectProps } from "@radix-ui/react-select";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -89,9 +89,9 @@ type CustomColumnMeta = {
   };
 };
 
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<TData extends RowData, TValue> extends CustomColumnMeta {}
-}
+//declare module '@tanstack/react-table' {
+//  interface ColumnMeta<TData extends RowData, TValue> extends CustomColumnMeta {}
+//}
 
 type SelectOption = {
   id: string;
@@ -166,7 +166,7 @@ export function DataTable<TData, TValue>({
         }
       });
     }
-  }, [showCreateDialog]);
+  }, [showCreateDialog, columns]);
 
   const handleDelete = async () => {
     if (!rowToDelete || !onRowDelete) return;
@@ -178,6 +178,7 @@ export function DataTable<TData, TValue>({
         description: "Record deleted successfully",
       });
     } catch (error) {
+      console.error('Error deleting row:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -216,6 +217,7 @@ export function DataTable<TData, TValue>({
             description: "Data updated successfully",
           });
         } catch (error) {
+          console.error('Error updating data:', error);
           toast({
             variant: "destructive",
             title: "Error",
@@ -357,6 +359,7 @@ export function DataTable<TData, TValue>({
         description: "New record created successfully",
       })
     } catch (error) {
+      console.error('Error creating new row:', error);
       toast({
         title: "Error",
         description: "Failed to create new record",
@@ -397,7 +400,7 @@ export function DataTable<TData, TValue>({
                 {columns.map((column) => {
                   if (column.id === "actions" || 
                       ("accessorKey" in column && column.accessorKey === "all_columns") ||
-                      !column.meta || !column.meta.editable) {
+                      !("meta" in column) || !column.meta || !("editable" in column.meta)) {
                     return null
                   }
                   const columnId = column.id || ("accessorKey" in column ? String(column.accessorKey) : "")
@@ -409,7 +412,7 @@ export function DataTable<TData, TValue>({
                       <Label className="text-right">
                         {(typeof column.header === 'string' ? column.header : columnName.charAt(0).toUpperCase() + columnName.slice(1).replace(/_/g, ' '))}
                       </Label>
-                      {column.meta?.selectableOptions ? (
+                      {column.meta && "selectableOptions" in column.meta && column.meta.selectableOptions ? (
                         <Select
                           value={String(newRowData[columnId as keyof TData] || "")}
                           onValueChange={(value) => {

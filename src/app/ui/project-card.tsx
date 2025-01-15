@@ -10,25 +10,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button";
 import { formatDateToLocal, formatCurrency } from '@/app/lib/miscutils';
 import Link from 'next/link';
-import { Project, VProjectCard } from '../lib/dataschemas';
+import { VProjectCard } from '../lib/dataschemas';
 
 /*
  * This is the project card (client) component

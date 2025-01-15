@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Plus } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import { VProjectResources } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
@@ -118,7 +118,7 @@ export default function ProjectResourcesTable({
       throw new Error('Failed to create resource');
     }
 
-    setCurrentResources(prev => [...prev, result.resource]);
+    setCurrentResources(prev => [...prev, result.resource as VProjectResources]);
   };
 
   const handleResourceDelete = async (rowId: string) => {

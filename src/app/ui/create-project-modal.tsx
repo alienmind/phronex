@@ -17,14 +17,12 @@ import {
   DialogHeader,
   DialogFooter,
   DialogTitle,
-  DialogTrigger,
   DialogClose
 } from "@/components/ui/dialog"
 import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl
 } from "@/components/ui/form"
 
@@ -36,12 +34,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { Calendar as CalendarIcon } from "lucide-react"
 import { Plus } from "lucide-react"
 
-import { useForm, FormProvider } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
-import { createProjectAction, CreateProjectState } from '@/app/lib/actions';
+import { createProjectAction } from '@/app/lib/actions';
 import { CreateProjectFormSchema } from '@/app/lib/zodschemas';
 import { useToast } from "@/hooks/use-toast"
 import { z } from 'zod';
@@ -67,7 +64,7 @@ export function CreateProjectModal() {
   });
 
   const { toast } = useToast()
-  const [errorMessage, formAction, isPending] = useActionState(
+  const [errorMessage, formAction, _isPending] = useActionState(
     createProjectAction,
     undefined,
   );
@@ -99,7 +96,7 @@ export function CreateProjectModal() {
         <ToastAction altText="Back">Back</ToastAction>
       ),
     })
-  }, [errorMessage]);
+  }, [errorMessage, toast]);
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -161,7 +158,7 @@ export function CreateProjectModal() {
               <div className="grid gap-4 py-4">
               <FormField
                 name="project_manager_id"
-                render={({ field }) => (
+                render={({ field }) => ( // eslint-disable-line @typescript-eslint/no-unused-vars
                   <FormItem>
                     <Select name="project_manager_id" required>
                       <FormControl>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Plus } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { VPerson } from "@/app/lib/dataschemas"
 import { Button } from "@/components/ui/button"
 import { DataTable } from "@/app/ui/data-table"
@@ -67,7 +67,6 @@ const columns: ColumnDef<VPerson>[] = [
   {
     id: "actions",
     cell: ({ row, table }) => {
-      const person = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -116,7 +115,7 @@ export default function PersonsTable({ persons }: { persons: VPerson[] }) {
       throw new Error('Failed to create person');
     }
 
-    setCurrentPersons(prev => [...prev, result.person]);
+    setCurrentPersons(prev => [...prev, result.person as VPerson]);
   };
 
   const handlePersonDelete = async (rowId: string) => {
