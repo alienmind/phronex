@@ -26,8 +26,8 @@ export const projects : Project[] = [
     project_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
     project_name: "Phoenix",
     project_scope: "Legacy system modernization and cloud migration",
-    project_start_date: new Date("2024-01-01"),
-    project_end_date: new Date("2024-06-30"),
+    project_start_date: new Date("2025-01-01"),
+    project_end_date: new Date("2025-06-30"),
     project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
@@ -35,7 +35,7 @@ export const projects : Project[] = [
     project_name: "Stellar Gateway",
     project_scope: "Enterprise API gateway implementation",
     project_start_date: new Date("2024-04-01"),
-    project_end_date: new Date("2024-09-30"),
+    project_end_date: new Date("2025-09-30"),
     project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
@@ -43,7 +43,7 @@ export const projects : Project[] = [
     project_name: "Super Lab PRO",
     project_scope: "Advanced laboratory management system",
     project_start_date: new Date("2024-07-01"),
-    project_end_date: new Date("2024-12-31"),
+    project_end_date: new Date("2025-12-31"),
     project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
@@ -66,8 +66,8 @@ export const projects : Project[] = [
     project_id: '8f9a0b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c',
     project_name: "Quantum",
     project_scope: "High-performance computing infrastructure",
-    project_start_date: new Date("2024-03-01"),
-    project_end_date: new Date("2024-08-31"),
+    project_start_date: new Date("2025-03-01"),
+    project_end_date: new Date("2025-08-31"),
     project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
@@ -75,7 +75,7 @@ export const projects : Project[] = [
     project_name: "Super Cockpit",
     project_scope: "Executive dashboard and analytics suite",
     project_start_date: new Date("2024-06-01"),
-    project_end_date: new Date("2024-11-30"),
+    project_end_date: new Date("2025-11-30"),
     project_manager_id: '8f3d8f90-e98b-4b3c-8d55-43c5d5e6f7a8'
   },
   {
@@ -372,7 +372,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'Enterprise Software Licenses',
     expense_value: 55000.00,
-    expense_date: new Date("2024-02-15")
+    expense_date: new Date("2024-10-15")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -380,7 +380,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'Legacy System Migration Tools',
     expense_value: 42000.00,
-    expense_date: new Date("2024-03-01")
+    expense_date: new Date("2024-11-01")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -388,7 +388,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'Cloud Infrastructure Setup',
     expense_value: 80000.00,
-    expense_date: new Date("2024-02-01")
+    expense_date: new Date("2024-12-01")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -396,7 +396,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'Hybrid Cloud Services',
     expense_value: 65000.00,
-    expense_date: new Date("2024-03-15")
+    expense_date: new Date("2024-09-15")
   },
 
   // Stellar Gateway - API Implementation (85% of budget)
@@ -406,7 +406,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[1].category_id,
     expense_name: 'API Gateway Hardware',
     expense_value: 45000.00,
-    expense_date: new Date("2024-04-15")
+    expense_date: new Date("2024-07-15")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -414,7 +414,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'Load Balancer Infrastructure',
     expense_value: 38000.00,
-    expense_date: new Date("2024-04-01")
+    expense_date: new Date("2024-08-01")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -422,7 +422,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'API Management Platform',
     expense_value: 42000.00,
-    expense_date: new Date("2024-05-01")
+    expense_date: new Date("2024-09-01")
   },
 
   // Super Lab PRO (60% of budget)
@@ -432,7 +432,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'Lab Management Software',
     expense_value: 27000.00,
-    expense_date: new Date("2024-07-15")
+    expense_date: new Date("2024-08-15")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -440,7 +440,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[3].category_id,
     expense_name: 'Staff Training Program',
     expense_value: 18000.00,
-    expense_date: new Date("2024-08-01")
+    expense_date: new Date("2024-09-01")
   },
 
   // Data Factory (25% of budget)
@@ -468,7 +468,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'Portal Software License',
     expense_value: 32000.00,
-    expense_date: new Date("2024-01-15")
+    expense_date: new Date("2024-12-15")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -476,7 +476,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'CDN Services',
     expense_value: 28000.00,
-    expense_date: new Date("2024-02-01")
+    expense_date: new Date("2024-09-01")
   },
   {
     expense_id: crypto.randomUUID(),
@@ -484,7 +484,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'Authentication Services',
     expense_value: 25000.00,
-    expense_date: new Date("2024-03-01")
+    expense_date: new Date("2024-10-01")
   },
   {
     expense_id: '9c0d1e2f-3a4b-5c6d-7e8f-9a0b1c2d3e4f',
@@ -492,7 +492,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'Visual Studio Enterprise Licenses',
     expense_value: 35000.00,
-    expense_date: new Date("2024-02-15")
+    expense_date: new Date("2024-10-15")
   },
   {
     expense_id: '0d1e2f3a-4b5c-6d7e-8f9a-0b1c2d3e4f5a',
@@ -500,7 +500,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'JetBrains Suite Annual Subscription',
     expense_value: 25000.00,
-    expense_date: new Date("2024-03-01")
+    expense_date: new Date("2024-12-01")
   },
   {
     expense_id: '1e2f3a4b-5c6d-7e8f-9a0b-1c2d3e4f5a6b',
@@ -508,7 +508,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'AWS Reserved Instances',
     expense_value: 50000.00,
-    expense_date: new Date("2024-02-01")
+    expense_date: new Date("2024-12-01")
   },
   {
     expense_id: '2f3a4b5c-6d7e-8f9a-0b1c-2d3e4f5a6b7c',
@@ -516,7 +516,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'Azure Cloud Services',
     expense_value: 40000.00,
-    expense_date: new Date("2024-03-15")
+    expense_date: new Date("2024-12-15")
   },
   {
     expense_id: '3a4b5c6d-7e8f-9a0b-1c2d-3e4f5a6b7c8d',
@@ -524,7 +524,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[1].category_id,
     expense_name: 'Development Workstations',
     expense_value: 45000.00,
-    expense_date: new Date("2024-04-15")
+    expense_date: new Date("2024-12-13")
   },
   {
     expense_id: '4b5c6d7e-8f9a-0b1c-2d3e-4f5a6b7c8d9e',
@@ -532,7 +532,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[2].category_id,
     expense_name: 'MongoDB Atlas Enterprise',
     expense_value: 38000.00,
-    expense_date: new Date("2024-04-01")
+    expense_date: new Date("2024-12-01")
   },
   {
     expense_id: '5c6d7e8f-9a0b-1c2d-3e4f-5a6b7c8d9e0f',
@@ -540,7 +540,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[0].category_id,
     expense_name: 'Laboratory Management Software License',
     expense_value: 27000.00,
-    expense_date: new Date("2024-07-15")
+    expense_date: new Date("2024-11-15")
   },
   {
     expense_id: '6d7e8f9a-0b1c-2d3e-4f5a-6b7c8d9e0f1a',
@@ -548,7 +548,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[3].category_id,
     expense_name: 'Lab Safety Training Program',
     expense_value: 18000.00,
-    expense_date: new Date("2024-08-01")
+    expense_date: new Date("2024-12-01")
   },
   {
     expense_id: '7e8f9a0b-1c2d-3e4f-5a6b-7c8d9e0f1a2b',
@@ -556,7 +556,7 @@ export const projectExpenses: ProjectExpense[] = [
     category_id: categories[1].category_id,
     expense_name: 'Data Processing Servers',
     expense_value: 20000.00,
-    expense_date: new Date("2024-10-15")
+    expense_date: new Date("2024-11-15")
   },
   {
     expense_id: '8f9a0b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c',
