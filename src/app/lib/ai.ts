@@ -54,7 +54,7 @@ Duration: ${duration}
     const response = completion.choices[0].message.content;
     if (!response) return [];
 
-    let suggestions = JSON.parse(response);
+    const suggestions = JSON.parse(response);
     
     // Handle different response structures to ensure we get an array
     // as OpenAI is no respecting the requested format
