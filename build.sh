@@ -21,13 +21,13 @@ docker login
 docker compose -f docker/docker-compose-build.yml push
 
 # Create the tarball for EC2
-tar -czvf prod-dist.tgz run.sh .secrets docker/docker-compose.yml docker/env.prod docker/fixenv.sh
+tar -czvf prod-dist.tgz run.sh .secrets docker/docker-compose.prod.yml docker/env.prod docker/fixenv.sh
 
 cat <<EOF
 Finished:
 - Upload docker-dist.tgz to the EC2 instance
 - Log into the EC2 instance, uncompress and customize .env to the IP
 - Run:
-  docker compose -f docker/docker-compose.yml up -d
-- Jump into http://public-ip:3000
+  ./run.sh
+- Jump into http://public-ip:80
 EOF
